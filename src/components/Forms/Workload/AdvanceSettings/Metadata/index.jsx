@@ -37,8 +37,9 @@ export default class Metadata extends React.Component {
       return callback({ message: t('LABEL_FORMAT_DESC') })
     }
 
+    const { namespace, cluster } = this.props
     this.props.store
-      .checkLabels({ labels: value, namespace: this.props.namespace })
+      .checkLabels({ labels: value, namespace, cluster })
       .then(resp => {
         if (resp.exist) {
           return callback({ message: t('Labels exists'), field: rule.field })
@@ -58,7 +59,6 @@ export default class Metadata extends React.Component {
             name="metadata.labels"
             addText={t('Add Label')}
             onChange={this.handleLabelsChange}
-            readOnlyKeys={['app']}
           />
         </Form.Item>
         <Form.Item label={t('Annotations')}>

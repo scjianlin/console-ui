@@ -51,7 +51,7 @@ class Header extends React.Component {
     return (
       <Menu onClick={this.handleDocumentLinkClick} data-test="header-docs">
         <Menu.MenuItem key={globals.config.documents.url}>
-          <Icon name="hammer" /> {t("User's Manual")}
+          <Icon name="hammer" /> {t('User Manual')}
         </Menu.MenuItem>
         <Menu.MenuItem key={globals.config.documents.api}>
           <Icon name="api" /> {t('API Documents')}
@@ -76,11 +76,11 @@ class Header extends React.Component {
         )}
       >
         <Link to="/">
-          <img
+          {/* <img
             className={styles.logo}
             src={isAppsPage() ? `/assets/login-logo.svg` : logo}
             alt=""
-          />
+          /> */}
         </Link>
         <div className="header-bottom" />
         {this.isLoggedIn && (
@@ -119,11 +119,11 @@ class Header extends React.Component {
           </div>
         )}
         <div className={styles.right}>
-          {/* {this.isLoggedIn && (
+          {this.isLoggedIn && (
             <Dropdown content={this.renderDocumentList()}>
               <Button type="flat" icon="documentation" />
             </Dropdown>
-          )} */}
+          )}
           <LoginInfo className={styles.loginInfo} isAppsPage={isAppsPage()} />
         </div>
       </div>

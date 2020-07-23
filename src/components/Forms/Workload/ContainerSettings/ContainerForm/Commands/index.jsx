@@ -18,7 +18,7 @@
 
 import React from 'react'
 import { Form } from 'components/Base'
-import { StringInput } from 'components/Inputs'
+import StringInput from 'components/Inputs/StringInput'
 
 import styles from './index.scss'
 
@@ -36,11 +36,11 @@ export default class Commands extends React.Component {
   render() {
     return (
       <Form.Group
-        label={t('Start command')}
+        label={t('Start Command')}
         desc={t('START_COMMAND_DESC')}
         checkable
       >
-        <Form.Item label={t('Run cammand')} desc={t('RUN_COMMAND_DESC')}>
+        <Form.Item label={t('Run Command')} desc={t('RUN_COMMAND_DESC')}>
           <StringInput
             className={styles.input}
             name={`${this.prefix}command`}

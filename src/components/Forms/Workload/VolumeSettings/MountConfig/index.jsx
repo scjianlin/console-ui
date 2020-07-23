@@ -16,7 +16,7 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { get, keyBy, isEmpty } from 'lodash'
+import { get, set, keyBy, isEmpty } from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Input, Select, RadioGroup, RadioButton } from '@pitrix/lego-ui'
@@ -92,11 +92,19 @@ export default class MountConfig extends React.Component {
   }
 
   fetchData() {
-    const { namespace } = this.props
+    const { cluster, namespace, projectDetail, isFederated } = this.props
+
+    const params = {
+      namespace,
+      cluster: cluster || get(projectDetail, 'clusters[0].name'),
+    }
+    if (isFederated) {
+      params.labelSelector = 'kubefed.io/managed=true'
+    }
 
     Promise.all([
-      this.configMapStore.fetchByK8s({ namespace }),
-      this.secretStore.fetchByK8s({ namespace }),
+      this.configMapStore.fetchListByK8s(params),
+      this.secretStore.fetchListByK8s(params),
     ]).then(([configMaps, secrets]) => {
       this.setState({ configMaps, secrets }, () => {
         if (this.state.formData.name) {
@@ -132,18 +140,23 @@ export default class MountConfig extends React.Component {
   }
 
   handleSelectChange = value => {
-    const { configMaps, secrets } = this.state
-
-    const configMap = configMaps.find(({ name }) => name === value)
-    const secret = secrets.find(({ name }) => name === value)
-
-    const data = configMap || secret || {}
+    const { configMaps, secrets, type } = this.state
+    let data = {}
+    if (type === 'configmap') {
+      data = configMaps.find(({ name }) => name === value)
+    } else {
+      data = secrets.find(({ name }) => name === value)
+    }
 
     this.setState({ resource: data })
   }
 
   handleTypeChange = type => {
-    this.setState({ type })
+    const { formData } = this.state
+    const form = this.formRef.current
+    this.setState({ type, formData: set(formData, 'name', undefined) }, () => {
+      form.validate()
+    })
   }
 
   handleSubmit = callback => {
@@ -239,11 +252,31 @@ export default class MountConfig extends React.Component {
     })
   }
 
+  nameValidator = (rule, value, callback) => {
+    const { formData, type } = this.state
+    const volumeMounts = get(formData, 'volumeMounts')
+
+    const hasVolume = volume => {
+      return !isEmpty(volume) && get(volume, '[0].readOnly') !== 'null'
+    }
+
+    if (hasVolume(volumeMounts) && !value) {
+      return type === 'configmap'
+        ? callback({ message: t('Please select a configmap') })
+        : callback({ message: t('Please select a secret') })
+    }
+
+    if (!hasVolume(volumeMounts) || value) {
+      return callback()
+    }
+  }
+
   renderContent() {
     const { containers, collectSavedLog } = this.props
     const { type, formData } = this.state
 
     const options = this.getResourceOptions()
+    const supportedAccessModes = ['ReadOnly', 'Not Mount']
 
     const placeholder = {
       label: isEmpty(options)
@@ -255,7 +288,7 @@ export default class MountConfig extends React.Component {
     return (
       <Form data={formData} ref={this.formRef}>
         <div className={styles.card}>
-          <Form.Item>
+          <Form.Item rules={[{ validator: this.nameValidator }]}>
             <TypeSelect
               name="name"
               options={options}
@@ -266,6 +299,7 @@ export default class MountConfig extends React.Component {
           <Form.Item rules={[{ validator: this.mountValidator }]}>
             <MountInput
               name="volumeMounts"
+              supportedAccessModes={supportedAccessModes}
               containers={containers}
               collectSavedLog={collectSavedLog}
             />

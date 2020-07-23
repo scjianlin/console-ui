@@ -17,7 +17,7 @@
  */
 
 import React from 'react'
-import { toJS, when } from 'mobx'
+import { toJS } from 'mobx'
 import { observer, inject } from 'mobx-react'
 import { Link } from 'react-router-dom'
 import { get, isEmpty } from 'lodash'
@@ -34,41 +34,28 @@ export default class Applications extends React.Component {
   constructor(props) {
     super(props)
     this.store = new ApplicationStore()
-
-    this.disposer = when(
-      () => this.project.data.name === this.namespace,
-      this.fetchData.bind(this)
-    )
   }
 
-  componentWillUnmount() {
-    this.disposer && this.disposer()
+  componentDidMount() {
+    this.fetchData()
   }
 
   get routing() {
     return this.props.rootStore.routing
   }
 
-  get namespace() {
-    return get(this.props.match, 'params.namespace')
-  }
-
-  get project() {
-    return this.props.rootStore.project
-  }
-
   fetchData() {
     this.store.fetchList({
-      namespace: this.namespace,
-      runtime_id: get(this.project, 'data.annotations["openpitrix_runtime"]'),
+      ...this.props.match.params,
       limit: 3,
     })
   }
 
   handleClickApp = e => {
     const { app } = e.currentTarget.dataset
+    const { workspace, cluster, namespace } = this.props.match.params
     this.routing.push(
-      `/projects/${this.namespace}/applications/template/${app}`
+      `/${workspace}/clusters/${cluster}/projects/${namespace}/applications/template/${app}`
     )
   }
 
@@ -79,10 +66,11 @@ export default class Applications extends React.Component {
   }
 
   renderExtras() {
+    const { workspace, cluster, namespace } = this.props.match.params
     return (
       <Link
         className={styles.more}
-        to={`/projects/${this.namespace}/applications/template`}
+        to={`/${workspace}/clusters/${cluster}/projects/${namespace}/applications/template`}
       >
         {t('View All')}
       </Link>

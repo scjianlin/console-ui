@@ -47,32 +47,34 @@ const isEditable = function(name) {
 
 @observer
 export default class StepsEditor extends React.Component {
-  constructor(props) {
-    super(props)
-    this.stage = toJS(props.activeStage)
+  static defaultProps = {
+    activeStage: {},
   }
-  @observable
-  stage = []
+
+  state = {
+    stage: null,
+  }
+
   @observable
   zIndex = ''
   @observable
   isEditMode = false
 
   get steps() {
-    return get(this.stage, 'branches[0].steps', [])
+    return get(this.props.activeStage, 'branches[0].steps', [])
   }
 
   get hasNestStage() {
-    return !!this.stage.stages
+    return !!this.props.activeStage.stages
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.stage = toJS(nextProps.activeStage)
+  static getDerivedStateFromProps(nextProps) {
+    return { stage: toJS(nextProps.activeStage) }
   }
 
   @action
   handleChangeName = value => {
-    this.stage.name = value
+    this.props.activeStage.name = value
     this.handleSetValue()
   }
 
@@ -147,10 +149,10 @@ export default class StepsEditor extends React.Component {
 
     let prevData = this.steps
     if (typeof this.props.store.isAddingStep === 'string') {
-      if (!this.stage.when) {
-        this.stage.when = { conditions: [] }
+      if (!this.props.activeStage.when) {
+        this.props.activeStage.when = { conditions: [] }
       }
-      prevData = this.stage.when.conditions
+      prevData = this.props.activeStage.when.conditions
     }
     if (this.zIndex.length) {
       const path = this.zIndex.reduce((_path, value, _index) => {
@@ -169,8 +171,9 @@ export default class StepsEditor extends React.Component {
   }
 
   addNoInputTask = task => {
-    if (!this.stage.when) {
-      this.stage.when = { conditions: [] }
+    const { activeStage } = this.props
+    if (!activeStage.when) {
+      activeStage.when = { conditions: [] }
     }
     if (this.zIndex.length) {
       const path = this.zIndex.reduce((_path, value, _index) => {
@@ -179,12 +182,12 @@ export default class StepsEditor extends React.Component {
         }
         return `${_path}.children[${value}]`
       }, '')
-      get(this.stage.when.conditions, `${path}.children`).push({
+      get(activeStage.when.conditions, `${path}.children`).push({
         name: task,
         children: [],
       })
     } else {
-      this.stage.when.conditions.push({ name: task, children: [] })
+      activeStage.when.conditions.push({ name: task, children: [] })
     }
     this.props.store.isAddingStep = false
     this.handleSetValue()
@@ -192,7 +195,9 @@ export default class StepsEditor extends React.Component {
 
   @action
   handleDeleteStep = (index, zIndex, listType) => () => {
-    const prevData = listType ? this.stage.when.conditions : this.steps
+    const prevData = listType
+      ? this.props.activeStage.when.conditions
+      : this.steps
 
     if (zIndex.length) {
       const path = zIndex.reduce((_path, value, _index) => {
@@ -232,19 +237,22 @@ export default class StepsEditor extends React.Component {
           (preSteps, index) => JSON.stringify(preSteps) + index === step
         )
       )
-      set(this.stage, 'branches[0].steps', sortedData)
+      set(this.props.activeStage, 'branches[0].steps', sortedData)
     }
     this.handleSetValue()
   }
 
   handleSetValue = () => {
-    this.stage.error = undefined
-
-    if (this.stage.when && !this.stage.when.conditions.length) {
-      delete this.stage.when
+    if (
+      this.props.activeStage.when &&
+      !this.props.activeStage.when.conditions.length
+    ) {
+      delete this.props.activeStage.when
     }
-
-    this.props.store.setValue(this.stage)
+    if (this.props.activeStage.error) {
+      this.props.activeStage.error = undefined
+    }
+    this.props.store.setValue(this.props.activeStage)
   }
 
   cancelFocus = () => {
@@ -320,11 +328,18 @@ export default class StepsEditor extends React.Component {
   }
 
   renderConditions() {
-    if (!this.stage.when || !this.stage.when.conditions) {
+    if (
+      !this.props.activeStage.when ||
+      !this.props.activeStage.when.conditions
+    ) {
       return null
     }
 
-    return this.renderLists(this.stage.when.conditions, [], 'condition')
+    return this.renderLists(
+      this.props.activeStage.when.conditions,
+      [],
+      'condition'
+    )
   }
 
   render() {
@@ -333,7 +348,7 @@ export default class StepsEditor extends React.Component {
     return (
       <div className={styles.sheet}>
         <div className={styles.title}>
-          {t('Stage')}{' '}
+          {t('Stage')}
           <span className={styles.delete} onClick={this.handleDelete}>
             <Icon name="trash" clickable />
           </span>
@@ -341,7 +356,7 @@ export default class StepsEditor extends React.Component {
         <div className={styles.form}>
           <Form.Item label={t('Name')}>
             <Input
-              value={this.stage.name || ''}
+              value={this.props.activeStage.name || ''}
               onChange={this.handleChangeName}
             />
           </Form.Item>
@@ -349,7 +364,7 @@ export default class StepsEditor extends React.Component {
             {t('pipeline_conditions')}
             <span>
               {t(
-                'The conditions required to perform the current phase. (optional)'
+                'The conditions required to implement the current phase (optional).'
               )}
             </span>
           </div>
@@ -365,7 +380,7 @@ export default class StepsEditor extends React.Component {
           )}
           <div className={styles.title}>
             {t('Task')}
-            <span>{t('drag and drop tasks to sort')}</span>
+            <span>{t('Drag and drop tasks to sort')}</span>
           </div>
           {this.renderSteps(this.steps, [])}
           {this.hasNestStage ? null : (

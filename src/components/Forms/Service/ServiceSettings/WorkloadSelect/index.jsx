@@ -17,6 +17,7 @@
  */
 
 import React from 'react'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { get } from 'lodash'
 import { RadioButton, RadioGroup } from '@pitrix/lego-ui'
@@ -35,29 +36,31 @@ export default class WorkloadSelect extends React.Component {
     this.state = {
       type: 'deployments',
       selectItem: {},
-      visible: false,
     }
 
     this.store = new WorkloadStore(this.state.type)
   }
 
   handleTypeChange = type => {
-    this.setState({ type, visible: true }, () => {
+    this.setState({ type }, () => {
       this.store.setModule(this.state.type)
       this.fetchData()
     })
   }
 
   fetchData = (params = {}) => {
-    this.store.fetchList({ namespace: this.props.namespace, ...params })
+    const { cluster, namespace } = this.props
+    this.store.fetchList({ cluster, namespace, ...params })
   }
 
   handleSelect = item => {
-    this.setState({ selectItem: item, visible: true })
+    this.setState({ selectItem: item })
   }
 
   handleCancel = () => {
-    this.setState({ visible: false, selectItem: {} })
+    this.setState({ selectItem: {} }, () => {
+      this.props.onCancel()
+    })
   }
 
   handleOK = () => {
@@ -65,13 +68,11 @@ export default class WorkloadSelect extends React.Component {
     const { selectItem } = this.state
 
     onSelect(get(selectItem, '_originData.spec.template.metadata.labels', {}))
-
-    this.setState({ visible: false })
   }
 
   render() {
     const { type, selectItem } = this.state
-    const { data, total, page, isLoading } = this.store.list
+    const { data, total, page, isLoading } = toJS(this.store.list)
 
     return (
       <div>

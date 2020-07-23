@@ -17,12 +17,146 @@
  */
 
 export default {
+  'According to the HTTP header': 'According to the HTTP header',
+  'Add Component': 'Add Component',
+  'Add Component Successfully': 'Add Component Successfully',
+  'Add Internet access rule for the application':
+    'Add Internet access rule for the application',
+  'Add New Component': 'Add New Component',
+  'Add Service': 'Add Service',
+  'Add stateful or stateless services': 'Add stateful or stateless services',
+  'App Description': 'App Description',
+  'App store deployment': 'App store deployment',
+  'App Template': 'App Template',
+  'App Types': 'App Types',
+  APP_ICON_TIP: 'APP_ICON_TIP',
+  application: 'application',
+  'Application Component': 'Application Component',
+  'Application Components': 'Application Components',
+  'Application components combine workloads and services as components in applications':
+    'Application components combine workloads and services as components in applications',
+  'Application Governance': 'Application Governance',
+  'Application governance is not enabled':
+    'Application governance is not enabled',
+  'Application Icon': 'Application Icon',
+  'Application Name': 'Application Name',
+  'Application Route': 'Application Route',
+  'Application Type': 'Application Type',
+  'Application Version(Optional)': 'Application Version(Optional)',
+  APPLICATION_YAML_DESC: 'APPLICATION_YAML_DESC',
+  Applications: 'Applications',
+  'Base ejection time (s)': 'Base ejection time (s)',
+  'Based on HTTP cookie': 'Based on HTTP cookie',
+  'Based on HTTP header': 'Based on HTTP header',
+  'Build an app by app template': 'Build an app by app template',
+  'Build an app by services': 'Build an app by services',
+  'Called Depth': 'Called Depth',
+  'Called Services': 'Called Services',
+  'Choose existing services or create new service components to build an app':
+    'Choose existing services or create new service components to build an app',
+  'Circuit Breaker': 'Circuit Breaker',
+  'Cluster Select': 'Cluster Select',
+  'Cluster Selection': 'Cluster Selection',
+  'Component Version': 'Component Version',
+  'Composing App': 'Composing App',
+  'Connection pool management': 'Connection pool management',
+  'Connection timeout': 'Connection timeout',
+  'Continuous error response (5xx) number':
+    'Continuous error response (5xx) number',
+  'Create Application by Service': 'Create Application by Service',
+  'Create Composing Application': 'Create Composing Application',
+  'Current Version': 'Current Version',
+  Deploy: 'Deploy',
+  'Deploy App': 'Deploy App',
+  'Deploy applications with one-click application templates provided by Kubesphere':
+    'Deploy applications with one-click application templates provided by Kubesphere',
+  'Deploy New Application': 'Deploy New Application',
+  'Deploy sample app Bookinfo': 'Deploy sample app Bookinfo',
+  'Deployed Applications': 'Deployed Applications',
+  'Edit Component': 'Edit Component',
+  'From App Store': 'From App Store',
+  'From App Templates': 'From App Templates',
+  'From third party Helm': 'From third party Helm',
+  'From workspace': 'From workspace',
+  'Hash based on a specific HTTP header.':
+    'Hash based on a specific HTTP header.',
+  'Hash based on HTTP cookie.': 'Hash based on HTTP cookie.',
+  'Hash based on the source IP address.':
+    'Hash based on the source IP address.',
+  'How to use Application Governance': 'How to use Application Governance',
+  'If the maximum number of requests in the backend connection is set to 1, the keep alive feature is disabled.':
+    'If the maximum number of requests in the backend connection is set to 1, the keep alive feature is disabled.',
+  'If you need to access applications by application route, add routing rules':
+    'If you need to access applications by application route, add routing rules',
+  'Inspection period (unit: s)': 'Inspection period (unit: s)',
+  'Invalid version': 'Invalid version',
+  'Load balance algorithm': 'Load balance algorithm',
+  Log: 'Log',
+  'Max number of connections': 'Max number of connections',
+  'Max number of requests per connection':
+    'Max number of requests per connection',
+  'Max request retries': 'Max request retries',
+  'Maximum pending requests': 'Maximum pending requests',
+  'Maximum requests': 'Maximum requests',
+  Method: 'Method',
+  'Microservice enabled': 'Microservice enabled',
+  'Microservice not enabled': 'Microservice not enabled',
+  'No Components': 'No Components',
+  'No result found': 'No result found',
+  Off: 'Off',
+  On: 'On',
+  'Please finish the sub form first': 'Please finish the sub form first',
+  'Please input an application name': 'Please input an application name',
+  'Please input component version': 'Please input component version',
+  'Please save the current form first': 'Please save the current form first',
+  'Please try other query conditions': 'Please try other query conditions',
+  'Pod isolation ratio (unit: %)': 'Pod isolation ratio (unit: %)',
+  Process: 'Process',
+  Receive: 'Receive',
+  Rollback: 'Rollback',
+  'Sample apps can help you get started with app creation and app governance':
+    'Sample apps can help you get started with app creation and app governance',
+  Send: 'Send',
+  'Service components should not be empty':
+    'Service components should not be empty',
+  'Service Ports': 'Service Ports',
+  SERVICE_PORT_NAME_DESC: 'SERVICE_PORT_NAME_DESC',
+  'Services & Operations': 'Services & Operations',
+  'Session retention': 'Session retention',
+  'Specify an application version': 'Specify an application version',
+  'Success rate': 'Success rate',
+  Tags: 'Tags',
+  'TCP - Inbound Traffic': 'TCP - Inbound Traffic',
+  'TCP - Outbound Traffic': 'TCP - Outbound Traffic',
+  'TCP connection timeout.': 'TCP connection timeout.',
+  'Temporarily unable to use tracing': 'Temporarily unable to use tracing',
+  'Temporarily unable to use traffic management':
+    'Temporarily unable to use traffic management',
+  'The app has not received the request for a long time, please visit the app and try traffic management':
+    'The app has not received the request for a long time, please visit the app and try traffic management',
+  'The maximum number of HTTP1 or TCP connections to the target host.':
+    'The maximum number of HTTP1 or TCP connections to the target host.',
+  'The maximum number of retries to the target host within the specified time.':
+    'The maximum number of retries to the target host within the specified time.',
+  'The number of consecutive 5xx errors in one inspection cycle':
+    'The number of consecutive 5xx errors in one inspection cycle',
+  'The response code will be filtered in the inspection cycle.':
+    'The response code will be filtered in the inspection cycle.',
+  TOTAL_COLLECTIONS: 'TOTAL_COLLECTIONS',
+  Traffic: 'Traffic',
+  'Traffic (requests per second)': 'Traffic (requests per second)',
+  'Traffic Entry': 'Traffic Entry',
+  'Traffic Management': 'Traffic Management',
+  'Traffic Monitoring': 'Traffic Monitoring',
+  Upgrade: 'Upgrade',
+  'Workload Type': 'Workload Type',
+
   TOTAL_APPS: 'Total {num} applications',
 
   APPLICATIONS_DESC:
-    'An application provides users with full business functionalities in one package. Application templates in KubeSphere are built on the Helm packaging specification. They are delivered through a unified public or private Helm repository. An application is composed of one or more Kubernetes objects such as workloads, services, ingress etc.',
+    'An application provides users with comprehensive business functions in one package. App templates in KubeSphere are built on the Helm packaging specification. They are delivered through a unified public or private Helm repository. An application is composed of one or more Kubernetes objects including workloads, services and ingress.',
   APP_DEPLOYMENT_DESC:
-    'Lightweight, portable, self-contained software packaging technology that enables applications to run in the same way almost anywhere.',
+    'Lightweight, portable and self-contained software packaging technology enables applications to run in almost any place in the same way.',
 
   LB_ALG_DESC:
     'Support standard load balancing algorithms</br>ROUND_ROBIN：Polling, the default load balancing algorithm.</br>LEAST_CONN：Randomly select two healthy hosts, and then select one host with fewer links from the selected two hosts.</br>RANDOM：Pick one randomly from all healthy hosts.',
@@ -31,23 +165,13 @@ export default {
   LB_RANDOM: 'RANDOM',
 
   CLUSTER_NAME_DESC:
-    'It can only contain lowercase letters, numbers and hyphens("-"), and must begin with a lowercase letter, ending with a number or lowercase letter. The maximum length of characters is set to 14.',
-
-  CLUSTER_ALIAS_DESC:
-    'Alias can be composed of any character to help you better distinguish resources and support Chinese names.',
+    'It can only contain lowercase letters, numbers and hyphens("-"), and must begin and end with a lowercase letter or a number. The maximum length of characters is set to 14.',
 
   COMPONENT_VERSION_DESC:
     'For the application of governance to distinguish between components. It can only contain lowercase letters and numbers. The maximum length of characters is set to 16.',
 
   APP_WORKLOAD_TYPE_DESC:
     'Support stateless services (Deployment) and stateful services (StatefulSet)',
-
-  BLUE_GREEN_DEPLOYMENT_DESC:
-    'The blue-green release provides a zero downtime deployment which can deploy the new version while preserving the old version, and bring both versions running at the same time. If there is a problem with running, you can quickly roll back to the old version.',
-  CANARY_RELEASES_DESC:
-    'Introduce a part of the actual traffic into a new version for testing the performance and reliability of the new version, aiming to protect the overall system stability, early detection and adjustment of the problem.',
-  TRAFFIC_MIRROR_DESC:
-    'Traffic mirror is used to test the new version more realistically, to detect problems in advance without affecting the production environment, thus improving the security reliability of the release.',
 
   SERVICE_DEPLOYMENT: 'Stateless service(Deployment)',
   SERVICE_STATEFULSET: 'Stateful service(StatefulSet)',
@@ -56,7 +180,7 @@ export default {
     'Create a fixed number of connection objects for the application, save them in the pool for reuse. The existing pool is available for each access, and is returned to the pool after use.',
 
   APP_GOVERNANCE_DESC:
-    'If application governance enabled, the Istio-proxy container is injected as a SideCar in each component. <a href="https://istio.io/docs/setup/kubernetes/additional-setup/sidecar-injection/" target="_blank">READ MORE</a>',
+    'If Application Governance is enabled, the Istio-proxy container will be injected as a SideCar in each component. <a href="https://istio.io/docs/setup/kubernetes/additional-setup/sidecar-injection/" target="_blank">READ MORE</a>',
 
   POD_ISOLATION_RATIO_DESC:
     'Maximum % of Pod for the upstream service that can be ejected. It uses up rounding, when set to 13% it will isolate up to 2 instances if 10 instances exist.',
@@ -73,26 +197,40 @@ export default {
   WORKLOAD_NAME_EXIST: 'Workload {name} exists',
 
   APPLICATION_TYPE_DESC:
-    'KubeSphere supports application deployments (based on Helm) from the app store, as well as Application CRD.',
+    'KubeSphere supports application deployments (based on Helm) from the App Store, as well as Application CRD.',
 
-  HOW_TO_USE_APPLICATION_GOVE_Q: 'How to use application governance',
+  HOW_TO_USE_APPLICATION_GOVE_Q: 'How to use Application Governance?',
   HOW_TO_USE_APPLICATION_GOVE_A:
-    'Using App Governance requires creating a composing app and turning on service governance for each service.',
+    'Please create a composing app and enable service governance for each service before you use Application Governance.',
 
   FROM_APP_STORE_DESC:
-    'From the official app store of KubeSphere, providing high-quality applications and easy deployment',
+    'From the official App Store of KubeSphere with high-quality applications and easy deployments.',
   FROM_APP_TEMPLATES_DESC:
-    'From the application templates of workspace and the third-party helm application templates of app repo',
+    'From the app templates of workspace and the third-party Helm app templates of App Repository.',
   COMPOSING_APP_DESC:
-    'Publish services to build applications through resource orchestration(support application governance function)',
+    'You can publish services to build applications through resource orchestration (Application Governance supported).',
   APP_TEMPLATES_MODAL_DESC:
-    'The application template comes from the workspace and the third-party helm application templates. It supports one click deployment and can be visualized in KubeSphere to show and provide deployment and management functions',
+    'The app template comes from the workspace and the third-party Helm app templates. It supports one click deployment and can be visualized in KubeSphere to show and provide deployments and management functions.',
 
   TIP_APP_TYPE:
     'KubeSphere supports application deployment (based on Helm) from app stores and app repositories, as well as home-made applications (Application CRD).',
   TIP_APP_GOVERNANCE:
     'Using App Governance requires creating a homebrew app and turning on service governance for each service',
   APP_REPOS_DESC:
-    'The application repository comes from a third-party Helm Chart Repo, which visually exposes and provides deployment and management capabilities in KubeSphere, allowing users to quickly deploy applications one-click based on templates in the application repository.',
+    'The app repository comes from a third-party Helm Chart Repo, which visually displays and provides deployment and management capabilities in KubeSphere. Users can quickly deploy applications with one click based on templates in the app repository.',
   SEARCH_TIPS: 'You can filter based on relevant conditions',
+
+  APPLICATION_BASEINFO_DESC:
+    'Basic application information (such as name description)',
+
+  TRAFFIC_MANAGEMENT_NO_MICROSERVICE_TIP:
+    'Traffic governance depends on the microservices module. The current cluster has not enabled the microservices module.',
+  TRACING_NO_MICROSERVICE_TIP:
+    'Tracing depends on the microservices module. The current cluster has not enabled the microservices module.',
+
+  APPLICATION_SERVICE_DESC:
+    'You can set different service components based on the service type in an application. Stateful and stateless services are both supported.',
+
+  INTERNET_ACCESS_DESC:
+    "You can set the application's Internet access rules (Ingress).",
 }

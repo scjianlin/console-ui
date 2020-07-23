@@ -31,7 +31,7 @@ export default class Empty extends React.PureComponent {
 
   static defaultProps = {
     img: '/assets/empty-card.svg',
-    desc: 'No relevant data',
+    desc: 'No Relevant Data',
   }
 
   render() {
@@ -40,7 +40,7 @@ export default class Empty extends React.PureComponent {
     return (
       <div className={classnames(styles.wrapper, className)}>
         <img src={img} alt="No data" />
-        {desc && <div className={styles.content}>{t(desc)}</div>}
+        <div className={styles.content}>{t(desc)}</div>
       </div>
     )
   }

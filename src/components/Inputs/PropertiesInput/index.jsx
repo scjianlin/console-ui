@@ -31,7 +31,6 @@ export default class PropertiesInput extends React.Component {
   static propTypes = {
     name: PropTypes.string,
     value: PropTypes.object,
-    valueType: PropTypes.string,
     hiddenKeys: PropTypes.arrayOf(PropTypes.string),
     readOnlyKeys: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
@@ -40,7 +39,6 @@ export default class PropertiesInput extends React.Component {
 
   static defaultProps = {
     name: '',
-    valueType: 'text',
     value: {},
     hiddenKeys: [],
     readOnlyKeys: [],
@@ -52,24 +50,23 @@ export default class PropertiesInput extends React.Component {
 
     this.state = {
       existedKey: false,
-      ...this.getValues(props),
+      propsValue: props.value,
+      ...PropertiesInput.getValues(props),
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { arrayValues, hiddenValues, readOnlyValues } = this.getValues(
-      nextProps
-    )
-
-    if (
-      nextProps.controlledValue &&
-      !isEqual(arrayValues, this.state.arrayValues)
-    ) {
-      this.setState({ arrayValues, hiddenValues, readOnlyValues })
+  static getDerivedStateFromProps(props, state) {
+    if (props.controlledValue && !isEqual(props.value, state.propsValue)) {
+      return {
+        propsValue: props.value,
+        ...PropertiesInput.getValues(props),
+      }
     }
+
+    return null
   }
 
-  getValues(props) {
+  static getValues(props) {
     const propsValue = props.controlledValue || props.value || {}
     const hiddenValues = []
     const readOnlyValues = []
@@ -151,7 +148,7 @@ export default class PropertiesInput extends React.Component {
     // some key is empty, throw error
     const hasEmptyKey = Object.keys(value).some(key => isEmpty(key))
     if (hasEmptyKey) {
-      this.props.onError({ message: t('No empty keys') })
+      this.props.onError({ message: t('Empty keys') })
     }
 
     // has duplicate keys, throw error
@@ -182,13 +179,18 @@ export default class PropertiesInput extends React.Component {
   }
 
   render() {
-    const { className, addText } = this.props
+    const { className, addText, itemProps } = this.props
     const { readOnlyValues, arrayValues } = this.state
 
     return (
       <div className={classnames(styles.wrapper, className)}>
         {readOnlyValues.map(item => (
-          <Item key={`readonly-${item.key}`} value={item} readOnly />
+          <Item
+            key={`readonly-${item.key}`}
+            value={item}
+            readOnly
+            {...itemProps}
+          />
         ))}
         {arrayValues.map((item, index) => (
           <Item
@@ -197,6 +199,7 @@ export default class PropertiesInput extends React.Component {
             value={item || {}}
             onChange={this.handleItemChange}
             onDelete={this.handleItemDelete}
+            {...itemProps}
           />
         ))}
         <div className="text-right">

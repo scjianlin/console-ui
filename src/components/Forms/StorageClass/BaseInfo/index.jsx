@@ -18,8 +18,8 @@
 
 import React from 'react'
 import { get } from 'lodash'
-import { Columns, Column, Input, TextArea } from '@pitrix/lego-ui'
-import { Form } from 'components/Base'
+import { Columns, Column, Input } from '@pitrix/lego-ui'
+import { Form, TextArea } from 'components/Base'
 import { MODULE_KIND_MAP } from 'utils/constants'
 
 export default class BaseInfo extends React.Component {
@@ -38,15 +38,18 @@ export default class BaseInfo extends React.Component {
             <Column>
               <Form.Item
                 label={t('Name')}
-                desc={t('storage class name')}
+                desc={t('Storage Class Name')}
                 rules={[{ required: true, message: t('Please input name') }]}
               >
                 <Input name="metadata.name" autoFocus={true} />
               </Form.Item>
             </Column>
             <Column>
-              <Form.Item label={t('Description')}>
-                <TextArea name="metadata.annotations['kubesphere.io/description']" />
+              <Form.Item label={t('Description')} desc={t('DESCRIPTION_DESC')}>
+                <TextArea
+                  name="metadata.annotations['kubesphere.io/description']"
+                  maxLength={256}
+                />
               </Form.Item>
             </Column>
           </Columns>

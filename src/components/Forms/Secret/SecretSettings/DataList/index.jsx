@@ -19,6 +19,7 @@
 import React from 'react'
 import { omit } from 'lodash'
 import { List } from 'components/Base'
+import { safeAtob } from 'utils'
 
 import styles from './index.scss'
 
@@ -47,14 +48,14 @@ export default class SecretDataList extends React.Component {
             key={key}
             icon="key"
             title={key}
-            description={_value || '-'}
+            description={safeAtob(_value) || '-'}
             onDelete={this.handleDelete(key)}
             onEdit={this.handleEdit(key)}
           />
         ))}
         <List.Add
-          title={t('Add data')}
-          description={t('Add key / value pair formal data')}
+          title={t('Add Data')}
+          description={t('Add key / value pair data')}
           onClick={onAdd}
         />
       </List>

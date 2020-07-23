@@ -1,115 +1,165 @@
-/*
- * This file is part of KubeSphere Console.
- * Copyright (C) 2019 The KubeSphere Console Authors.
- *
- * KubeSphere Console is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * KubeSphere Console is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
- */
 
-import { get, set, isString, isEmpty, isArray } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import { action, observable } from 'mobx'
 import ObjectMapper from 'utils/object.mapper'
-import Base from './base'
 
-export default class RackStore extends Base {
+import { LIST_DEFAULT_ORDER, API_VERSIONS } from 'utils/constants'
+
+import List from './base.list'
+
+export default class RackStore {
+  list = new List()
+
   @observable
-  resources = {
-    data: [],
-    isLoading: true,
-  }
+  detail = {}
 
   @observable
-  metrics = {
-    data: [],
-    isLoading: true,
-  }
+  isLoading = true
 
-  constructor() {
-    super()
-    this.module = 'getRackCidr'
-  }
+  @observable
+  isSubmitting = false
+
+  module = "getRackCidr"
 
   get apiVersion() {
-    return 'apis/storage.k8s.io/v1'
+    return API_VERSIONS[this.module] || ''
   }
 
-  getListUrl = () => `${this.apiVersion}/storageclasses`
-  
-  // getResourceUrl = () => `kapis/resources.kubesphere.io/v1alpha2/${this.module}`
+  get mapper() {
+    return ObjectMapper[this.module] || (data => data)
+  }
+
+  getPath({ cluster, namespace } = {}) {
+    let path = ''
+    if (cluster) {
+      path += `/klusters/${cluster}`
+    }
+    if (namespace) {
+      path += `/namespaces/${namespace}`
+    }
+    return path
+  }
+
+  getAddUrl = () => `sailor/addRackCidr`
+
+  getDeleteUrl = () => `sailor/delRackCidr`
+
+  // getDetailUrl = (params = {}) => `${this.getListUrl(params)}/${params.name}`
+
+  getWatchListUrl = (params = {}) =>
+    `${this.apiVersion}/watch${this.getPath(params)}/${this.module}`
+
+  getWatchUrl = (params = {}) =>
+    `${this.getWatchListUrl(params)}/${params.name}`
+
+  // getResourceUrl = (params = {}) =>
+  //   `kapis/resources.kubesphere.io/v1alpha3${this.getPath(params)}/${
+  //     this.module
+  //   }`
+
   getResourceUrl = () => `sailor/${this.module}`
 
-  @action
-  create(data) {
-    if (data.provisioner === 'custom') {
-      data.provisioner = data.parameters.provisioner
-      delete data.parameters.provisioner
-    }
 
-    if (isString(data.allowVolumeExpansion)) {
-      data.allowVolumeExpansion = data.allowVolumeExpansion === 'true'
+  getFilterParams = params => {
+    const result = { ...params }
+    if (result.app) {
+      result.labelSelector = result.labelSelector || ''
+      result.labelSelector += `app.kubernetes.io/name=${result.app}`
+      delete result.app
     }
-
-    const supportedAccessModes = get(
-      data,
-      'metadata.annotations["storageclass.kubesphere.io/supported_access_modes"]'
-    )
-
-    if (!isEmpty(supportedAccessModes) && isArray(supportedAccessModes)) {
-      set(
-        data,
-        'metadata.annotations["storageclass.kubesphere.io/supported_access_modes"]',
-        JSON.stringify(supportedAccessModes)
-      )
-    }
-    return this.submitting(request.post(this.getListUrl(), data))
+    return result
   }
 
   @action
-  async fetchResources({ name, ...rest }) {
-    this.resources.isLoading = true
+  setModule(module) {
+    this.module = module
+  }
 
-    const params = {
-      ...rest,
+  @action
+  submitting = promise => {
+    this.isSubmitting = true
+
+    setTimeout(() => {
+      promise
+        .catch(() => {})
+        .finally(() => {
+          this.isSubmitting = false
+        })
+    }, 500)
+
+    return promise
+  }
+
+  @action
+  async fetchList({
+    cluster,
+    workspace,
+    namespace,
+    more,
+    resources = [],
+    devops,
+    filters,
+    ...params
+    // ...filters
+  } = {}) {
+    this.list.isLoading = true
+
+    if (!params.sortBy && params.ascending === undefined) {
+      params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
     }
 
-    if (name) {
-      params.conditions = `storageClassName=${name}`
+    if (params.limit === Infinity || params.limit === -1) {
+      params.limit = -1
+      params.page = 1
     }
+
+    params.limit = params.limit || 9
+    params.page = params.page || 1
 
     const result = await request.get(
-      `kapis/resources.kubesphere.io/v1alpha2/persistentvolumeclaims`,
+      this.getResourceUrl(),
       params
     )
-    this.resources = {
-      data: result.items ? result.items.map(ObjectMapper.volumes) : [],
+
+    const data = result.items.map(this.mapper)
+
+    this.list.update({
+      data: data,
+      total: result.totalItems || result.total_count || data.length || 0,
+      ...params,
+      limit: Number(params.limit) || 9,
+      page: Number(params.page) || 1,
       isLoading: false,
-    }
+      ...(this.list.silent ? {} : { selectedRowKeys: [] }),
+    })
+
+    return data
   }
 
-  getStorageSizeConfig() {
-    const DEFAULT_MAX_SIZE = 2048
-    const DEFAULT_STEP = 1
-    const DEFAULT_MIN_SIZE = 0
+  @action
+  create(data, params = {}) {
+    return this.submitting(request.post(this.getAddUrl(), data))
+  }
 
-    const detail = this.detail || {}
-    const min = Number(get(detail, 'parameters.minSize')) || DEFAULT_MIN_SIZE
-    const max = Number(get(detail, 'parameters.maxSize')) || DEFAULT_MAX_SIZE
-    const step = Number(get(detail, 'parameters.stepSize')) || DEFAULT_STEP
+  @action
+  update(params, newObject) {
+    return this.submitting(request.put(this.getDetailUrl(params), newObject))
+  }
 
-    return {
-      min,
-      max,
-      step,
-    }
+  @action
+  patch(params, newObject) {
+    return this.submitting(request.patch(this.getDetailUrl(params), newObject))
+  }
+
+  @action
+  delete(data,params={}) {
+    console.log("delete==>",data);
+    console.log("params==>",params);
+    return this.submitting(request.delete(this.getDeleteUrl(), data))
+  }  
+
+  reject = res => {
+    this.isSubmitting = false
+    window.onunhandledrejection(res)
   }
 }

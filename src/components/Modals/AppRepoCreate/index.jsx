@@ -19,8 +19,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { Input, TextArea } from '@pitrix/lego-ui'
-import { Modal, Form } from 'components/Base'
+import { Input } from '@pitrix/lego-ui'
+import { Modal, Form, TextArea } from 'components/Base'
 import UrlInput from './url.input'
 
 import styles from './index.scss'
@@ -51,26 +51,24 @@ export default class AddRepoModal extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.detail !== this.props.detail) {
+  componentDidUpdate(prevProps) {
+    if (this.props.detail !== prevProps.detail) {
       this.setState({
-        formData: this.getFormData(nextProps.detail),
+        formData: this.getFormData(this.props.detail),
       })
     }
   }
 
   getFormData = detail => {
-    const data = Object.assign(
-      {
-        name: '',
-        repoType: 'Helm',
-        type: 'https',
-        visibility: 'public',
-        credential: '{}',
-        providers: ['kubernetes'],
-      },
-      detail
-    )
+    const data = {
+      name: '',
+      repoType: 'Helm',
+      type: 'https',
+      visibility: 'public',
+      credential: '{}',
+      providers: ['kubernetes'],
+      ...detail,
+    }
 
     return data
   }
@@ -121,11 +119,8 @@ export default class AddRepoModal extends Component {
           onValidate={this.handleUrlValidate}
           isSubmitting={this.props.isSubmitting}
         />
-        <Form.Item label={t('Description')}>
-          <TextArea
-            name="description"
-            placeholder={t('SHORT_DESCRIPTION_DESC')}
-          />
+        <Form.Item label={t('Description')} desc={t('DESCRIPTION_DESC')}>
+          <TextArea name="description" maxLength={256} />
         </Form.Item>
       </Modal.Form>
     )

@@ -29,8 +29,21 @@ const { server: serverConfig } = getServerConfig()
  *  gateway api request, if get logined resource, token must exists,
  * @param {options} options: { token, method, url, params }
  */
-const send_gateway_request = ({ method, url, params, token, headers = {} }) => {
-  const options = {}
+const send_gateway_request = ({
+  method,
+  url,
+  params,
+  token,
+  headers = {},
+  ...rest
+}) => {
+  console.log("method=>",method);
+  console.log("url=>",url);
+  console.log("params=>",params);
+  console.log("token=>",token);
+
+  const options = { headers, ...rest }
+
 
   if (token) {
     options.headers = {
@@ -39,9 +52,9 @@ const send_gateway_request = ({ method, url, params, token, headers = {} }) => {
       'x-client-ip': headers['x-client-ip'],
     }
   }
-
+  console.log("options==>",options);
   return request[method.toLowerCase()](
-    `${serverConfig.gatewayServer.url}${url}`,
+    `${serverConfig.apiServer.url}${url}`,
     params,
     options
   )

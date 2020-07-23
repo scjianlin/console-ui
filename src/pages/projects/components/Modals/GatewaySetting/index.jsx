@@ -55,12 +55,13 @@ export default class GatewaySettingModal extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible && nextProps.visible !== this.props.visible) {
+  componentDidUpdate(prevProps) {
+    const { visible, detail } = this.props
+    if (visible && visible !== prevProps.visible) {
       this.setState({
-        type: nextProps.detail.type || 'NodePort',
-        isChecked: nextProps.detail.serviceMeshEnable || false,
-        annotations: nextProps.detail.annotations || {},
+        type: detail.type || 'NodePort',
+        isChecked: detail.serviceMeshEnable || false,
+        annotations: detail.annotations || {},
       })
     }
   }
@@ -110,7 +111,7 @@ export default class GatewaySettingModal extends React.Component {
   }
 
   render() {
-    const { visible, onCancel, detail = {}, isSubmitting } = this.props
+    const { visible, onCancel, detail = {}, cluster, isSubmitting } = this.props
     const { type, isChecked } = this.state
 
     return (
@@ -151,7 +152,7 @@ export default class GatewaySettingModal extends React.Component {
                     `INGRESS_CONTROLLER_${type.toUpperCase()}_DESC`
                   )}
                 />
-                {globals.app.hasKSModule('servicemesh') && (
+                {globals.app.hasClusterModule(cluster, 'servicemesh') && (
                   <>
                     <div className={styles.toggle}>
                       {t('Application Governance')}

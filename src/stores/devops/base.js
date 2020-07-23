@@ -17,8 +17,9 @@
  */
 
 import { set } from 'lodash'
+import BaseStore from '../devops'
 
-export default class Base {
+export default class Base extends BaseStore {
   catchRequestError(method = 'get', ...rest) {
     return request[method](...rest).catch(error => {
       window.onunhandledrejection(error)
@@ -26,10 +27,10 @@ export default class Base {
     })
   }
 
-  getCrumb = async () =>
+  getCrumb = async ({ cluster } = { cluster: '' }) =>
     await this.catchRequestError(
       'get',
-      `kapis/devops.kubesphere.io/v1alpha2/crumbissuer`,
+      `${this.getBaseUrlV2({ cluster })}crumbissuer`,
       null,
       null,
       () => true
@@ -52,7 +53,13 @@ export default class Base {
       options = {}
     }
     if (globals.user.crumb === undefined) {
-      await this.getCrumb()
+      const match = url.match(/(clusters|klusters)\/([^/]*)\//)
+      if (match && match.length === 3) {
+        const cluster = match[2]
+        await this.getCrumb({ cluster })
+      } else {
+        await this.getCrumb()
+      }
     }
     if (globals.user.crumb) {
       set(options, 'headers.Jenkins-Crumb', globals.user.crumb)

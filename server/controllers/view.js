@@ -18,7 +18,7 @@
 
 const uid = require('uid-safe')
 const SvgCaptchaFactory = require('svg-captcha')
-const { getCurrentUser } = require('../services/session')
+const { getCurrentUser, getOAuthInfo } = require('../services/session')
 
 const {
   getServerConfig,
@@ -39,6 +39,7 @@ const renderView = async ctx => {
       ksConfig: JSON.stringify(ksConfig),
       user: JSON.stringify(user),
       version: getFileVersion,
+      hostname: ctx.hostname,
     })
   } catch (err) {
     ctx.app.emit('error', err)
@@ -53,13 +54,13 @@ const renderView = async ctx => {
         await ctx.render('error', {
           title: clientConfig.title,
           t: ctx.t.bind(ctx),
-          message: 'unable to access backend services',
+          message: 'Unable to access backend services',
         })
       } else if (err.code === 'ETIMEDOUT') {
         await ctx.render('error', {
           title: clientConfig.title,
           t: ctx.t.bind(ctx),
-          message: 'unable to access gateway',
+          message: 'Unable to access gateway',
         })
       }
     } else {
@@ -82,8 +83,12 @@ const renderLogin = async ctx => {
 
   ctx.session.salt = uid.sync(12)
 
+  const oauthServers = await getOAuthInfo(ctx)
+  console.log("RendLogin===>",ctx);
+
   await ctx.render('login', {
     loginPath,
+    oauthServers: oauthServers || [],
     title: clientConfig.title,
     error: ctx.request.error,
     errorCount: ctx.session.errorCount || 0,

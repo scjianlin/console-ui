@@ -19,7 +19,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import { flatten, isArray, isEmpty } from 'lodash'
+import { flatten, isArray, isEmpty, get, uniqBy } from 'lodash'
 import { Icon, Checkbox } from '@pitrix/lego-ui'
 
 import { joinSelector } from 'utils'
@@ -29,6 +29,8 @@ import EmptyList from 'components/Cards/EmptyList'
 
 import ServiceStore from 'stores/service'
 import VolumeStore from 'stores/volume'
+import FederatedStore from 'stores/federated'
+
 import styles from './index.scss'
 
 export default class WorkloadDeleteModal extends React.Component {
@@ -53,23 +55,20 @@ export default class WorkloadDeleteModal extends React.Component {
     this.serviceStore = new ServiceStore()
     this.volumeStore = new VolumeStore()
 
+    if (props.isFederated) {
+      this.serviceStore = new FederatedStore({
+        module: this.serviceStore.module,
+      })
+      this.volumeStore = new FederatedStore({
+        module: this.volumeStore.module,
+      })
+    }
+
     this.state = {
       relatedResources: [],
       selectedRelatedResourceIds: [],
       enableConfirm: false,
       timer: 3,
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible) {
-      if (nextProps.visible !== this.props.visible) {
-        this.setState({ enableConfirm: false, relatedResources: [], timer: 3 })
-        this.fetchRelatedResources(nextProps.resource)
-        this.startTimer()
-      }
-    } else if (this.timer) {
-      clearInterval(this.timer)
     }
   }
 
@@ -110,12 +109,18 @@ export default class WorkloadDeleteModal extends React.Component {
     this.setState({ isLoading: true })
     let selectors = []
     let namespace
+    let cluster
     if (isArray(resource)) {
       namespace = resource[0].namespace
-      selectors = resource.map(item => item.selector)
+      cluster = resource[0].cluster
+      selectors = resource.map(
+        item => item.selector || get(item, 'resource.selector')
+      )
     } else {
       namespace = resource.namespace
-      selectors.push(resource.selector)
+      cluster = resource.cluster
+
+      selectors.push(resource.selector || get(resource, 'resource.selector'))
     }
 
     const requests = []
@@ -124,53 +129,53 @@ export default class WorkloadDeleteModal extends React.Component {
       if (!isEmpty(selector)) {
         const labelSelector = joinSelector(selector)
         requests.push(
-          this.volumeStore.fetchListByK8s({ namespace, labelSelector }),
-          this.serviceStore.fetchListByK8s({ namespace, labelSelector })
+          this.volumeStore.fetchListByK8s({
+            cluster,
+            namespace,
+            labelSelector,
+          }),
+          this.serviceStore.fetchListByK8s({
+            cluster,
+            namespace,
+            labelSelector,
+          })
         )
       }
     })
 
     const results = await Promise.all(requests)
     this.setState({
-      relatedResources: flatten(
-        results.map((resources = []) =>
-          resources.map(item => {
-            if (item.storageClassName) {
-              return {
-                ...item,
-                type: 'volumes',
-              }
-            }
-
-            return {
-              ...item,
-              type: 'services',
-            }
-          })
-        )
-      ),
+      relatedResources: uniqBy(flatten(results), 'uid'),
       isLoading: false,
     })
   }
 
   stopPropagation = e => e.stopPropagation()
 
-  handleOk = () => {
-    const { onOk } = this.props
+  handleOk = async () => {
+    const { onOk, resource, store } = this.props
     const { selectedRelatedResourceIds, relatedResources } = this.state
 
     const requests = []
-    relatedResources.forEach(resource => {
-      if (selectedRelatedResourceIds.includes(resource.uid)) {
-        if (resource.type === 'services') {
-          requests.push(this.serviceStore.delete(resource))
-        } else if (resource.type === 'volumes') {
-          requests.push(this.volumeStore.delete(resource))
+    relatedResources.forEach(item => {
+      if (selectedRelatedResourceIds.includes(item.uid)) {
+        if (item.module === 'services') {
+          requests.push(this.serviceStore.delete(item))
+        } else if (item.module === 'persistentvolumeclaims') {
+          requests.push(this.volumeStore.delete(item))
         }
       }
     })
 
-    Promise.all(requests)
+    await Promise.all(requests)
+
+    if (isArray(resource)) {
+      await Promise.all(resource.map(item => store.delete(item)))
+      store.list.setSelectRowKeys([])
+    } else {
+      await store.delete(resource)
+    }
+
     onOk()
   }
 
@@ -196,7 +201,7 @@ export default class WorkloadDeleteModal extends React.Component {
           icon="appcenter"
           className={styles.empty}
           title={t('No related resources')}
-          desc={t('No related resources found with current workload(s)')}
+          desc={t('No related resources found with the current workload(s)')}
         />
       )
     }
@@ -219,7 +224,7 @@ export default class WorkloadDeleteModal extends React.Component {
               onClick={this.stopPropagation}
             />
             <Icon
-              name={ICON_TYPES[resource.type]}
+              name={ICON_TYPES[resource.module]}
               size={20}
               type={
                 selectedRelatedResourceIds.includes(resource.uid)
@@ -229,7 +234,7 @@ export default class WorkloadDeleteModal extends React.Component {
             />
             <span className={styles.resourceName}>{resource.name}</span>
             <span className={styles.resourceType}>
-              {t(MODULE_KIND_MAP[resource.type])}
+              {t(MODULE_KIND_MAP[resource.module])}
             </span>
           </div>
         ))}
@@ -244,10 +249,9 @@ export default class WorkloadDeleteModal extends React.Component {
     const title = `${t('Sure to delete the workload(s)?')}`
 
     const description = t('DELETE_WORKLOAD_DESC', {
-      resource:
-        resource.length > 1
-          ? resource.map(item => item.name).join(', ')
-          : resource.name,
+      resource: isArray(resource)
+        ? resource.map(item => item.name).join(', ')
+        : resource.name,
     })
 
     return (

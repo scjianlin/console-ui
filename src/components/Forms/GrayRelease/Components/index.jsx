@@ -51,15 +51,17 @@ export default class Components extends React.Component {
   }
 
   componentDidMount() {
-    this.appStore.fetchList({ namespace: this.namespace }).then(() => {
-      const data = toJS(this.appStore.list.data)
-      const app = data.find(item => item.serviceMeshEnable) || {}
-      this.setState({ selectApp: app.name })
+    this.appStore
+      .fetchList({ namespace: this.namespace, cluster: this.props.cluster })
+      .then(() => {
+        const data = toJS(this.appStore.list.data)
+        const app = data.find(item => item.serviceMeshEnable) || {}
+        this.setState({ selectApp: app.name })
 
-      if (app.selector) {
-        this.selectApp(app)
-      }
-    })
+        if (app.selector) {
+          this.selectApp(app)
+        }
+      })
   }
 
   get namespace() {
@@ -88,10 +90,7 @@ export default class Components extends React.Component {
       <img src={option.icon || '/assets/default-app.svg'} alt="" />
       {t('Application')}: {option.name}
       {option.disabled && (
-        <Tooltip
-          trigger="click"
-          content={t('未开启应用治理的应用无法使用灰度发布')}
-        >
+        <Tooltip trigger="click" content={t('NO_SERVICE_MESH_TIP')}>
           <Icon name="question" className="float-right" />
         </Tooltip>
       )}
@@ -116,6 +115,7 @@ export default class Components extends React.Component {
 
     const params = {
       namespace: this.namespace,
+      cluster: this.props.cluster,
       labelSelector: joinSelector(app.selector),
     }
     await Promise.all([

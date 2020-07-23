@@ -18,24 +18,23 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { getValue } from 'utils/yaml'
+import { Icon } from '@pitrix/lego-ui'
 
-import EditMode from '../EditMode'
+import EditMode from 'components/EditMode'
 
 import styles from './index.scss'
 
 const formatData = formTemplate => {
   const { application, ingress, ...components } = formTemplate
-  const formattedData = {
-    application,
-    ingress,
-  }
+  const formattedData = [application, ingress]
 
   Object.keys(components).forEach(key => {
-    const workloadYAML = getValue('yaml', components[key].workload || {})
-    const serviceYAML = getValue('yaml', components[key].service || {})
-
-    formattedData[key] = `${workloadYAML}---\n${serviceYAML}`
+    if (components[key].workload) {
+      formattedData.push(components[key].workload)
+    }
+    if (components[key].service) {
+      formattedData.push(components[key].service)
+    }
   })
 
   return formattedData
@@ -61,12 +60,6 @@ export default class CodeMode extends React.Component {
     this.editor = React.createRef()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.formTemplate !== this.data) {
-      this.data = formatData(nextProps.formTemplate)
-    }
-  }
-
   getData() {
     return this.editor.current.getData()
   }
@@ -74,7 +67,23 @@ export default class CodeMode extends React.Component {
   render() {
     return (
       <div className={styles.wrapper}>
-        <EditMode ref={this.editor} className="height-full" value={this.data} />
+        <div className={styles.step}>
+          <div>{t('Edit Mode')}</div>
+          <p>{t('APPLICATION_YAML_DESC')}</p>
+        </div>
+        <div className={styles.codeWrapper}>
+          <div className={styles.pane}>
+            <div className={styles.title}>
+              <Icon name="coding" size={20} />
+              <span>{t('Edit YAML')}</span>
+            </div>
+            <EditMode
+              ref={this.editor}
+              className={styles.editor}
+              value={this.data}
+            />
+          </div>
+        </div>
       </div>
     )
   }

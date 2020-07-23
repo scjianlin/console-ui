@@ -19,11 +19,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
-import { isEmpty, isArray, flatten } from 'lodash'
+import { get, isEmpty, isArray, flatten } from 'lodash'
 
 import { startAutoRefresh, stopAutoRefresh } from 'utils/monitoring'
 
-import { Icon, Loading } from '@pitrix/lego-ui'
+import { Icon, Loading, Select } from '@pitrix/lego-ui'
 import { Card, Button } from 'components/Base'
 import TimeSelector from './TimeSelector'
 
@@ -62,25 +62,32 @@ export default class MonitoringController extends React.Component {
       active: false,
       enableAutoRefresh: props.enableAutoRefresh,
       autoRefresh: false,
+      cluster: get(props, 'clusters[0].name', ''),
     }
 
     this.init()
   }
 
-  shouldComponentUpdate(nextProps) {
+  componentDidUpdate(prevProps) {
     if (
-      nextProps.step !== this.props.step ||
-      nextProps.times !== this.props.times ||
-      nextProps.createTime !== this.props.createTime
+      prevProps.step !== this.props.step ||
+      prevProps.times !== this.props.times ||
+      prevProps.createTime !== this.props.createTime
     ) {
-      this.initParams(nextProps)
+      this.initParams(this.props)
       this.fetchData()
     }
-    return true
   }
 
   componentWillUnmount() {
     stopAutoRefresh(this)
+  }
+
+  get clusters() {
+    return this.props.clusters.map(cluster => ({
+      label: cluster.name || cluster,
+      value: cluster.name || cluster,
+    }))
   }
 
   init() {
@@ -125,10 +132,15 @@ export default class MonitoringController extends React.Component {
   }
 
   fetchData = (params = {}) => {
-    this.props.onFetch({
+    const { cluster } = this.state
+    const query = {
       ...this.params,
       ...params,
-    })
+    }
+    if (cluster) {
+      query.cluster = cluster
+    }
+    this.props.onFetch(query)
   }
 
   handleChange = data => {
@@ -138,6 +150,12 @@ export default class MonitoringController extends React.Component {
       !data.start && !data.end && this.props.enableAutoRefresh
     this.setState({ enableAutoRefresh, autoRefresh: false }, () => {
       stopAutoRefresh(this)
+      this.fetchData()
+    })
+  }
+
+  handleClusterChange = cluster => {
+    this.setState({ cluster }, () => {
       this.fetchData()
     })
   }
@@ -185,6 +203,15 @@ export default class MonitoringController extends React.Component {
           [styles.active]: active,
         })}
       >
+        {this.props.isFederated && (
+          <Select
+            prefixIcon={<Icon name="cluster" />}
+            className={styles.clusters}
+            value={this.state.cluster}
+            options={this.clusters}
+            onChange={this.handleClusterChange}
+          />
+        )}
         <TimeSelector
           step={step}
           times={times}
@@ -232,7 +259,7 @@ export default class MonitoringController extends React.Component {
             [styles.showDropDown]: active,
           })}
           title={this.renderTitle()}
-          empty={t('NO_RESOURCE', { resource: t('monitoring data') })}
+          empty={t('NO_RESOURCE', { resource: t('Monitoring Data') })}
           isEmpty={this.props.isEmpty}
         >
           <div className={styles.content}>{this.renderContent()}</div>

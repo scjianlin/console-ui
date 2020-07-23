@@ -22,6 +22,8 @@ import PropTypes from 'prop-types'
 import { Icon, Select, Input, Tooltip, Control, Popper } from '@pitrix/lego-ui'
 import { Button } from 'components/Base'
 
+import { isEmpty } from 'lodash'
+
 import styles from './index.scss'
 
 const MOUNT_OPTIONS = [
@@ -41,25 +43,38 @@ export default class Item extends React.Component {
   static defaultProps = {
     name: '',
     value: {},
+    supportedAccessModes: [],
     onChange() {},
   }
 
   state = {
     visible: false,
     subPath: this.props.value.subPath,
+    defaultSubPath: this.props.value.subPath,
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.value.subPath !== this.state.subPath) {
-      this.setState({ subPath: nextProps.value.subPath })
+  static getDerivedStateFromProps(props, state) {
+    if (props.value.subPath !== state.defaultSubPath) {
+      return {
+        subPath: props.value.subPath,
+        defaultSubPath: props.value.subPath,
+      }
     }
+    return null
   }
 
   getMountOptions() {
-    return MOUNT_OPTIONS.map(item => ({
+    const { supportedAccessModes } = this.props
+
+    const hasAccessModes = mode =>
+      isEmpty(supportedAccessModes) || supportedAccessModes.includes(mode.label)
+
+    const setMountOptions = item => ({
       label: t(item.label),
       value: item.value,
-    }))
+    })
+
+    return MOUNT_OPTIONS.filter(hasAccessModes).map(setMountOptions)
   }
 
   handleSelectChange = newValue => {
@@ -228,7 +243,7 @@ export default class Item extends React.Component {
             name="mountPath"
             defaultValue={value.mountPath}
             disabled={value.readOnly === 'null'}
-            placeholder={`${t('container mount path')}, ${t(
+            placeholder={`${t('Container mount path')}, ${t(
               'for example'
             )}: /data`}
             onChange={this.handleMountPathChange}

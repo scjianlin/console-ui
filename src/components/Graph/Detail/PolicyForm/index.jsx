@@ -22,7 +22,6 @@ import PropTypes from 'prop-types'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import copy from 'fast-copy'
-import isEqual from 'react-fast-compare'
 import { RadioGroup, RadioButton, Select, Alert, Toggle } from '@pitrix/lego-ui'
 
 import { Button, Notify, Form } from 'components/Base'
@@ -75,10 +74,11 @@ export default class PolicyForm extends React.Component {
 
   getData(props) {
     const { name } = props.detail
-    const { namespace } = toJS(props.store.detail)
+    const { cluster, namespace } = toJS(props.store.detail)
 
     this.store
       .fetchListByK8s({
+        cluster,
         namespace,
         labelSelector: joinSelector({ app: name }),
         limit: 1,
@@ -92,17 +92,10 @@ export default class PolicyForm extends React.Component {
       })
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.detail.name !== this.props.detail.name) {
-      this.getData(nextProps)
+  componentDidUpdate(prevProps) {
+    if (prevProps.detail.name !== this.props.detail.name) {
+      this.getData(this.props)
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      nextProps.detail.name !== this.props.detail.name ||
-      !isEqual(nextState, this.state)
-    )
   }
 
   get formTemplate() {
@@ -174,7 +167,8 @@ export default class PolicyForm extends React.Component {
       set(data, 'metadata.resourceVersion', this.detail.resourceVersion)
       this.store.update(this.detail, data).then(callback)
     } else {
-      this.store.create(data).then(callback)
+      const { cluster, namespace } = toJS(this.props.store.detail)
+      this.store.create(data, { cluster, namespace }).then(callback)
     }
   }
 

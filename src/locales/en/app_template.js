@@ -17,11 +17,17 @@
  */
 
 export default {
+  'App README': 'App README',
+  'Configuration Files': 'Configuration Files',
+  'Deploy Successfully': 'Deploy Successfully',
+  'Edit by YAML': 'Edit by YAML',
+  'The app has no chart file.': 'The app has no chart file.',
+  'The app has no documentation.': 'The app has no documentation.',
+  'The version has no documentation.': 'The version has no documentation.',
+  'Update Successfully': 'Update Successfully',
+
   APP_TEMPLATE_DESCRIPTION_TITLE: 'Deploy packaged applications',
   APP_TEMPLATE_DESCRIPTION_ARTICLE:
-    'KubeSphere visualizes application templates and provides deployment and management function, allowing users to quickly deploy applications with one-click based on application templates.',
+    'KubeSphere visualizes app templates and provides deployment and management function, allowing users to quickly deploy applications with one click based on app templates.',
   TOTAL_APP_REPOS: 'Total {num} app repositories',
-
-  APP_TEMPLATE_DESC:
-    'The application template is equivalent to the Helm chart. It supports visualization and show application templates in KubeSphere, providing deployment and management features so that users can quickly deploy applications with one-click based on these application templates.',
 }

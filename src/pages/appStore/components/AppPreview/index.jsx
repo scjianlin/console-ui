@@ -20,7 +20,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { toJS, computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { Tabs } from '@pitrix/lego-ui'
+import { Tabs, Loading } from '@pitrix/lego-ui'
 import { isEmpty } from 'lodash'
 
 import AppFileStore from 'stores/openpitrix/file'
@@ -59,13 +59,14 @@ export default class AppPreview extends React.Component {
     return this.fileStore.files
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.versionId !== this.props.versionId) {
-      this.fetchFile(nextProps.versionId)
+  componentDidUpdate(prevProps) {
+    const { versionId } = this.props
+    if (versionId !== prevProps.versionId) {
+      this.fetchFile(versionId)
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { versionId } = this.props
     this.fetchFile(versionId)
   }
@@ -89,7 +90,7 @@ export default class AppPreview extends React.Component {
     }
 
     return (
-      <p className={styles.noReadme}>{t('The version has no documentation')}</p>
+      <p className={styles.noReadme}>{t('The version has no documentation.')}</p>
     )
   }
 
@@ -110,6 +111,10 @@ export default class AppPreview extends React.Component {
       return null
     }
 
+    if (this.fileStore.isLoading) {
+      return <Loading className={styles.loading} />
+    }
+
     if (currentTab === 'versionInfo') {
       return <>{this.renderReadMe()}</>
     }
@@ -124,11 +129,11 @@ export default class AppPreview extends React.Component {
         activeName={tab}
         onChange={this.handleTabChange}
       >
-        <TabPanel label={t('Version Info')} name="versionInfo">
-          {this.renderReadMe()}
+        <TabPanel label={t('App Description')} name="versionInfo">
+          <div className={styles.wrapper}>{this.renderReadMe()}</div>
         </TabPanel>
-        <TabPanel label={t('Chart File')} name="chartFiles">
-          {this.renderChartFiles()}
+        <TabPanel label={t('Chart Files')} name="chartFiles">
+          <div className={styles.wrapper}>{this.renderChartFiles()}</div>
         </TabPanel>
       </Tabs>
     )

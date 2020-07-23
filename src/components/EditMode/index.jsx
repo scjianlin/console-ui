@@ -20,8 +20,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { saveAs } from 'file-saver'
-import { isEmpty } from 'lodash'
-import isEqual from 'react-fast-compare'
+import { get, isEmpty } from 'lodash'
 
 import ReactFileReader from 'react-file-reader'
 import { Icon } from '@pitrix/lego-ui'
@@ -33,11 +32,11 @@ import styles from './index.scss'
 
 const objectToYaml = formTemplate => {
   if (formTemplate.metadata) {
-    return getValue('yaml', formTemplate)
+    return getValue(formTemplate)
   }
 
   return Object.values(formTemplate)
-    .map(value => getValue('yaml', value || {}))
+    .map(value => getValue(value || {}))
     .join('---\n')
 }
 
@@ -48,20 +47,17 @@ const yamlToObject = (data, hasMeta) => {
     return values[0]
   }
 
-  return values.reduce(
-    (prev, cur) => ({
-      ...prev,
-      [cur.kind || 'Unkown']: cur,
-    }),
-    {}
-  )
+  return values
 }
 
 export default class EditMode extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     mode: PropTypes.string,
-    value: PropTypes.object,
+    value: PropTypes.oneOfType([
+      PropTypes.object,
+      PropTypes.arrayOf(PropTypes.object),
+    ]),
     readOnly: PropTypes.bool,
   }
 
@@ -85,13 +81,6 @@ export default class EditMode extends React.Component {
     this.value = objectToYaml(props.value)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps.value, this.props.value)) {
-      this.value = objectToYaml(nextProps.value)
-      this.forceUpdate()
-    }
-  }
-
   handleUpload = file => {
     const reader = new FileReader()
     reader.onload = e => {
@@ -104,11 +93,23 @@ export default class EditMode extends React.Component {
   }
 
   handleDownload = () => {
-    const { mode } = this.props
+    const { value, mode } = this.props
 
-    const fileName = `default.${mode}`
+    let template
+    if (value.metadata) {
+      template = value
+    } else {
+      const values = Object.values(value)
+      if (values && values[0] && values[0].metadata) {
+        template = values[0]
+      }
+    }
+    const name = get(template, 'metadata.name', 'default')
+    const namespace = get(template, 'metadata.namespace', '')
+    const kind = get(template, 'kind', '').toLowerCase()
+    const fileName = [name, namespace, kind].filter(item => item).join('.')
 
-    this.saveAsFile(this.value, fileName)
+    this.saveAsFile(this.value, `${fileName}.${mode}`)
   }
 
   saveAsFile = (text = '', fileName = 'default.txt') => {

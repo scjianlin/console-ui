@@ -53,27 +53,20 @@ export default class HPAModal extends React.Component {
 
     this.state = {
       loading: true,
+      formData: undefined,
     }
 
     this.store = props.store
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible && nextProps.visible !== this.props.visible) {
-      this.fetchData(nextProps)
-    }
-  }
-
   componentDidMount() {
-    if (this.props.visible) {
-      this.fetchData(this.props)
-    }
+    this.fetchData(this.props)
   }
 
   fetchData = params => {
-    const { namespace, annotations = {} } = params.detail
+    const { namespace, cluster, annotations = {} } = params.detail
     const name = annotations['kubesphere.io/relatedHPA'] || params.detail.name
-    const _params = { name, namespace }
+    const _params = { name, cluster, namespace }
 
     this.setState({ loading: true }, () => {
       this.store.checkName(_params).then(resp => {
@@ -81,10 +74,10 @@ export default class HPAModal extends React.Component {
 
         if (resp.exist) {
           this.store.fetchDetail(_params).then(() => {
-            this.setState({ loading: false })
+            this.setState({ loading: false, formData: this.getFormData() })
           })
         } else {
-          this.setState({ loading: false })
+          this.setState({ loading: false, formData: this.getFormData() })
         }
       })
     })
@@ -93,6 +86,7 @@ export default class HPAModal extends React.Component {
   getFormData = () => {
     const { name, namespace } = this.props.detail
     const detail = toJS(this.store.detail)
+
     const {
       cpuCurrentUtilization,
       cpuTargetUtilization,
@@ -139,12 +133,10 @@ export default class HPAModal extends React.Component {
   render() {
     const { visible, onCancel } = this.props
     const { isSubmitting } = this.store
-    const formData = this.getFormData()
+    const { formData, loading } = this.state
 
     return (
-      <Modal.Form
-        formRef={this.form}
-        data={formData}
+      <Modal
         width={691}
         title={t('Horizontal Pod Autoscaling')}
         icon="firewall"
@@ -153,8 +145,8 @@ export default class HPAModal extends React.Component {
         visible={visible}
         isSubmitting={isSubmitting}
       >
-        <Loading spinning={this.state.loading}>
-          <div>
+        <Loading spinning={loading}>
+          <Form data={formData} ref={this.form}>
             <Alert
               className={styles.alert}
               type="info"
@@ -172,8 +164,11 @@ export default class HPAModal extends React.Component {
             >
               <NumberInput
                 name="metadata.annotations.cpuTargetUtilization"
+                interger
                 min={0}
                 max={100}
+                defaultValue=""
+                onChange={this.handleCPUChange}
               />
             </Form.Item>
             <Form.Item
@@ -182,9 +177,11 @@ export default class HPAModal extends React.Component {
             >
               <NumberInput
                 name="metadata.annotations.memoryTargetValue"
+                interger
                 unit="Mi"
                 min={0}
                 defaultValue=""
+                onChange={this.handleMemoryChange}
               />
             </Form.Item>
             <Form.Item
@@ -211,9 +208,9 @@ export default class HPAModal extends React.Component {
                 defaultValue={1}
               />
             </Form.Item>
-          </div>
+          </Form>
         </Loading>
-      </Modal.Form>
+      </Modal>
     )
   }
 }

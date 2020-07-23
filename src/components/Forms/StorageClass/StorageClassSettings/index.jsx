@@ -132,7 +132,7 @@ export default class StorageClassSetting extends React.Component {
               </Form.Item>
             </Column>
             <Column>
-              <Form.Item label={t('Reclaim Policy')}>
+              <Form.Item label={t('Reclaiming Policy')}>
                 <Input name="reclaimPolicy" disabled />
               </Form.Item>
             </Column>
@@ -140,7 +140,7 @@ export default class StorageClassSetting extends React.Component {
           <Columns>
             <Column>
               <Form.Item
-                label={t('Supported Access Modes')}
+                label={t('Supported Access Mode')}
                 desc={t('ACCESS_MODES_DESC')}
               >
                 <Select
@@ -154,12 +154,7 @@ export default class StorageClassSetting extends React.Component {
             {this.isCustomizedProvision && (
               <Column>
                 <Form.Item
-                  rules={[
-                    {
-                      required: true,
-                      message: t('required'),
-                    },
-                  ]}
+                  rules={[{ required: true, message: t('required') }]}
                   label={t('Storage System')}
                 >
                   <Input name={'provisioner'} />

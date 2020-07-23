@@ -17,17 +17,20 @@
  */
 
 import React from 'react'
-import { get } from 'lodash'
+import { inject } from 'mobx-react'
 
 import InstanceList from 'apps/components/Lists/InstanceList'
 
+@inject('detailStore', 'versionStore')
 export default class AppInstances extends React.Component {
   render() {
+    const { workspace, appId } = this.props.match.params
     return (
       <InstanceList
         appStore={this.props.detailStore}
         versionStore={this.props.versionStore}
-        appId={get(this.props.detailStore, 'detail.app_id', '')}
+        appId={appId}
+        workspace={workspace}
         title={t('App Instances')}
         empty={t('No app instances data')}
         hideFooter

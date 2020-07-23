@@ -18,12 +18,14 @@
 
 import React from 'react'
 import { get } from 'lodash'
+import { inject } from 'mobx-react'
 
 import VersionList from 'apps/components/Lists/VersionList'
 
+@inject('detailStore', 'versionStore')
 export default class VersionManage extends React.Component {
   render() {
-    const { appId } = this.props.match.params
+    const { workspace, appId } = this.props.match.params
     const isAdmin = get(this.props.detailStore, 'isAdmin', false)
 
     return (
@@ -32,6 +34,7 @@ export default class VersionManage extends React.Component {
         appStore={this.props.detailStore}
         versionStore={this.props.versionStore}
         appId={appId}
+        workspace={workspace}
         params={this.props.match.params}
         appDetail={get(this.props.detailStore, 'detail', {})}
         title={t('Versions')}

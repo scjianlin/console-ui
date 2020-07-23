@@ -16,7 +16,7 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { isEmpty, get, omit } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import { observable, action } from 'mobx'
 
 import { getFilterString } from 'utils'
@@ -31,15 +31,35 @@ export default class Application extends Base {
   defaultStatus = CLUSTER_QUERY_STATUS
 
   get baseUrl() {
-    return 'kapis/openpitrix.io/v1/'
+    return 'kapis/openpitrix.io/v1'
   }
 
-  getUrl = ({ namespace, cluster_id } = {}) => {
+  getPath({ workspace, cluster, namespace }) {
+    let path = ''
+    if (workspace) {
+      path += `/workspaces/${workspace}`
+    }
+    if (cluster) {
+      path += `/clusters/${cluster}`
+    }
+    if (namespace) {
+      path += `/namespaces/${namespace}`
+    }
+    return path
+  }
+
+  getUrl = ({ workspace, namespace, cluster, cluster_id } = {}) => {
+    const url = `${this.baseUrl}${this.getPath({
+      workspace,
+      namespace,
+      cluster,
+    })}/applications`
+
     if (cluster_id) {
-      return `${this.baseUrl}namespaces/${namespace}/applications/${cluster_id}`
+      return `${url}/${cluster_id}`
     }
 
-    return `${this.baseUrl}namespaces/${namespace}/applications`
+    return url
   }
 
   @observable
@@ -52,6 +72,7 @@ export default class Application extends Base {
   fetchList = async ({
     limit,
     page,
+    cluster,
     namespace,
     workspace,
     more,
@@ -61,11 +82,6 @@ export default class Application extends Base {
     ...filters
   } = {}) => {
     this.list.isLoading = true
-
-    if (!filters.runtime_id) {
-      this.list.isLoading = false
-      return
-    }
 
     const params = {
       conditions: getFilterString({ status: status || this.defaultStatus }),
@@ -77,7 +93,10 @@ export default class Application extends Base {
     }
 
     if (!isEmpty(filters)) {
-      params.conditions += `,${getFilterString(filters)}`
+      const filterString = getFilterString(filters)
+      if (filterString) {
+        params.conditions += `,${filterString}`
+      }
     }
 
     if (limit !== Infinity) {
@@ -93,33 +112,40 @@ export default class Application extends Base {
     }
 
     const result = await request.get(
-      `${this.baseUrl}namespaces/${namespace}/applications`,
+      this.getUrl({ workspace, namespace, cluster }),
       params
     )
 
-    const data = (result.items || []).map(({ cluster, ...item }) => ({
-      ...cluster,
-      ...item,
-    }))
+    const data = (result.items || []).map(
+      ({ cluster: clusterDetail, ...item }) => ({
+        ...clusterDetail,
+        ...item,
+        workspace,
+        cluster,
+      })
+    )
 
-    this.list = {
+    Object.assign(this.list, {
       data: more ? [...this.list.data, ...data] : data,
       total: result.total_count || 0,
       limit: Number(limit) || 10,
       page: Number(page) || 1,
       order,
       reverse,
-      filters: omit(filters, 'runtime_id'),
-      isLoading: false,
+      filters,
       selectedRowKeys: [],
-    }
+    })
+
+    this.list.isLoading = false
   }
 
   @action
-  fetchDetail = async ({ namespace, id: cluster_id }) => {
+  fetchDetail = async ({ workspace, namespace, cluster, id: cluster_id }) => {
     this.isLoading = true
 
-    const result = await request.get(this.getUrl({ namespace, cluster_id }))
+    const result = await request.get(
+      this.getUrl({ workspace, namespace, cluster, cluster_id })
+    )
 
     if (result.services) {
       result.services = result.services.map(ObjectMapper.services)
@@ -133,55 +159,67 @@ export default class Application extends Base {
       })
     }
 
-    const { cluster, ...rest } = result
-    this.detail = {
-      ...rest,
-      ...cluster,
-    }
-
     try {
       const clusterData = get(result, 'cluster.env', '')
       this.env.data = JSON.parse(clusterData)
     } catch (err) {}
 
+    this.detail = {
+      ...result,
+      ...result.cluster,
+      workspace,
+      cluster,
+    }
+
     this.isLoading = false
   }
 
   @action
-  update = ({ cluster_id, zone, ...data }) =>
-    this.submitting(
-      request.patch(this.getUrl({ namespace: zone, cluster_id }), data)
+  async upgrade(params, { workspace, namespace, cluster, cluster_id }) {
+    return this.submitting(
+      request.post(
+        this.getUrl({ workspace, namespace, cluster, cluster_id }),
+        params
+      )
     )
+  }
 
   @action
-  patch = ({ cluster_id, zone }, data) =>
+  update = ({ cluster_id, cluster, workspace, zone, ...data }) =>
     this.submitting(
-      request.patch(this.getUrl({ namespace: zone, cluster_id }), data)
-    )
-
-  @action
-  delete = ({ cluster_id, zone }) =>
-    this.submitting(
-      request.delete(this.getUrl({ namespace: zone, cluster_id }))
-    )
-
-  @action
-  batchDelete = (rowKeys, { namespace }) =>
-    this.submitting(
-      Promise.all(
-        rowKeys.map(cluster_id =>
-          request.delete(this.getUrl({ namespace, cluster_id }))
-        )
+      request.patch(
+        this.getUrl({ namespace: zone, cluster_id, cluster, workspace }),
+        data
       )
     )
 
-  // todo: nex version
   @action
-  upgrade = ({ cluster_id, version_id }) =>
+  patch = ({ cluster_id, cluster, workspace, zone }, data) =>
     this.submitting(
-      request.post(`${this.baseUrl}clusters/upgrade`, {
-        cluster_id,
-        version_id,
-      })
+      request.patch(
+        this.getUrl({ namespace: zone, cluster_id, cluster, workspace }),
+        data
+      )
+    )
+
+  @action
+  delete = ({ cluster_id, cluster, workspace, zone }) => {
+    return this.submitting(
+      request.delete(
+        this.getUrl({ namespace: zone, cluster_id, cluster, workspace })
+      )
+    )
+  }
+
+  @action
+  batchDelete = (rowKeys, { namespace, cluster, workspace }) =>
+    this.submitting(
+      Promise.all(
+        rowKeys.map(cluster_id =>
+          request.delete(
+            this.getUrl({ namespace, cluster, workspace, cluster_id })
+          )
+        )
+      )
     )
 }

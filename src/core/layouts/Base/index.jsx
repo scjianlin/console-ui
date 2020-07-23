@@ -18,7 +18,6 @@
 
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import classnames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import { isAppsPage } from 'utils'
 import { getScrollTop } from 'utils/dom'
@@ -26,11 +25,12 @@ import { renderRoutes } from 'utils/router.config'
 
 import { Header, GlobalNav } from 'components/Layout'
 import Tools from 'components/KubeTools'
+import History from 'components/Modals/History'
 import GlobalSVG from 'components/SVG'
 
 import styles from './index.scss'
 
-const appStoreScrollThreshold = 150
+const appStoreScrollThreshold = 10
 
 @inject('rootStore')
 @observer
@@ -55,23 +55,32 @@ class BaseLayout extends Component {
 
   componentDidMount() {
     document.addEventListener('scroll', this.handleScroll)
+    document.addEventListener('keydown', this.handleKeyDown)
   }
 
-  componentWillUpdate(nextProps) {
-    if (!globals.user && !isAppsPage(nextProps.location.path)) {
-      location.href = '/login'
-    }
-  }
-
-  componentDidUpdate(nextProps) {
-    if (nextProps.rootStore.showGlobalNav) {
+  componentDidUpdate(prevProps) {
+    const { showGlobalNav } = this.props.rootStore
+    if (showGlobalNav && showGlobalNav !== prevProps.rootStore.showGlobalNav) {
       document.removeEventListener('click', this.handleClick)
       document.addEventListener('click', this.handleClick)
+    }
+
+    if (!globals.user && !isAppsPage(this.props.location.path)) {
+      location.href = '/login'
     }
   }
 
   componentWillUnmount() {
     document.removeEventListener('scroll', this.throttleScroll)
+    document.removeEventListener('keydown', this.handleKeyDown)
+  }
+
+  handleKeyDown = e => {
+    if (e.code === 'F1' || (e.keyCode === 75 && e.metaKey)) {
+      e.stopPropagation()
+      e.preventDefault()
+      this.props.rootStore.toggleHistory()
+    }
   }
 
   handleScroll = () => {
@@ -106,17 +115,12 @@ class BaseLayout extends Component {
     }
   }
 
-  handleNavItemClick = () => {
-    this.props.rootStore.hideGlobalNav()
-  }
-
   handleJumpTo = link => {
     this.props.rootStore.routing.push(link)
   }
 
   render() {
-    const { location, match, rootStore } = this.props
-
+    const { location, rootStore } = this.props
     return (
       <div>
         <GlobalSVG />
@@ -129,18 +133,19 @@ class BaseLayout extends Component {
         />
         {globals.user && globals.app.enableGlobalNav && (
           <GlobalNav
-            innerRef={this.navRef}
-            className={classnames({
-              [styles.nav]: !rootStore.showGlobalNav,
-            })}
-            match={match}
-            location={location}
+            visible={rootStore.showGlobalNav}
             navs={globals.app.getGlobalNavs()}
-            onItemClick={this.handleNavItemClick}
+            onCancel={rootStore.hideGlobalNav}
           />
         )}
         <div className={styles.main}>{renderRoutes(this.routes)}</div>
         {globals.user && <Tools />}
+        {globals.user && (
+          <History
+            visible={rootStore.showHistory}
+            onCancel={rootStore.hideHistory}
+          />
+        )}
       </div>
     )
   }

@@ -27,12 +27,16 @@ const {
   k8sResourceProxy,
   devopsWebhookProxy,
   b2iFileProxy,
-  sailorWebProxy, //自定义sailor 代理
+  sailorWebProxy
 } = require('./proxy')
 
 const { handleSampleData, handleDockerhubProxy } = require('./controllers/api')
 
-const { handleLogin, handleLogout } = require('./controllers/session')
+const {
+  handleLogin,
+  handleLogout,
+  handleOAuthLogin,
+} = require('./controllers/session')
 
 const {
   renderView,
@@ -57,8 +61,8 @@ router
 
   .use(checkIfExist)
 
-  .use(proxy('/(k)?api(s)?/(.*)', k8sResourceProxy))
   .use(proxy('/(s)?ailo(r)?/(.*)', sailorWebProxy ))
+  .use(proxy('/(k)?api(s)?/(.*)', k8sResourceProxy))
   .use(proxy('/b2i_download/(.*)', b2iFileProxy))
   .get('/dockerhub/(.*)', parseBody, handleDockerhubProxy)
 
@@ -68,6 +72,8 @@ router
   .post('/login', parseBody, handleLogin)
   .post('/logout', handleLogout)
   .get('/login', renderLogin)
+
+  .get('/oauth/redirect', handleOAuthLogin)
 
   // markdown template
   .get('/blank_md', renderMarkdown)

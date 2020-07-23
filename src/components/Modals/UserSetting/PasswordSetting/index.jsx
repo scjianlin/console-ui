@@ -96,14 +96,14 @@ export default class PasswordSetting extends React.Component {
             className={styles.password}
             label={t('Current Password')}
             desc={t(
-              'You must enter the correct current password to change to a new password'
+              'You must enter the correct current password to change to a new password.'
             )}
             rules={[
               { required: true, message: t('Please input current password') },
             ]}
           >
             <InputPassword
-              name="current_password"
+              name="currentPassword"
               placeholder={t('Please input current password')}
               autoComplete="cur-password"
             />

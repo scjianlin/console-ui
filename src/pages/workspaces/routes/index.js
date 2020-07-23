@@ -18,32 +18,34 @@
 
 import { getIndexRoute } from 'utils/router.config'
 
-import Layout from '../containers/layout'
+import ListLayout from '../containers/Base/List'
 
 import BaseInfo from '../containers/BaseInfo'
 import Roles from '../containers/Roles'
 import Members from '../containers/Members'
 import Projects from '../containers/Projects'
+import FedProjects from '../containers/FedProjects'
 import DevOps from '../containers/DevOps'
 import Apps from '../containers/Apps'
 import Repos from '../containers/Repos'
 
+import detail from './detail'
 import overviewRoutes from './overview'
-import roleRoutes from './role'
-import memberRoutes from './member'
-import appRoutes from './app'
 
 const PATH = '/workspaces/:workspace'
 
 export default [
-  ...roleRoutes,
-  ...memberRoutes,
-  ...appRoutes,
+  ...detail,
   {
     path: PATH,
-    component: Layout,
+    component: ListLayout,
     routes: [
       ...overviewRoutes,
+      {
+        path: `${PATH}/federatedprojects`,
+        component: FedProjects,
+        exact: true,
+      },
       {
         path: `${PATH}/projects`,
         component: Projects,
@@ -52,13 +54,11 @@ export default [
       {
         path: `${PATH}/devops`,
         component: DevOps,
-        ksModule: 'devops',
         exact: true,
       },
       {
         path: `${PATH}/apps`,
         component: Apps,
-        ksModule: 'openpitrix',
         exact: true,
       },
       {
@@ -69,7 +69,6 @@ export default [
       {
         path: `${PATH}/repos`,
         component: Repos,
-        ksModule: 'openpitrix',
         exact: true,
       },
       {

@@ -49,11 +49,11 @@ export default class BaseList extends React.Component {
   }
 
   initWebsocket() {
-    const { namespace } = this.props.match.params
+    const { cluster, namespace } = this.props.match.params
 
     if (namespace && 'getWatchListUrl' in this.store) {
-      const url = this.store.getWatchListUrl({ namespace })
-
+      const url = this.store.getWatchListUrl({ cluster, namespace })
+      console.log("Url==>",url);
       this.websocket.watch(url)
 
       this.getData = throttle(this.getData, 1000)
@@ -90,8 +90,8 @@ export default class BaseList extends React.Component {
     return globals.app.getActions({
       module: this.authKey,
       workspace: this.props.match.params.workspace,
-      project:
-        this.props.match.params.namespace || this.props.match.params.project_id,
+      project: this.props.match.params.namespace,
+      devops: this.props.match.params.project_id,
     })
   }
 
@@ -128,7 +128,7 @@ export default class BaseList extends React.Component {
   }
 
   get list() {
-    return this.store.list
+    return this.store.list || {}
   }
 
   get tips() {
@@ -235,6 +235,7 @@ export default class BaseList extends React.Component {
     if (isEmpty(props.selectActions)) {
       props.onSelectRowKeys = null
     }
+
     return props
   }
 

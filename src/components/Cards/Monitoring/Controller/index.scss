@@ -19,12 +19,7 @@
 
 .operations {
   position: relative;
-  z-index: 100;
   display: flex;
-
-  &.active {
-    z-index: 102;
-  }
 
   .button {
     padding: 6px;
@@ -46,5 +41,10 @@
 }
 
 .showDropDown {
-  z-index: 102; 
+  z-index: 102;
+}
+
+.clusters {
+  width: 150px;
+  margin-right: 12px;
 }

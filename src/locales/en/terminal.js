@@ -17,14 +17,25 @@
  */
 
 export default {
+  connected: 'connected',
+  Copy: 'Copy',
+  'Copy Successfully': 'Copy Successfully',
+  Disconnect: 'Disconnect',
+  disconnected: 'disconnected',
+  'Download File': 'Download File',
+  'Kubeconfig File': 'Kubeconfig File',
+  'KubeSphere Terminal': 'KubeSphere Terminal',
+  'Launch kubectl': 'Launch kubectl',
+  'Put this into': 'Put this into',
+
   KUBECONFIG_TIP: `
     <h2><a id="KubeConfig_Configuration_Method_0"></a>KubeConfig Configuration Method</h2>
-    <p>please refer to the <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/" target="_blank">official documentation</a> for more commands.</p>
+    <p>Please refer to the <a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/" target="_blank">official documentation</a> for more commands.</p>
   `,
   KUBECTL_TIP: `
     <h2><a id="KubeCtl_Common_Instructions_0"></a>KubeCtl Common Instructions</h2>
-    <p>please refer to the <a href="https://kubernetes.io/docs/reference/kubectl/overview/" target="_blank">official documentation</a> for more commands.</p>
-    <h3><a id="kubectl_output_format_4"></a>kubectl output format</h3>
+    <p>Please refer to the <a href="https://kubernetes.io/docs/reference/kubectl/overview/" target="_blank">official documentation</a> for more commands.</p>
+    <h3><a id="kubectl_output_format_4"></a>kubectl Output Format</h3>
     <ul>
     <li>Show more information about Pod</li>
     </ul>
@@ -58,7 +69,7 @@ export default {
     </ul>
     <p><code>kubectl describe nodes &lt;node-name&gt;</code></p>
     <ul>
-    <li>Display details of Pod</li>
+    <li>Display Pod details</li>
     </ul>
     <p><code>kubectl describe pods/&lt;pod-name&gt;</code></p>
   `,

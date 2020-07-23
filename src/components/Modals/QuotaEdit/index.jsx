@@ -57,15 +57,18 @@ export default class QuotaEditModal extends React.Component {
     this.state = {
       formTemplate: {},
     }
+  }
 
-    if (props.detail && props.detail.name) {
-      this.fetchData(props.detail)
+  componentDidMount() {
+    if (this.props.detail && this.props.detail.name) {
+      this.fetchData(this.props.detail)
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible && nextProps.detail && nextProps.detail.name) {
-      this.fetchData(nextProps.detail)
+  componentDidUpdate(prevProps) {
+    const { visible, detail } = this.props
+    if (visible && visible !== prevProps.visible && detail && detail.name) {
+      this.fetchData(detail)
     }
   }
 
@@ -73,12 +76,14 @@ export default class QuotaEditModal extends React.Component {
     const ret = await this.store.checkName({
       name: detail.name,
       namespace: detail.name,
+      cluster: detail.cluster,
     })
 
     if (ret.exist) {
       await this.store.fetchDetail({
         name: detail.name,
         namespace: detail.name,
+        cluster: detail.cluster,
       })
     }
 
@@ -93,7 +98,8 @@ export default class QuotaEditModal extends React.Component {
     const memoryFormatter = value => {
       if (value > 0 && value < 1) {
         return value.toFixed(2)
-      } else if (value > 1 && value !== Infinity) {
+      }
+      if (value > 1 && value !== Infinity) {
         return value.toFixed(1)
       }
       return value

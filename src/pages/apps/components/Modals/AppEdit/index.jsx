@@ -19,13 +19,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { toJS } from 'mobx'
-import { get, set, pick, debounce } from 'lodash'
+import { get, set, pick, debounce, cloneDeep } from 'lodash'
 import { Columns, Column } from '@pitrix/lego-ui'
 import { Modal } from 'components/Base'
 
 import AppBaseEdit from 'apps/components/Forms/AppBaseEdit'
 import ScreenshotsEdit from 'apps/components/Cards/ScreenshotsEdit'
 import ReadmeEdit from 'apps/components/Cards/ReadmeEdit'
+
 import CategoryStore from 'stores/openpitrix/category'
 import FileStore from 'stores/openpitrix/file'
 
@@ -56,6 +57,10 @@ export default class AppEdit extends Component {
     this.fileStore = new FileStore()
 
     this.formRef = React.createRef()
+
+    this.state = {
+      detail: cloneDeep(toJS(this.props.detail)),
+    }
   }
 
   componentDidMount() {
@@ -63,11 +68,16 @@ export default class AppEdit extends Component {
   }
 
   handleAppChange = debounce((value, name) => {
-    set(this.props.detail, name, value)
+    const { detail } = this.state
+    const newDetail = cloneDeep(detail)
+    set(newDetail, name, value)
+    this.setState({
+      detail: newDetail,
+    })
   }, 200)
 
   handleOk = async () => {
-    const fromData = pick(this.props.detail, [
+    const formData = pick(this.state.detail, [
       'app_id',
       'name',
       'abstraction',
@@ -75,15 +85,22 @@ export default class AppEdit extends Component {
       'home',
       'category_id',
       'readme',
+      'workspace',
     ])
 
     const form = this.formRef.current
-    form && form.validate(() => this.props.onOk(fromData))
+    form && form.validate(() => this.props.onOk(formData))
+  }
+
+  onCancel = () => {
+    this.props.onCancel()
+    this.props.success()
   }
 
   render() {
-    const { visible, isSubmitting, onCancel, detail, ...rest } = this.props
+    const { visible, isSubmitting, onCancel, ...rest } = this.props
     const categories = toJS(get(this.categoryStore, 'list.data', []))
+    const { detail } = this.state
 
     return (
       <Modal
@@ -91,7 +108,7 @@ export default class AppEdit extends Component {
         className={styles.modal}
         bodyClassName={styles.body}
         onOk={this.handleOk}
-        onCancel={onCancel}
+        onCancel={this.onCancel}
         visible={visible}
         isSubmitting={isSubmitting}
         fullScreen

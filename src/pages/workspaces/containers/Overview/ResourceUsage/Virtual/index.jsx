@@ -16,12 +16,15 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import React from 'react'
 import { observer, inject } from 'mobx-react'
 import { get } from 'lodash'
 
+import { Select } from '@pitrix/lego-ui'
+
 import WorkspaceMonitorStore from 'stores/monitoring/workspace'
 
-import { Component as Base } from 'clusters/containers/MonitoringCenter/Monitoring/Resource/Usage/Virtual'
+import { Component as Base } from 'clusters/containers/Monitor/Resource/Usage/Virtual'
 
 const MetricTypes = {
   deployment_count: 'workspace_deployment_count',
@@ -38,6 +41,12 @@ const MetricTypes = {
 @inject('rootStore')
 @observer
 export default class VirtualResource extends Base {
+  componentDidUpdate(prevProps) {
+    if (prevProps.cluster !== this.props.cluster) {
+      this.fetchData()
+    }
+  }
+
   get workspace() {
     return this.props.workspace
   }
@@ -110,9 +119,19 @@ export default class VirtualResource extends Base {
   getControllerProps = () => ({
     title: t('Application Resources Usage'),
     createTime: this.createTime,
+    customAction: this.renderClusters(),
   })
 
+  renderClusters() {
+    const { workspace, cluster, ...clusterProps } = this.props
+    if (clusterProps.options.length) {
+      return <Select value={cluster} {...clusterProps} />
+    }
+  }
+
   fetchData = params => {
+    this.monitorStore.cluster = this.props.cluster
+
     this.monitorStore.fetchMetrics({
       workspace: this.workspace,
       metrics: Object.values(MetricTypes),

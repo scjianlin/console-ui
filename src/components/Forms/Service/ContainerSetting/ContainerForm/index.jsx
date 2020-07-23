@@ -16,7 +16,6 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { isEmpty } from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
@@ -73,43 +72,13 @@ export default class ContaineForm extends React.Component {
     )
   }
 
-  handleSubmit = callback => {
-    const { onSave } = this.props
-    const form = this.formRef.current
-
-    form &&
-      form.validate(() => {
-        const data = form.getData()
-
-        if (data.args) {
-          data.args = data.args.filter(item => !isEmpty(item))
-        }
-
-        if (data.command) {
-          data.command = data.command.filter(item => !isEmpty(item))
-        }
-
-        if (data.env) {
-          data.env = data.env.filter(({ name }) => !isEmpty(name))
-        }
-
-        if (data.ports) {
-          data.ports = data.ports.filter(
-            item => !(!item.name && !item.containerPort && !item.hostPort)
-          )
-        }
-
-        onSave(data)
-        callback && callback()
-      })
-  }
-
   render() {
     const {
       className,
       data,
       configMaps,
       secrets,
+      cluster,
       namespace,
       withService,
     } = this.props
@@ -118,7 +87,12 @@ export default class ContaineForm extends React.Component {
 
     return (
       <div className={classNames(styles.wrapper, className)}>
-        <ContainerSetting prefix={prefix} namespace={namespace} data={data} />
+        <ContainerSetting
+          prefix={prefix}
+          cluster={cluster}
+          namespace={namespace}
+          data={data}
+        />
         <Ports prefix={prefix} withService={withService} />
         <ImagePullPolicy prefix={prefix} />
         {this.supportProbe && <HealthChecker prefix={prefix} />}

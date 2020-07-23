@@ -69,6 +69,13 @@ export default class Artifacts extends React.Component {
     return this.props.match.url
   }
 
+  getDownloadUrl = url => {
+    const { params } = this.props.match
+    return `/kapis/clusters/${
+      params.cluster
+    }/devops.kubesphere.io/v1alpha2/jenkins${url}`
+  }
+
   getFilteredValue = dataIndex => this.store.list.filters[dataIndex]
 
   getColumns = () => [
@@ -78,7 +85,7 @@ export default class Artifacts extends React.Component {
       width: '40%',
       render: (path, record) => (
         <a
-          href={`/kapis/jenkins.kubesphere.io${record.url}`}
+          href={this.getDownloadUrl(record.url)}
           target="_blank"
           download={true}
         >
@@ -98,7 +105,7 @@ export default class Artifacts extends React.Component {
       key: 'download',
       render: record => (
         <a
-          href={`/kapis/jenkins.kubesphere.io${record.url}`}
+          href={this.getDownloadUrl(record.url)}
           target="_blank"
           download={true}
         >

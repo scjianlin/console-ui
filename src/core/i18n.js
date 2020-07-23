@@ -20,24 +20,22 @@ import moment from 'moment-mini'
 import { locale } from '@pitrix/lego-ui'
 import get from 'lodash/get'
 import cookie from 'utils/cookie'
-import { getBrowserLang } from 'utils'
+import { lazy, getBrowserLang } from 'utils'
 
-import locales from '../locales'
+const getLocales = {
+  tc: lazy(() => import(/* webpackChunkName: "locales-tc" */ `../locales/tc`)),
+  zh: lazy(() => import(/* webpackChunkName: "locales-zh" */ `../locales/zh`)),
+  en: lazy(() => import(/* webpackChunkName: "locales-en" */ `../locales/en`)),
+}
 
-const init = () => {
-  const defaultLang = get(globals.user, 'lang')
-  if (defaultLang && cookie('lang') !== defaultLang) {
-    cookie('lang', defaultLang)
+const init = async () => {
+  const supportLangs = globals.config.supportLangs.map(item => item.value)
+  const userLang = get(globals.user, 'lang') || getBrowserLang()
+  if (userLang && cookie('lang') !== userLang) {
+    cookie('lang', userLang)
   }
 
-  let lang = cookie('lang') || getBrowserLang()
-
-  if (!locales[lang]) {
-    lang = 'en'
-    cookie('lang', lang)
-  }
-
-  if (lang === 'zh') {
+  if (userLang === 'zh') {
     moment.locale('zh', {
       relativeTime: {
         s: '1秒',
@@ -57,6 +55,18 @@ const init = () => {
       },
     })
   }
+
+  const locales = {}
+
+  await Promise.all(
+    supportLangs.map(async item => {
+      const modules = await getLocales[item]()
+      locales[item] = Object.assign(
+        {},
+        ...modules.default.map(_item => _item.default)
+      )
+    })
+  )
 
   return { locales }
 }

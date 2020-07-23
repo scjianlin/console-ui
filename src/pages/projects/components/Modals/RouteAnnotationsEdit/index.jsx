@@ -21,7 +21,7 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 
 import { Modal, Form } from 'components/Base'
-import AnnotationsInput from 'components/Forms/Route/AnnotationsInput'
+import { AnnotationsInput } from 'components/Inputs'
 
 import styles from './index.scss'
 
@@ -49,9 +49,9 @@ class RouteAnnotationsEdit extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.detail !== this.state.formTemplate) {
-      this.setState({ formTemplate: nextProps.detail })
+  componentDidUpdate(prevProps) {
+    if (this.props.detail !== prevProps.detail) {
+      this.setState({ formTemplate: this.props.detail })
     }
   }
 

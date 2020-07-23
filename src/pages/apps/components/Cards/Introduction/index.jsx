@@ -49,7 +49,7 @@ export default class Introduction extends React.Component {
     this.fileStore.fetch({ version_id: this.props.versionId })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.fetchFile()
   }
 
@@ -63,6 +63,6 @@ export default class Introduction extends React.Component {
       )
     }
 
-    return <p>{t('The app has no documentation')}</p>
+    return <p>{t('The app has no documentation.')}</p>
   }
 }

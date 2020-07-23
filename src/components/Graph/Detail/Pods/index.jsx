@@ -41,9 +41,9 @@ export default class Pods extends React.Component {
     this.getData()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps.detail, this.props.detail)) {
-      this.getData(nextProps)
+  componentDidUpdate(prevProps) {
+    if (!isEqual(prevProps.detail, this.props.detail)) {
+      this.getData(this.props)
     }
   }
 
@@ -53,6 +53,7 @@ export default class Pods extends React.Component {
       this.podStore
         .fetchListByK8s({
           namespace: store.detail.namespace,
+          cluster: store.detail.cluster,
           labelSelector: joinSelector({
             ...store.detail.selector,
             app: detail.name,

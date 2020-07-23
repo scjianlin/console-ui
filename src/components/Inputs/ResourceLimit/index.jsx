@@ -49,53 +49,52 @@ export default class ResourceLimit extends React.Component {
     super(props)
 
     this.state = {
-      requests: {
-        cpu: cpuFormat(this.getDefaultRequestValue(props, 'cpu'), this.cpuUnit),
-        memory: memoryFormat(
-          this.getDefaultRequestValue(props, 'memory'),
-          this.memoryUnit
-        ),
-      },
-      limits: {
-        cpu: cpuFormat(this.getDefaultLimitValue(props, 'cpu'), this.cpuUnit),
-        memory: memoryFormat(
-          this.getDefaultLimitValue(props, 'memory'),
-          this.memoryUnit
-        ),
-      },
+      ...ResourceLimit.getValue(props),
+      defaultValue: props.defaultValue,
       cpuError: '',
       memoryError: '',
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (!isEqual(nextProps.defaultValue, this.props.defaultValue)) {
-      this.setState({
-        requests: {
-          cpu: cpuFormat(
-            this.getDefaultRequestValue(nextProps, 'cpu'),
-            this.cpuUnit
-          ),
-          memory: memoryFormat(
-            this.getDefaultRequestValue(nextProps, 'memory'),
-            this.memoryUnit
-          ),
-        },
-        limits: {
-          cpu: cpuFormat(
-            this.getDefaultLimitValue(nextProps, 'cpu'),
-            this.cpuUnit
-          ),
-          memory: memoryFormat(
-            this.getDefaultLimitValue(nextProps, 'memory'),
-            this.memoryUnit
-          ),
-        },
-      })
+  static getDerivedStateFromProps(props, state) {
+    if (!isEqual(props.defaultValue, state.defaultValue)) {
+      return {
+        ...ResourceLimit.getValue(props),
+        defaultValue: props.defaultValue,
+      }
+    }
+
+    return null
+  }
+
+  static getValue(props) {
+    const cpuUnit = props.cpuProps.unit || 'Core'
+    const memoryUnit = props.memoryProps.unit || 'Mi'
+    return {
+      requests: {
+        cpu: cpuFormat(
+          ResourceLimit.getDefaultRequestValue(props, 'cpu'),
+          cpuUnit
+        ),
+        memory: memoryFormat(
+          ResourceLimit.getDefaultRequestValue(props, 'memory'),
+          memoryUnit
+        ),
+      },
+      limits: {
+        cpu: cpuFormat(
+          ResourceLimit.getDefaultLimitValue(props, 'cpu'),
+          cpuUnit
+        ),
+        memory: memoryFormat(
+          ResourceLimit.getDefaultLimitValue(props, 'memory'),
+          memoryUnit
+        ),
+      },
     }
   }
 
-  getDefaultRequestValue(props, key) {
+  static getDefaultRequestValue(props, key) {
     return get(
       props,
       `value.requests.${key}`,
@@ -103,7 +102,7 @@ export default class ResourceLimit extends React.Component {
     )
   }
 
-  getDefaultLimitValue(props, key) {
+  static getDefaultLimitValue(props, key) {
     return get(
       props,
       `value.limits.${key}`,
@@ -114,7 +113,8 @@ export default class ResourceLimit extends React.Component {
   cpuFormatter = value => {
     if (value > 0 && value < 1) {
       return value.toFixed(2)
-    } else if (value > 1 && value !== Infinity) {
+    }
+    if (value > 1 && value !== Infinity) {
       return value.toFixed(1)
     }
     return value
@@ -124,9 +124,11 @@ export default class ResourceLimit extends React.Component {
     value = Math.round(value)
     if (value > 0 && value < 1000) {
       return value - (value % 10)
-    } else if (value > 1000 && value < 2000) {
+    }
+    if (value > 1000 && value < 2000) {
       return value - (value % 50)
-    } else if (value > 2000 && value !== Infinity) {
+    }
+    if (value > 2000 && value !== Infinity) {
       return value - (value % 100)
     }
     return value

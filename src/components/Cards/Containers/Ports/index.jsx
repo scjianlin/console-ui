@@ -20,6 +20,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classnames from 'classnames'
 import { isEmpty } from 'lodash'
+import { PROTOCOLS } from 'utils/constants'
 
 import { Panel } from 'components/Base'
 
@@ -35,8 +36,12 @@ export default class ContainerPorts extends React.Component {
     ports: [],
   }
 
+  get protocols() {
+    return PROTOCOLS.map(item => item.value)
+  }
+
   renderContent() {
-    const { ports } = this.props
+    const { ports, isFederated } = this.props
 
     if (isEmpty(ports)) return null
 
@@ -45,19 +50,31 @@ export default class ContainerPorts extends React.Component {
         <table className={styles.table}>
           <thead>
             <tr>
+              {isFederated && <th>{t('Cluster')}</th>}
               <th>{t('Name')}</th>
               <th>{t('Protocol')}</th>
               <th>{t('Port')}</th>
             </tr>
           </thead>
           <tbody>
-            {ports.map((item, index) => (
-              <tr key={index}>
-                <td>{item.name}</td>
-                <td>{item.protocol}</td>
-                <td>{item.containerPort}</td>
-              </tr>
-            ))}
+            {ports.map((item, index) => {
+              let protocol = ''
+              if (item.name && item.name.indexOf('-') !== -1) {
+                protocol = (item.name.split('-')[0] || '').toUpperCase()
+              }
+              return (
+                <tr key={index}>
+                  {isFederated && <td>{item.cluster}</td>}
+                  <td>{item.name}</td>
+                  <td>
+                    {this.protocols.includes(protocol)
+                      ? `${protocol} (${item.protocol})`
+                      : item.protocol}
+                  </td>
+                  <td>{item.containerPort}</td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>

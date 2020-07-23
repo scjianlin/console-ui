@@ -17,15 +17,42 @@
  */
 
 export default {
+  'Add App Repository': 'Add App Repository',
+  'Add Repo': 'Add Repo',
+  'App Repos': 'App Repos',
+  'App Repository': 'App Repository',
+  'App Repository Name': 'App Repository Name',
+  'Edit App Repository': 'Edit App Repository',
+  'HTTP access denied': 'HTTP access denied',
+  'Index Repo': 'Index Repo',
+  'Invalid format of credential': 'Invalid format of credential',
+  'Invalid format of URL': 'Invalid format of URL',
+  'Invalid HTTP Scheme': 'Invalid HTTP Scheme',
+  'Invalid HTTPS Scheme': 'Invalid HTTPS Scheme',
+  'Invalid Providers': 'Invalid Providers',
+  'Invalid Repo URL': 'Invalid Repo URL',
+  'Invalid S3 Scheme': 'Invalid S3 Scheme',
+  'Invalid type': 'Invalid type',
+  'Invalid URL': 'Invalid URL',
+  'Missing access key ID': 'Missing access key ID',
+  'Missing secret access key': 'Missing secret access key',
+  'Please input access key ID and secret access key':
+    'Please input access key ID and secret access key',
+  'Please input URL': 'Please input URL',
+  'S3 access denied': 'S3 access denied',
+  Synchronize: 'Synchronize',
+  'Unrecognized URL': 'Unrecognized URL',
+  Validate: 'Validate',
+
   'App Repositorys': 'App Repositories',
   APP_REPO_URL_DESC:
     'The entered URL needs to be validated before added or edited.',
   APP_REPOSITORY_CREATE_DESC:
-    "You can add   third-party applications  repository source which supports Helm's Kubernetes.",
+    'You can add a third-party app repository source which supports Helm-based Kubernetes apps.',
   APP_REPO_DESC:
-    "You can add   third-party applications  repository source which supports Helm's Kubernetes.",
+    'You can add a third-party app repository source which supports Helm-based Kubernetes apps.',
 
-  HOW_TO_USE_APP_REPO_Q: 'How to use application repository?',
+  HOW_TO_USE_APP_REPO_Q: 'How to use an app repository?',
   HOW_TO_USE_APP_REPO_A:
-    'The added application repository can be seen in the workspace projects. By entering Application => Deploy applications => Application repository, you can find all the applications in the current repository and deploy them.',
+    'The added app repository can be seen in the workspace projects. By entering Application => Deploy applications => App repository, you can find all the applications in the current repository and deploy them.',
 }

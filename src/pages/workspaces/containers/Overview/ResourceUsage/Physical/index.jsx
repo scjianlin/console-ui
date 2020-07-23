@@ -18,10 +18,12 @@
 
 import { observer, inject } from 'mobx-react'
 import { get } from 'lodash'
+import React from 'react'
 
+import { Select } from '@pitrix/lego-ui'
 import WorkspaceMonitorStore from 'stores/monitoring/workspace'
 
-import { Component as Base } from 'clusters/containers/MonitoringCenter/Monitoring/Resource/Usage/Physical'
+import { Component as Base } from 'clusters/containers/Monitor/Resource/Usage/Physical'
 
 const MetricTypes = {
   cpu_usage: 'workspace_cpu_usage',
@@ -32,6 +34,12 @@ const MetricTypes = {
 @inject('rootStore')
 @observer
 export default class PhysicalResource extends Base {
+  componentDidUpdate(prevProps) {
+    if (prevProps.cluster !== this.props.cluster) {
+      this.fetchData()
+    }
+  }
+
   get workspace() {
     return this.props.workspace
   }
@@ -64,9 +72,19 @@ export default class PhysicalResource extends Base {
   getControllerProps = () => ({
     title: t('Physical Resources Usage'),
     createTime: this.createTime,
+    customAction: this.renderClusters(),
   })
 
+  renderClusters() {
+    const { workspace, cluster, ...clusterProps } = this.props
+    if (clusterProps.options.length) {
+      return <Select value={cluster} {...clusterProps} />
+    }
+  }
+
   fetchData = params => {
+    this.monitorStore.cluster = this.props.cluster
+
     this.monitorStore.fetchMetrics({
       workspace: this.workspace,
       metrics: Object.values(MetricTypes),

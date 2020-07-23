@@ -48,7 +48,6 @@ export default class CodeMode extends React.Component {
 
   handleCreate = () => {
     const { onOk } = this.props
-
     onOk(this.getData())
   }
 

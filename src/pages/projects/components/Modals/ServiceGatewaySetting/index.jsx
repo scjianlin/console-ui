@@ -16,7 +16,7 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { get, set, unset, merge, omit } from 'lodash'
+import { get, set, unset, merge, omit, cloneDeep } from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Select } from '@pitrix/lego-ui'
@@ -48,16 +48,7 @@ export default class GatewaySettingModal extends React.Component {
 
     this.state = {
       type: get(props.detail, 'spec.type'),
-      formTemplate: props.detail,
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.detail !== this.state.formTemplate) {
-      this.setState({
-        type: get(nextProps.detail, 'spec.type'),
-        formTemplate: nextProps.detail,
-      })
+      formTemplate: cloneDeep(props.detail),
     }
   }
 

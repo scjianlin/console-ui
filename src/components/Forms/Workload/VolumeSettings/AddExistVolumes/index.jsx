@@ -27,7 +27,7 @@ import { getDisplayName } from 'utils'
 
 import styles from './index.scss'
 
-export default class MountEdit extends React.Component {
+export default class AddExistVolumes extends React.Component {
   static propTypes = {
     formRef: PropTypes.object,
     formData: PropTypes.object,
@@ -119,7 +119,7 @@ export default class MountEdit extends React.Component {
 
     const placeholder = {
       icon: 'storage',
-      label: t('Choose an exist volume'),
+      label: t('Choose an existing volume'),
       description: t('CHOOSE_EXIST_VOLUME_DESC'),
     }
 

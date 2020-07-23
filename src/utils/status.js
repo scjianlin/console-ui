@@ -71,9 +71,10 @@ export const getStatefulSetStatus = ({ spec = {}, status = {} }) => {
 }
 
 export const getDaemonSetStatus = ({ status }) => {
-  if (status.numberAvailable === 0) {
+  if (status.numberReady === 0) {
     return 'Stopped'
-  } else if (status.numberAvailable === status.desiredNumberScheduled) {
+  }
+  if (status.numberReady === status.desiredNumberScheduled) {
     return 'Running'
   }
   return 'Updating'
@@ -325,14 +326,6 @@ export const getPodStatusAndRestartCount = pod => {
   }
 
   return { status, type, restarts }
-}
-
-export const getUserStatus = status => {
-  if (status === 0) {
-    return 'active'
-  }
-
-  return 'disabled'
 }
 
 export const getPipelineStatus = statusDetail => {

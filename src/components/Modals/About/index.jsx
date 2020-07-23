@@ -50,10 +50,10 @@ export default class AboutModal extends Component {
           </div>
           <p>{t('KS_DESCRIPTION')}</p>
           <strong>
-            DKS {t('Version')} : {version.kubesphere}
+            KubeSphere {t('Version')} : {version.kubesphere}
           </strong>
         </div>
-{/* 
+
         <div className={styles.links}>
           <div className={styles.left}>
             <span>
@@ -89,7 +89,7 @@ export default class AboutModal extends Component {
               </a>
             </span>
           </div>
-        </div> */}
+        </div>
       </Modal>
     )
   }

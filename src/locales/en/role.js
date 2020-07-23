@@ -17,16 +17,124 @@
  */
 
 export default {
+  'Account Role': 'Account Role',
+  'Account Roles': 'Account Roles',
+  'Alerting Messages Management': 'Alerting Messages Management',
+  'Alerting Messages View': 'Alerting Messages View',
+  'Alerting Policies Management': 'Alerting Policies Management',
+  'Alerting Policies View': 'Alerting Policies View',
+  'App Templates Management': 'App Templates Management',
+  'App Templates View': 'App Templates View',
+  'Application Workloads Management': 'Application Workloads Management',
+  'Application Workloads View': 'Application Workloads View',
+  'Authorization List': 'Authorization List',
+  'Authorization Settings': 'Authorization Settings',
+  'Authorized Actions': 'Authorized Actions',
+  'Authorized Users': 'Authorized Users',
+  Cluster: 'Cluster',
+  'Cluster Members Management': 'Cluster Members Management',
+  'Cluster Members View': 'Cluster Members View',
+  'Cluster Monitoring View': 'Cluster Monitoring View',
+  'Cluster Resources Management': 'Cluster Resources Management',
+  'Cluster Role': 'Cluster Role',
+  'Cluster Roles Management': 'Cluster Roles Management',
+  'Cluster Roles View': 'Cluster Roles View',
+  'Clusters Management': 'Clusters Management',
+  'Clusters View': 'Clusters View',
+  'Components Management': 'Components Management',
+  'CRD Management': 'CRD Management',
+  'Create Account Role': 'Create Account Role',
+  'Create Cluster Role': 'Create Cluster Role',
+  'Create Project Role': 'Create Project Role',
+  'Create Role': 'Create Role',
+  'Credentials Management': 'Credentials Management',
+  'Credentials View': 'Credentials View',
+  'Default user role which allows a user to manage resources within the projects created by the user himself or invited by others. It does not allow the user to manage unauthorized resources in the cluster.':
+    'Default user role which allows a user to manage resources within the projects created by the user himself or invited by others. It does not allow the user to manage unauthorized resources in the cluster.',
+  'Depend on': 'Depend on',
+  'DevOps Create': 'DevOps Create',
+  'DevOps Management': 'DevOps Management',
+  'DevOps Members Management': 'DevOps Members Management',
+  'DevOps Members View': 'DevOps Members View',
+  'DevOps Roles Management': 'DevOps Roles Management',
+  'DevOps Roles View': 'DevOps Roles View',
+  'DevOps Settings': 'DevOps Settings',
+  'DevOps View': 'DevOps View',
+  'Edit Account Role': 'Edit Account Role',
+  'Edit Authorization': 'Edit Authorization',
+  'Edit Cluster Role': 'Edit Cluster Role',
+  'Edit Project Role': 'Edit Project Role',
+  'Edit Role': 'Edit Role',
+  'Federated Projects Management': 'Federated Projects Management',
+  'Invalid role name': 'Invalid role name',
+  'Invited Successfully': 'Invited Successfully',
+  Member: 'Member',
+  Modules: 'Modules',
+  'Network Policies Management': 'Network Policies Management',
+  'Network Policies View': 'Network Policies View',
+  'No Authorization': 'No Authorization',
+  'Nodes Management': 'Nodes Management',
+  'Nodes View': 'Nodes View',
+  'Pipelines Management': 'Pipelines Management',
+  'Pipelines View': 'Pipelines View',
+  'Platform Settings Management': 'Platform Settings Management',
+  'Please input role name': 'Please input role name',
+  'Please specify role authorization': 'Please specify role authorization',
+  'Project Details': 'Project Details',
+  'Project Members Management': 'Project Members Management',
+  'Project Members View': 'Project Members View',
+  'Project Resources Management': 'Project Resources Management',
+  'Project Roles': 'Project Roles',
+  'Project Roles Management': 'Project Roles Management',
+  'Project Roles View': 'Project Roles View',
+  'Projects Create': 'Projects Create',
+  'Projects Management': 'Projects Management',
+  'Projects View': 'Projects View',
+  Role: 'Role',
+  'Role Identifier': 'Role Identifier',
+  'Role Management': 'Role Management',
+  'Role Name': 'Role Name',
+  'Role name exists': 'Role name exists',
+  'Role Type': 'Role Type',
+  Roles: 'Roles',
+  roles: 'roles',
+  'Roles Management': 'Roles Management',
+  'Roles View': 'Roles View',
+  'Secrets Management': 'Secrets Management',
+  'Secrets View': 'Secrets View',
+  'StorageClasses Management': 'StorageClasses Management',
+  'StorageClasses View': 'StorageClasses View',
+  Terminating: 'Terminating',
+  'Unable to delete preset role': 'Unable to delete preset role',
+  'User Name': 'User Name',
+  'Users Management': 'Users Management',
+  'Users View': 'Users View',
+  'Volume Snapshots Management': 'Volume Snapshots Management',
+  'Volume Snapshots View': 'Volume Snapshots View',
+  'Volumes Management': 'Volumes Management',
+  'Volumes View': 'Volumes View',
+  'Workspace App Repos Management': 'Workspace App Repos Management',
+  'Workspace App Repos View': 'Workspace App Repos View',
+  'Workspace App Templates Management': 'Workspace App Templates Management',
+  'Workspace App Templates View': 'Workspace App Templates View',
+  'Workspace Members Management': 'Workspace Members Management',
+  'Workspace Members View': 'Workspace Members View',
+  'Workspace Roles Management': 'Workspace Roles Management',
+  'Workspace Roles View': 'Workspace Roles View',
+  'Workspaces Management': 'Workspaces Management',
+  'Workspaces View': 'Workspaces View',
+
   NO_AVAILABLE_ROLE: 'No roles are available for the current project.',
 
   JOIN_PROJECT_PLACEHOLDER:
     'Invite members by user name or email to join the project.',
+  ROLE_PROJECTS_JOIN_TIP:
+    'Enter the username or email address to invite users to the project.',
   ROLE_DELETE_TIP:
     'The current role is already bound to the user, please try again after unbinding.',
   ROLE_NO_AVAILABLE_TIP: 'No roles are available for the current project.',
   ROLE_TYPE_DESC:
     'The role types are classified into cluster and project, the current role is authorized as the project scope.',
-
   DELETE_ROLE_TIP:
     'Are you sure about deleting the role <strong>{resource}</strong>?',
   ROLE_USERS_TIP:
@@ -60,7 +168,7 @@ export default {
   RULE_PODSCALE: 'Pod Scale Management',
   RULE_SCALE: 'Scale out/in',
   RULE_MEMBERS: 'Members Management',
-  RULE_MEMBER_ROLES: 'Member‘s Role',
+  RULE_MEMBER_ROLES: 'Member Role',
   RULE_COMPONENTS: 'Components',
   RULE_VOLUMES: 'Volumes',
   RULE_PODS: 'Pod Management',
@@ -82,4 +190,158 @@ export default {
   RULE_MANAGE: 'Manage',
   RULE_ADVANCED: 'Advanced Settings',
   RULE_S2IBUILDERS: 'Image Builder',
+
+  CLUSTER_SETTINGS_DESC:
+    'Manage cluster settings and authorizations to workspaces & edit cluster information',
+  WORKSPACE_ROLE_NAME_TIP: 'Please give a unique identifier as the role name.',
+  ROLE_CREATE_TIP_TITLE: 'Next Step',
+  ROLE_CREATE_TIP_MESSAGE:
+    'You need to edit authorization after which the role can be created successfully.',
+  NODES_VIEW_DESC: 'View node information',
+  NODES_MANAGEMENT_DESC: 'Manage, enable and disable nodes; manage taints',
+  CRD_MANAGEMENT_DESC: 'Manage, view, modify and delele cluster CRDs',
+  COMPONENTS_MANAGEMENT_DESC: 'Manage cluster components',
+  CLUSTERS_VIEW_DESC:
+    'View all clusters and cluster resources within a platform',
+  CLUSTERS_MANAGEMENT_DESC:
+    'Create and delete clusters; manage resources in all clusters',
+  WORKSPACES_VIEW_DESC: 'View the current workspaces that users have access to',
+  ROLES_VIEW_DESC: 'View the current roles in the platform',
+  USERS_VIEW_DESC: 'View users in the current platform',
+
+  WORKSPACES_MANAGEMENT_DESC:
+    'Support workspace management, including adding/deleting/editing workspaces; view all workspaces in the platform',
+  USERS_MANAGEMENT_DESC:
+    'Support account management, including adding/deleting/updating account information',
+  ROLES_MANAGEMENT_DESC:
+    'Support account role management, including adding/deleting/updating account roles',
+  APP_TEMPLATES_VIEW_DESC: 'View platform App Store',
+  APP_TEMPLATES_MANAGEMENT_DESC:
+    'Manage App Store at platform level and responsible for unified lifecycle management of cloud native applications including their release, removal and review',
+  PLATFORM_SETTINGS_MANAGEMENT_DESC: 'Manage platform settings.',
+  ACCOUNT_ROLE_DESC:
+    'Account roles define the authorization an account has in the platform.',
+  ACCOUNT_ROLE_CREATE_DESC:
+    'Account roles define the authorization an account has in the platform.',
+  PIPELINES_MANAGEMENT_DESC:
+    'Manage DevOps project pipeline, including creating, editing and deleting',
+  PIPELINES_VIEW_DESC: 'View DevOps project pipeline and download artifacts',
+  CREDENTIALS_MANAGEMENT_DESC:
+    'Manage project credentials, including creating, editing and deleting',
+  CREDENTIALS_VIEW_DESC: 'View and use credentials',
+  DEVOPS_ROLES_VIEW_DESC: 'View DevOps project roles',
+  DEVOPS_ROLES_MANAGEMENT_DESC:
+    'Create, edit and delete DevOps project roles (system preset roles cannot be deleted)',
+  DEVOPS_MEMBERS_VIEW_DESC: 'View DevOps project members',
+  DEVOPS_MEMBERS_MANAGEMENT_DESC: 'Invite/edit/remove DevOps project members',
+  DEVOPS_SETTINGS_DESC:
+    'Manage DevOps project settings and edit DevOps project information',
+
+  CLUSTER_MEMBERS_MANAGEMENT_DESC: 'Invite/edit/remove cluster members',
+  CLUSTER_MEMBERS_VIEW_DESC: 'View cluster members',
+  CLUSTER_ROLES_MANAGEMENT_DESC:
+    'Create, edit and delete cluster roles (system preset roles cannot be deleted)',
+  CLUSTER_ROLES_VIEW_DESC: 'View cluster roles',
+
+  NETWORK_POLICIES_MANAGEMENT_DESC:
+    'Create/edit/delete cluster network policies',
+  NETWORK_POLICIES_VIEW_DESC: 'View cluster network policies',
+  STORAGECLASSES_VIEW_DESC: 'View all storage classes in the cluster',
+  STORAGECLASSES_MANAGEMENT_DESC:
+    'Create/edit/delete storage classes and set the default storage class',
+  VOLUME_SNAPSHOTS_VIEW_DESC: 'View all volume snapshots in the cluster',
+  VOLUME_SNAPSHOTS_MANAGEMENT_DESC: 'Create/edit/delete volume snapshots',
+  CLUSTER_MONITORING_VIEW_DESC:
+    'View cluster physical resources and monitoring data of application resources',
+  APPLICATION_WORKLOADS_VIEW_DESC:
+    'View applications, services, workloads and tasks in the project',
+  APPLICATION_WORKLOADS_MANAGEMENT_DESC:
+    'Create, edit and delete applications, services, workloads and tasks in the project',
+  VOLUMES_VIEW_DESC: 'View project volumes',
+  VOLUMES_MANAGEMENT_DESC: 'Create/edit/delete project volumes',
+  SECRETS_VIEW_DESC: 'View project secrets',
+  SECRETS_MANAGEMENT_DESC: 'Create/edit/delete project secrets',
+
+  CUSTOM_MONITORING_DESC: 'Create and manage custom monitoring data',
+
+  ALERTING_POLICIES_VIEW_DESC: 'View alerting policies',
+  ALERTING_POLICIES_MANAGEMENT_DESC: 'Create/edit/delete alerting policies',
+  ALERTING_MESSAGES_VIEW_DESC: 'View alerting messages',
+  ALERTING_MESSAGES_MANAGEMENT_DESC: 'Comment/delete alerting messages',
+
+  PROJECT_ROLES_VIEW_DESC: 'View project roles',
+  PROJECT_ROLES_MANAGEMENT_DESC:
+    'Create, edit and delete project roles (system preset roles cannot be deleted)',
+  PROJECT_MEMBERS_VIEW_DESC: 'View project members',
+  PROJECT_MEMBERS_MANAGEMENT_DESC: 'Invite/edit/remove project members',
+  PROJECT_SETTINGS_DESC:
+    'Manage project settings and edit project information, including Internet access, network policies, resource quota, and disk log collection and configuration',
+  PROJECTS_MANAGEMENT_DESC:
+    'Manage all projects in the workspace, including creating/editing/deleting projects',
+  PROJECTS_CREATE_DESC:
+    'Have the access to create projects and the project administrator has to be the creator',
+  PROJECTS_VIEW_DESC: 'View all projects in the workspace',
+  FEDERATED_PROJECTS_MANAGEMENT_DESC:
+    'Manage all federated projects in the workspace, including creating/editing/deleting federated projects',
+
+  DEVOPS_MANAGEMENT_DESC:
+    'Manage all DevOps projects in the workspace, including creating/editing/deleting DevOps projects',
+  DEVOPS_CREATE_DESC:
+    'Have the access to create DevOps projects and the DevOps project administrator has to be the creator',
+  DEVOPS_VIEW_DESC: 'View all DevOps projects in the workspace',
+
+  WORKSPACE_ROLES_VIEW_DESC: 'View workspace roles',
+  WORKSPACE_ROLES_MANAGEMENT_DESC:
+    'Create, edit and delete workspace roles (system preset roles cannot be deleted)',
+  WORKSPACE_MEMBERS_VIEW_DESC: 'View workspace members',
+  WORKSPACE_MEMBERS_MANAGEMENT_DESC: 'Invite/edit/remove workspace members',
+  WORKSPACE_APP_REPOS_VIEW_DESC: 'View app repository lists',
+  WORKSPACE_APP_REPOS_MANAGEMENT_DESC: 'Create/edit/delete app repositories',
+  WORKSPACE_APP_TEMPLATES_VIEW_DESC: 'View workspace app templates',
+  WORKSPACE_APP_TEMPLATES_MANAGEMENT_DESC:
+    'Upload/edit/delete workspace app templates; release/remove apps to App Store in the platform',
+  WORKSPACE_SETTINGS_DESC:
+    'Manage workspace settings, edit workspace information, network policies, etc.',
+
+  ROLE_PLATFORM_ADMIN:
+    'Platform administrator who can manage all resources in the platform.',
+  ROLE_PLATFORM_REGULAR:
+    'Normal user in the platform who has no access to any resources before joining the workspace or cluster.',
+
+  ROLE_CLUSTER_ADMIN:
+    'Allows cluster-admin access to perform any action on any resource. It gives full control over all resources in the cluster and in all namespaces.',
+  ROLE_CLUSTER_VIEWER:
+    'Allows cluster-viwer to view all resources in the cluster.',
+  ROLE_USERS_MANAGER: 'User manager in the platform who manages all users.',
+  ROLE_WORKSPACES_MANAGER:
+    'Workspace manager in the platform who manages all workspaces in the platform.',
+
+  ROLE_WORKSPACE_ADMIN:
+    'Allows admin access to perform any action on any resource. It gives full control over all resources in the workspace.',
+  ROLE_WORKSPACE_REGULAR:
+    'Regular user in the workspace who cannot create namespaces or DevOps projects.',
+  ROLE_WORKSPACE_VIEWER:
+    'Allows viewer access to view all resources in the workspace.',
+  ROLE_WORKSPACE_SELF_PROVISIONER:
+    'Regular user in the workspace who can create namespaces and DevOps projects.',
+
+  ROLE_PROJECT_ADMIN:
+    'Allows admin access to perform any action on any resource. It gives full control over all resources in the namespace.',
+  ROLE_PROJECT_REGULAR:
+    'The maintainer of the namespace who can manage resources other than users and roles in the namespace.',
+  ROLE_PROJECT_VIEWER:
+    'Allows viewer access to view all resources in the namespace.',
+  ROLE_PROJECT_OPERATOR:
+    'The maintainer of the project who can manage resources other than users and roles in the project.',
+
+  ROLE_DEVOPS_ADMIN:
+    'Allows admin access to perform any action on any resource. It gives full control over all resources in the DevOps project.',
+  ROLE_DEVOPS_REGULAR:
+    'The maintainer of the namespace who can manage resources other than users and roles in the DevOps project.',
+  ROLE_DEVOPS_VIEWER:
+    'Allows viewer access to view all resources in the DevOps project.',
+  ROLE_DEVOPS_OPERATOR:
+    'Normal member in a DevOps project who can create pipeline credentials in the DevOps project.',
+
+  NO_AUTHORIZED_USERS: 'Currently there is no authorized user for this role.',
 }

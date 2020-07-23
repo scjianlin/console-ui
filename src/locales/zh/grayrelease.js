@@ -26,7 +26,7 @@ export default {
   NO_GRAY_RELEASE_JOBS_TIP_2: '您可以绑定灰度策略进行灰度任务发布',
 
   'Blue-green Deployment': '蓝绿部署',
-  'Canary Releases': '金丝雀发布',
+  'Canary Release': '金丝雀发布',
   'A/B Testing': 'A/B 测试',
   'Traffic Mirroring': '流量镜像',
 
@@ -107,7 +107,7 @@ export default {
 
   Recover: '恢复',
 
-  'two versions': '两个版本',
+  'Two Versions': '两个版本',
   'Traffic Rules': '流量规则',
   'Offline this version': '下线此版本',
   'Take over all traffic': '接管所有流量',
@@ -119,7 +119,7 @@ export default {
   'Port protocol is not HTTP, cannot publish policy by request content':
     '端口协议非 HTTP, 不能发布按内容分配的策略',
 
-  '': '未开启应用治理的应用无法使用灰度发布',
+  NO_SERVICE_MESH_TIP: '未开启应用治理的应用无法使用灰度发布',
 
   BLUE_GREEN_DEPLOYMENT_DESC:
     '蓝绿发布提供了一种零宕机的部署方式。在<strong>保留旧版本的同时部署新版本</strong>，将两个版本同时在线，如果有问题可以快速处理。',

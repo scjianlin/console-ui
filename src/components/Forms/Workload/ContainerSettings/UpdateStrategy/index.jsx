@@ -19,45 +19,42 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
-import { isEmpty, get, set } from 'lodash'
+import { get, set, unset, isEmpty } from 'lodash'
 
 import { STRATEGIES, STRATEGIES_PREFIX } from 'utils/constants'
 
-import { Input, Columns, Column, Icon, Alert, Tooltip } from '@pitrix/lego-ui'
+import { Input, Tooltip, Icon, Columns, Column } from '@pitrix/lego-ui'
 import { Form, TypeSelect } from 'components/Base'
 import { NumberInput } from 'components/Inputs'
 
 import styles from './index.scss'
 
+const getStrategy = (props = {}) =>
+  get(props.data, `${STRATEGIES_PREFIX[props.module]}.type`)
+
 @observer
 export default class UpdateStrategyForm extends React.Component {
   static propTypes = {
-    ownRef: PropTypes.object,
-    formRef: PropTypes.object,
     module: PropTypes.string,
     data: PropTypes.object,
-    replicas: PropTypes.number,
     onChange: PropTypes.func,
   }
 
   static defaultProps = {
-    formRef: {},
     module: '',
     data: {},
-    replicas: 1,
     onChange() {},
   }
 
-  constructor(props) {
-    super(props)
+  state = {
+    strategy: getStrategy(this.props),
+  }
 
-    this.state = {
-      strategy: this.getStrategy(props) || 'RollingUpdate',
+  componentDidUpdate(prevProps, prevState) {
+    const strategy = getStrategy(this.props)
+    if (strategy !== prevState.strategy) {
+      this.setState({ strategy })
     }
-
-    this.strategyFormRef = props.ownRef || React.createRef()
-
-    this.init(props)
   }
 
   get isRollingUpdate() {
@@ -68,18 +65,9 @@ export default class UpdateStrategyForm extends React.Component {
     return `${STRATEGIES_PREFIX[this.props.module]}.rollingUpdate`
   }
 
-  get maxUnavailable() {
-    return get(this.props.data, `${this.rollingUpdatePrefix}.maxUnavailable`)
-  }
-
-  get maxSurge() {
-    return get(this.props.data, `${this.rollingUpdatePrefix}.maxSurge`)
-  }
-
   get strategyOptions() {
     const { module } = this.props
-    const ops = STRATEGIES[module]
-    return ops.map(({ label, value, description }) => ({
+    return STRATEGIES[module].map(({ label, value, description }) => ({
       label: t(label),
       description: t(description),
       icon: 'update',
@@ -87,186 +75,41 @@ export default class UpdateStrategyForm extends React.Component {
     }))
   }
 
-  getStrategy = (props = {}) =>
-    get(props.data, `${STRATEGIES_PREFIX[props.module]}.type`)
-
-  getPodValue = (name, replicas, value = '25%') => {
-    const total = replicas || 1
-    const rate = parseFloat(value) / 100
-    let val = 1
-
-    if (name === 'minAvailablePod') {
-      val = total - total * rate
-    }
-    if (name === 'maxSurgePod') {
-      val = total * (1 + rate)
-    }
-
-    return Math.ceil(val)
-  }
-
-  getPercentageValue = (name, replicas, value) => {
-    if (value <= 0) return '25%'
-
-    const total = replicas || 1
-    let val = 0
-
-    if (name === 'maxUnavailable') {
-      val = total - value
-    }
-    if (name === 'maxSurge') {
-      val = value - total
-
-      if (val > total) return '100%'
-    }
-
-    return val <= 0 ? '0%' : `${Math.ceil((val / total) * 100)}%`
-  }
-
-  init(props = this.props) {
-    const { data, replicas, module } = props
-    const strategy = this.getStrategy(props)
-
-    if (module !== 'deployments') {
-      return
-    }
-
-    let minAvailablePod = ''
-    let maxSurgePod = ''
-
-    if (strategy === 'RollingUpdate') {
-      minAvailablePod = String(
-        this.getPodValue(
-          'minAvailablePod',
-          replicas,
-          get(data, `${this.rollingUpdatePrefix}.maxUnavailable`)
-        )
-      )
-      maxSurgePod = String(
-        this.getPodValue(
-          'maxSurgePod',
-          replicas,
-          get(data, `${this.rollingUpdatePrefix}.maxSurge`)
-        )
-      )
-    } else {
-      set(data, this.rollingUpdatePrefix, null)
-    }
-
-    set(
-      data,
-      'metadata.annotations["kubesphere.io/minAvailablePod"]',
-      minAvailablePod
-    )
-    set(data, 'metadata.annotations["kubesphere.io/maxSurgePod"]', maxSurgePod)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.data !== this.props.data ||
-      nextProps.replicas !== this.props.replicas
-    ) {
-      this.init(nextProps)
-      this.setState({
-        strategy: this.getStrategy(nextProps),
-      })
-    }
-  }
-
-  componentDidMount() {
-    this.setStrategyValidator()
-  }
-
-  setStrategyValidator = () => {
-    const { formRef } = this.props
-
-    if (formRef && formRef.current && !formRef.current.customValidator) {
-      formRef.current.setCustomValidator(this.validator)
-    }
-  }
-
-  validator = callback => {
-    this.strategyFormRef.current.validate(callback)
-  }
-
-  strategyValidator = (rule, value, callback) => {
-    const { data } = this.props
-
-    // make sure the values in the annotations are all strings
-    const annotations = get(data, 'metadata.annotations')
-    if (!isEmpty(annotations)) {
-      const result = {}
-      Object.entries(annotations).forEach(([_key, _value]) => {
-        result[_key] = String(_value)
-      })
-      set(data, 'metadata.annotations', result)
-    }
-
-    callback()
-  }
-
-  minAvailablePodValidator = (rule, value, callback) => {
-    const { replicas } = this.props
-
-    if (value < 1) {
-      return callback({ message: t('MIN_AVAILABLE_POD_VALIDATOR_MIN') })
-    }
-
-    if (value > replicas) {
-      return callback({ message: t('MIN_AVAILABLE_POD_VALIDATOR_MAX') })
-    }
-    callback()
-  }
-
-  maxSurgePodValidator = (rule, value, callback) => {
-    const { replicas } = this.props
-
-    if (value < replicas) {
-      return callback({ message: t('MAX_SURGE_POD_VALIDATOR_MIN') })
-    }
-
-    if (value > replicas * 2) {
-      return callback({ message: t('MAX_SURGE_POD_VALIDATOR_MAX') })
-    }
-    callback()
-  }
-
-  handleStrategyChange = value => {
-    this.setState(
-      {
-        strategy: value,
-      },
-      () => {
-        this.init()
+  handleStrategyChange = strategy => {
+    const { data, module } = this.props
+    this.setState({ strategy }, () => {
+      if (strategy !== 'RollingUpdate') {
+        unset(data, this.rollingUpdatePrefix)
+      } else {
+        const obj = get(data, this.rollingUpdatePrefix)
+        if (isEmpty(obj)) {
+          switch (module) {
+            case 'deployments':
+              set(data, this.rollingUpdatePrefix, {
+                maxUnavailable: '25%',
+                maxSurge: '25%',
+              })
+              break
+            case 'statfulsets':
+              set(data, this.rollingUpdatePrefix, {
+                partition: 0,
+              })
+              break
+            case 'daemonsets':
+              set(data, this.rollingUpdatePrefix, {
+                maxUnavailable: '25%',
+              })
+              break
+            default:
+          }
+        }
       }
-    )
-  }
-
-  handleInputChange = name => value => {
-    const { data, replicas } = this.props
-    const val = this.getPercentageValue(name, replicas, value)
-
-    set(data, `${this.rollingUpdatePrefix}[${name}]`, val)
-  }
-
-  renderAlert() {
-    const { strategy = '' } = this.state
-    const type = this.isRollingUpdate ? 'info' : 'warning'
-
-    return (
-      <Columns>
-        <Column>
-          <Alert
-            type={type}
-            description={t(`${strategy.toUpperCase()}_ALERT_TIP`)}
-          />
-        </Column>
-      </Columns>
-    )
+    })
   }
 
   renderRollingUpdateParams() {
-    if (this.props.module === 'statefulsets') {
+    const { module } = this.props
+    if (module === 'statefulsets') {
       return (
         <Columns className={styles.wrapper}>
           <Column>
@@ -278,6 +121,7 @@ export default class UpdateStrategyForm extends React.Component {
               <NumberInput
                 name={`${this.rollingUpdatePrefix}.partition`}
                 placeholder={t('STATEFULSET_PARTITION_PLACEHOLDER')}
+                defaultValue={0}
                 min={0}
                 integer
               />
@@ -285,21 +129,20 @@ export default class UpdateStrategyForm extends React.Component {
           </Column>
         </Columns>
       )
-    } else if (this.props.module === 'daemonsets') {
+    }
+
+    if (module === 'daemonsets') {
       return (
         <Columns className={styles.wrapper}>
           <Column>
             <Form.Item
-              label={t('MaxUnavailable (%)')}
-              desc={t('MAX_UNAVAILABLE_DESC')}
+              label={t('MAX_UNAVAILABLE_POD_LABEL')}
+              desc={t('MAX_DAEMON_UNAVAILABLE_POD_DESC')}
               rules={[{ required: true, message: t('Please input value') }]}
             >
-              <NumberInput
+              <Input
                 name={`${this.rollingUpdatePrefix}.maxUnavailable`}
-                unit="%"
-                min={1}
-                max={100}
-                integer
+                defaultValue="20%"
               />
             </Form.Item>
           </Column>
@@ -309,7 +152,12 @@ export default class UpdateStrategyForm extends React.Component {
               desc={t('MIN_READY_SECONDS_DESC')}
               rules={[{ required: true, message: t('Please input value') }]}
             >
-              <Input name="spec.minReadySeconds" />
+              <NumberInput
+                name="spec.minReadySeconds"
+                defaultValue={0}
+                min={0}
+                integer
+              />
             </Form.Item>
           </Column>
         </Columns>
@@ -320,15 +168,13 @@ export default class UpdateStrategyForm extends React.Component {
       <Columns className={styles.wrapper}>
         <Column>
           <Form.Item
-            label={t('MIN_AVAILABLE_POD_LABEL')}
-            desc={t('MIN_AVAILABLE_POD_DESC')}
-            rules={[{ validator: this.minAvailablePodValidator }]}
+            label={t('MAX_UNAVAILABLE_POD_LABEL')}
+            desc={t('MAX_DEPLOY_UNAVAILABLE_POD_DESC')}
+            rules={[{ required: true, message: t('Please input value') }]}
           >
-            <NumberInput
-              name="metadata.annotations['kubesphere.io/minAvailablePod']"
-              min={1}
-              onChange={this.handleInputChange('maxUnavailable')}
-              integer
+            <Input
+              name={`${this.rollingUpdatePrefix}.maxUnavailable`}
+              defaultValue="25%"
             />
           </Form.Item>
         </Column>
@@ -336,12 +182,11 @@ export default class UpdateStrategyForm extends React.Component {
           <Form.Item
             label={t('MAX_SURGE_POD_LABEL')}
             desc={t('MAX_SURGE_POD_DESC')}
-            rules={[{ validator: this.maxSurgePodValidator }]}
+            rules={[{ required: true, message: t('Please input value') }]}
           >
-            <NumberInput
-              name="metadata.annotations['kubesphere.io/maxSurgePod']"
-              onChange={this.handleInputChange('maxSurge')}
-              integer
+            <Input
+              name={`${this.rollingUpdatePrefix}.maxSurge`}
+              defaultValue="25%"
             />
           </Form.Item>
         </Column>
@@ -350,7 +195,7 @@ export default class UpdateStrategyForm extends React.Component {
   }
 
   render() {
-    const { className, module, data, formProps = {} } = this.props
+    const { module } = this.props
 
     const label = (
       <span>
@@ -364,17 +209,8 @@ export default class UpdateStrategyForm extends React.Component {
     )
 
     return (
-      <Form
-        className={className}
-        type="inner"
-        data={data}
-        ref={this.strategyFormRef}
-        {...formProps}
-      >
-        <Form.Item
-          label={t('Update Strategy')}
-          rules={[{ validator: this.strategyValidator }]}
-        >
+      <>
+        <Form.Item label={t('Update Strategy')}>
           <TypeSelect
             name={`${STRATEGIES_PREFIX[module]}.type`}
             onChange={this.handleStrategyChange}
@@ -385,7 +221,7 @@ export default class UpdateStrategyForm extends React.Component {
         <Form.Group label={label} checkable keepDataWhenUnCheck>
           {this.isRollingUpdate && this.renderRollingUpdateParams()}
         </Form.Group>
-      </Form>
+      </>
     )
   }
 }

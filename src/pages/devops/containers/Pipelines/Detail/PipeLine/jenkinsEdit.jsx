@@ -44,9 +44,10 @@ export default class JenkinsEdit extends React.Component {
     this.state = { value: props.defaultValue, isLoading: false }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.visible && !this.props.visible && nextProps.defaultValue) {
-      this.setState({ value: nextProps.defaultValue })
+  componentDidUpdate(prevProps) {
+    const { visible, defaultValue } = this.props
+    if (visible && !prevProps.visible && defaultValue) {
+      this.setState({ value: defaultValue })
     }
   }
 
@@ -59,10 +60,15 @@ export default class JenkinsEdit extends React.Component {
   }
 
   checkScriptCompile = async () => {
-    const { project_id, name: pipeline } = this.props.params
+    const { project_id, name: pipeline, cluster } = this.props.params
     this.setState({ isLoading: true })
     const res = await this.store
-      .checkScriptCompile({ value: this.newValue, pipeline, project_id })
+      .checkScriptCompile({
+        value: this.newValue,
+        pipeline,
+        project_id,
+        cluster,
+      })
       .finally(() => {
         this.setState({ isLoading: false })
       })

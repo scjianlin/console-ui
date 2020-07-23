@@ -89,16 +89,12 @@ export default class Home extends React.Component {
       params.category_id = category
     }
 
-    await this.appStore.fetchList(
-      Object.assign(
-        {
-          limit: STORE_APP_LIMIT,
-          status: 'active',
-        },
-        params,
-        filters
-      )
-    )
+    await this.appStore.fetchList({
+      limit: STORE_APP_LIMIT,
+      status: 'active',
+      ...params,
+      ...filters,
+    })
 
     const { allApps, list } = this.appStore
 
@@ -216,7 +212,7 @@ export default class Home extends React.Component {
   render() {
     const { list, allApps } = this.appStore
     const { isLoading, total } = list
-    const { workspace, namespace } = this.queryParams
+    const { workspace, namespace, cluster } = this.queryParams
 
     return (
       <div className={styles.wrapper}>
@@ -236,6 +232,7 @@ export default class Home extends React.Component {
             onFetchMore={this.fetchMoreApps}
             workspace={workspace}
             namespace={namespace}
+            cluster={cluster}
           />
         </div>
       </div>

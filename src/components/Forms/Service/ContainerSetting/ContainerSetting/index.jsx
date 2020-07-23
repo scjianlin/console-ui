@@ -17,14 +17,14 @@
  */
 
 import React from 'react'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import { toJS } from 'mobx'
 import { generateId, cpuFormat, memoryFormat } from 'utils'
 
 import { PATTERN_NAME, PATTERN_LENGTH_63 } from 'utils/constants'
 
 import { Input } from '@pitrix/lego-ui'
-import { Form } from 'components/Base'
+import { Form, Alert } from 'components/Base'
 import { ResourceLimit } from 'components/Inputs'
 import ToggleView from 'components/ToggleView'
 
@@ -77,13 +77,14 @@ export default class ContainerSetting extends React.Component {
   }
 
   fetchData() {
-    const { namespace } = this.props
+    const { cluster, namespace } = this.props
 
     Promise.all([
-      this.quotaStore.fetch({ namespace }),
-      this.projectStore.fetchLimitRanges({ namespace }),
-      this.secretStore.fetchByK8s({
-        namespace: this.props.namespace,
+      this.quotaStore.fetch({ cluster, namespace }),
+      this.projectStore.fetchLimitRanges({ cluster, namespace }),
+      this.secretStore.fetchListByK8s({
+        cluster,
+        namespace,
         fieldSelector: `type=kubernetes.io/dockerconfigjson`,
       }),
     ]).then(() => {
@@ -136,13 +137,20 @@ export default class ContainerSetting extends React.Component {
       </div>
     )
 
+    const defaultResourceLimit = this.defaultResourceLimit
+
     return (
-      <ToggleView>
+      <ToggleView defaultShow={isEmpty(defaultResourceLimit)}>
         <>
+          <Alert
+            className="margin-b12"
+            type="warning"
+            message={t('CONTAINER_RESOURCE_LIMIT_TIP')}
+          />
           <Form.Item>
             <ResourceLimit
               name={`${this.prefix}resources`}
-              defaultValue={this.defaultResourceLimit}
+              defaultValue={defaultResourceLimit}
             />
           </Form.Item>
           {message}
@@ -155,9 +163,7 @@ export default class ContainerSetting extends React.Component {
     return (
       <Form.Group
         label={t('Container Settings')}
-        desc={t(
-          'Setting for the name of the container and the computing resources of the container'
-        )}
+        desc={t('Please set the container name and computing resources.')}
         noWrapper
       >
         <Form.Item
