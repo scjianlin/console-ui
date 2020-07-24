@@ -1,5 +1,5 @@
 
-import { get, isEmpty } from 'lodash'
+// import { get, isEmpty, round } from 'lodash'
 import { action, observable } from 'mobx'
 import ObjectMapper from 'utils/object.mapper'
 
@@ -21,53 +21,8 @@ export default class RackStore {
 
   module = "getRackCidr"
 
-  get apiVersion() {
-    return API_VERSIONS[this.module] || ''
-  }
-
   get mapper() {
     return ObjectMapper[this.module] || (data => data)
-  }
-
-  getPath({ cluster, namespace } = {}) {
-    let path = ''
-    if (cluster) {
-      path += `/klusters/${cluster}`
-    }
-    if (namespace) {
-      path += `/namespaces/${namespace}`
-    }
-    return path
-  }
-
-  getAddUrl = () => `sailor/addRackCidr`
-
-  getDeleteUrl = () => `sailor/delRackCidr`
-
-  // getDetailUrl = (params = {}) => `${this.getListUrl(params)}/${params.name}`
-
-  getWatchListUrl = (params = {}) =>
-    `${this.apiVersion}/watch${this.getPath(params)}/${this.module}`
-
-  getWatchUrl = (params = {}) =>
-    `${this.getWatchListUrl(params)}/${params.name}`
-
-  // getResourceUrl = (params = {}) =>
-  //   `kapis/resources.kubesphere.io/v1alpha3${this.getPath(params)}/${
-  //     this.module
-  //   }`
-
-  getResourceUrl = () => `sailor/${this.module}`
-
-
-  getFilterParams = params => {
-    const result = { ...params }
-    if (result.app) {
-      result.labelSelector = result.labelSelector || ''
-      result.labelSelector += `app.kubernetes.io/name=${result.app}`
-      delete result.app
-    }
-    return result
   }
 
   @action
@@ -98,12 +53,10 @@ export default class RackStore {
     more,
     resources = [],
     devops,
-    filters,
     ...params
-    // ...filters
   } = {}) {
     this.list.isLoading = true
-
+    
     if (!params.sortBy && params.ascending === undefined) {
       params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
     }
@@ -116,10 +69,7 @@ export default class RackStore {
     params.limit = params.limit || 9
     params.page = params.page || 1
 
-    const result = await request.get(
-      this.getResourceUrl(),
-      params
-    )
+    const result = await request.get('sailor/getRackCidr',params)
 
     const data = result.items.map(this.mapper)
 
@@ -136,25 +86,23 @@ export default class RackStore {
     return data
   }
 
-  @action
-  create(data, params = {}) {
-    return this.submitting(request.post(this.getAddUrl(), data))
+  @action  
+  setSelectRowKeys(selectedRowKeys) {
+    this.list.selectedRowKeys.replace(selectedRowKeys)
   }
 
   @action
-  update(params, newObject) {
-    return this.submitting(request.put(this.getDetailUrl(params), newObject))
+  create(data, params = {}) {
+    return this.submitting(request.post('sailor/addRackCidr', data))
   }
 
   @action
   patch(params, newObject) {
-    return this.submitting(request.patch(this.getDetailUrl(params), newObject))
+    return this.submitting(request.post('sailor/updateRackCidr', newObject))
   }
 
   @action
   delete(data,params={}) {
-    console.log("delete==>",data);
-    console.log("params==>",params);
     return this.submitting(request.delete(this.getDeleteUrl(), data))
   }  
 

@@ -248,7 +248,6 @@ export default class WorkloadTable extends React.Component {
 
   renderSelectActions() {
     const { onDelete, selectActions } = this.props
-
     if (selectActions) {
       return (
         <Buttons>

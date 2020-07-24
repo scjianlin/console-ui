@@ -54,7 +54,6 @@ export default class EmptyTable extends React.PureComponent {
         )
 
     const _icon = icon || ICON_TYPES[module] || 'appcenter'
-
     return (
       <div className={classnames(styles.wrapper, className)}>
         <div className={styles.image}>

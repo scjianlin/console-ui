@@ -15,7 +15,7 @@ import RackStore from 'stores/rackcidr'
 @withList({
   store: new RackStore(),
   module: 'settings',
-  name: 'Workspace',
+  name: 'rackcidr',
   rowKey: 'id'
 })
 
@@ -43,9 +43,8 @@ export default class ClusterComm extends React.Component {
         icon: 'pen',
         text: t('Edit'),
         action: 'edit',
-        show: this.showAction,
         onClick: item =>
-          trigger('resource.baseinfo.edit', {
+          trigger('rack.edit', {
             detail: item,
             success: routing.query,
           }),
@@ -55,7 +54,6 @@ export default class ClusterComm extends React.Component {
         icon: 'trash',
         text: t('Delete'),
         action: 'delete',
-        show: this.showAction,
         onClick: item =>
           trigger('resource.delete', {
             type: t(name),
@@ -71,6 +69,21 @@ export default class ClusterComm extends React.Component {
     const { tableProps } = this.props
     return {
       ...tableProps.tableActions,
+      selectActions: [
+        // {
+        //   key: 'delete',
+        //   icon: 'trash',
+        //   text: '网络删除',
+        //   type: 'danger',
+        //   action: 'delete',
+        //   onClick: () =>
+        //     trigger('rack.deleteList', {
+        //       resource: item.name,
+        //       data: tableProps.selectedRowKeys,
+        //       success: routing.query,
+        //     }),
+        // },        
+      ],
       getCheckboxProps: record => ({
         disabled: false,
         name: record.name,
@@ -132,9 +145,16 @@ export default class ClusterComm extends React.Component {
     })
   }
 
+  // onDelete = () => {
+  //   const { getData,selectedRows } = this.props
+  //   console.log("selectedRows==>",selectedRows);
+  //   return this.props.trigger('rack.delete', {
+  //     success: getData,
+  //   })
+  // }
+
   render() {
     const { tableProps } = this.props
-    console.log("tableProps===>",tableProps);
     const isClusterLoading = this.clusterStore.list.isLoading
     return (
       <ListPage {...this.props} noWatch>
@@ -149,7 +169,10 @@ export default class ClusterComm extends React.Component {
           itemActions={this.itemActions}
           tableActions={this.tableActions}
           onCreate={this.showCreate}
+          // onDelete={this.onDelete}
           isClusterLoading={isClusterLoading}
+          // hideHeader
+          // hideCustom
           alwaysUpdate
         />
       </ListPage>
