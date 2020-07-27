@@ -57,10 +57,6 @@ export default class RackStore {
   } = {}) {
     this.list.isLoading = true
     
-    if (!params.sortBy && params.ascending === undefined) {
-      params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
-    }
-
     if (params.limit === Infinity || params.limit === -1) {
       params.limit = -1
       params.page = 1
@@ -103,8 +99,8 @@ export default class RackStore {
 
   @action
   delete(data,params={}) {
-    return this.submitting(request.delete(this.getDeleteUrl(), data))
-  }  
+    return this.submitting(request.delete('sailor/DelRackCidr', data))
+  }
 
   reject = res => {
     this.isSubmitting = false

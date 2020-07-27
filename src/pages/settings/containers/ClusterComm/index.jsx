@@ -16,7 +16,7 @@ import RackStore from 'stores/rackcidr'
   store: new RackStore(),
   module: 'settings',
   name: 'rackcidr',
-  rowKey: 'id'
+  rowKey: 'rack_cidr'
 })
 
 export default class ClusterComm extends React.Component {
@@ -94,11 +94,11 @@ export default class ClusterComm extends React.Component {
   getColumns = () => {
     // const { getSortOrder } = this.props
     const columns = [
-      {
-        title: 'ID',
-        dataIndex: 'id',
-        sorter: true,
-      },
+      // {
+      //   title: 'ID',
+      //   dataIndex: 'id',
+      //   sorter: true,
+      // },
       {
         title: 'CIDR地址',
         key: 'rack_cidr',
