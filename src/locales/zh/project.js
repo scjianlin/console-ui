@@ -68,7 +68,7 @@ export default {
   Closed: '已关闭',
 
   PROJECT_CREATE_DESC:
-    'KubeSphere 中的项目对应的是 Kubernetes 的 namespace，是对一组资源和对象的抽象集合，常用来将系统内部的对象划分为不同的项目组或用户组。',
+    '项目对应的是 Kubernetes 的 namespace，是对一组资源和对象的抽象集合，常用来将系统内部的对象划分为不同的项目组或用户组。',
   PROJECT_NAME_DESC: '项目名只能包含小写字母、数字及分隔符("-")',
   'Please input project name': '请输入项目名',
   'Invalid project name': '项目名格式不合法',

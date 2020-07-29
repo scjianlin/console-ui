@@ -1,7 +1,7 @@
 import Layout from '../containers/layout'
-import Accounts from '../containers/Accounts'
 import ClusterComm from '../containers/ClusterComm'
 import BaseInfo from '../containers/BaseInfo'
+import AddCluster from '../containers/AddCluster'
 
 // import detail from './detail'
 
@@ -16,8 +16,8 @@ export default [
       { path: `${PATH}/base-info`, component: BaseInfo, exact: true },
       { path: `${PATH}/racckcommon`, component: ClusterComm, exact: true },
       { path: `${PATH}/podcommon`, component: ClusterComm, exact: true },
-      { path: `${PATH}/cluster`, component: BaseInfo, exact: true },
-      { path: `${PATH}/node`, component: Accounts, exact: true },
+      { path: `${PATH}/cluster`, component: AddCluster, exact: true },
+      { path: `${PATH}/node`, component: ClusterComm, exact: true },
     ],
   },
 ]

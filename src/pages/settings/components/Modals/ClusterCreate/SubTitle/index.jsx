@@ -16,18 +16,15 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { getIndexRoute } from 'utils/router.config'
+import React from 'react'
 
-import LoginHistory from './LoginHistory'
+import styles from './index.scss'
 
-const PATH = '/access/accounts/:name'
-
-export default [
-  {
-    path: `${PATH}/login-history`,
-    title: 'Login History',
-    component: LoginHistory,
-    exact: true,
-  },
-  getIndexRoute({ path: PATH, to: `${PATH}/login-history`, exact: true }),
-]
+export default function SubTitle({ className, title, description }) {
+  return (
+    <div className={`${styles.text} ${className}`}>
+      <div>{title}</div>
+      <p>{description}</p>
+    </div>
+  )
+}
