@@ -1,9 +1,10 @@
 
 import { action, observable } from 'mobx'
 import ObjectMapper from 'utils/object.mapper'
+
 import List from './base.list'
 
-export default class AddClusterStore {
+export default class PodStore {
   list = new List()
 
   @observable
@@ -15,7 +16,7 @@ export default class AddClusterStore {
   @observable
   isSubmitting = false
 
-  module = "AddCluster"
+  module = "pod"
 
   get mapper() {
     return ObjectMapper[this.module] || (data => data)
@@ -61,7 +62,7 @@ export default class AddClusterStore {
     params.limit = params.limit || 9
     params.page = params.page || 1
 
-    const result = await request.get('sailor/getRackCidr',params)
+    const result = await request.get('sailor/getPodCidr',params)
 
     const data = result.items.map(this.mapper)
 
@@ -74,28 +75,12 @@ export default class AddClusterStore {
       isLoading: false,
       ...(this.list.silent ? {} : { selectedRowKeys: [] }),
     })
-
     return data
   }
 
   @action  
   setSelectRowKeys(selectedRowKeys) {
     this.list.selectedRowKeys.replace(selectedRowKeys)
-  }
-
-  @action
-  create(data, params = {}) {
-    return this.submitting(request.post('sailor/addCluster', data))
-  }
-
-  @action
-  patch(params, newObject) {
-    return this.submitting(request.post('sailor/updateRackCidr', newObject))
-  }
-
-  @action
-  delete(data,params={}) {
-    return this.submitting(request.delete('sailor/DelRackCidr', data))
   }
 
   reject = res => {

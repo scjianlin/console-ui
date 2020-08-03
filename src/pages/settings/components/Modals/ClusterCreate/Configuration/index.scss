@@ -6,7 +6,7 @@
 }
 
 .step {
-  margin: 20px 0;
+  margin: 10px 0;
   & > div {
     @include TypographyTitleH4($dark-color08);
   }

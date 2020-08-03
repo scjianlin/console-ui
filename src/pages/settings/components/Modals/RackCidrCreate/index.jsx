@@ -52,12 +52,13 @@ export default class RackCidrCreateModal extends React.Component {
     this.state = {
       currentStep: 0,
       formTemplate: {
-        rack_cidr: "",
-        rack_cidr_gw: "",
-        provider_cidr: "",
-        rack_tag: ""
+        rackCidr: "",
+        rackCidrGw: "",
+        providerCidr: "",
+        rackTag: "",
+        isMaster: "",
+        podNum: "",
       }
-      // formTemplate: cloneDeep(FORM_TEMPLATES['workspaces']()),
     }
 
     this.formRef = React.createRef()

@@ -474,7 +474,7 @@ export default class WorkloadTable extends React.Component {
     }
 
     const { total, page, limit } = this.props.pagination
-
+    
     return (
       <Level>
         {!isUndefined(total) && (

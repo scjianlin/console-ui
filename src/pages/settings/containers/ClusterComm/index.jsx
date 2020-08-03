@@ -1,14 +1,10 @@
 
 import React from 'react'
 import { computed } from 'mobx'
-// import { observer, inject } from 'mobx-react'
-// import { Avatar } from 'components/Base'
 import Banner from 'components/Cards/Banner'
 import withList, { ListPage } from 'components/HOCs/withList'
 import Table from 'components/Tables/List'
-import ClusterWrapper from 'components/Clusters/ClusterWrapper'
 
-// import WorkspaceStore from 'stores/workspace'
 import ClusterStore from 'stores/cluster'
 import RackStore from 'stores/rackcidr'
 
@@ -16,7 +12,7 @@ import RackStore from 'stores/rackcidr'
   store: new RackStore(),
   module: 'settings',
   name: 'rackcidr',
-  rowKey: 'rack_cidr'
+  rowKey: 'rackCidr'
 })
 
 export default class ClusterComm extends React.Component {
@@ -69,21 +65,7 @@ export default class ClusterComm extends React.Component {
     const { tableProps } = this.props
     return {
       ...tableProps.tableActions,
-      selectActions: [
-        // {
-        //   key: 'delete',
-        //   icon: 'trash',
-        //   text: '网络删除',
-        //   type: 'danger',
-        //   action: 'delete',
-        //   onClick: () =>
-        //     trigger('rack.deleteList', {
-        //       resource: item.name,
-        //       data: tableProps.selectedRowKeys,
-        //       success: routing.query,
-        //     }),
-        // },        
-      ],
+      selectActions: [],
       getCheckboxProps: record => ({
         disabled: false,
         name: record.name,
@@ -92,49 +74,43 @@ export default class ClusterComm extends React.Component {
   }
 
   getColumns = () => {
-    // const { getSortOrder } = this.props
     const columns = [
-      // {
-      //   title: 'ID',
-      //   dataIndex: 'id',
-      //   sorter: true,
-      // },
       {
         title: 'CIDR地址',
-        key: 'rack_cidr',
-        dataIndex: 'rack_cidr',
+        key: 'rackCidr',
+        dataIndex: 'rackCidr',
         sorter: true,
-        //sortOrder: this.getSortOrder('rackCidr'),
         search: true,
       },      
       {
         title: '网关地址',
-        dataIndex: 'rack_cidr_gw',
+        dataIndex: 'rackCidrGw',
         isHideable: true,
       },
       {
         title: '所属网络',
-        dataIndex: 'provider_cidr',
+        dataIndex: 'providerCidr',
         isHideable: true,
       },
       {
-        title: '机柜号',
-        dataIndex: 'rack_tag',
+        title: 'POD数量',
+        dataIndex: 'podNum',
         isHideable: true,
-      },
-    ]
-
-    if (globals.app.isMultiCluster) {
-      columns.splice(1, 0, {
-        title: t('Cluster Info'),
-        dataIndex: 'clusters',
-        width: '30%',
-        render: clusters => (
-          <ClusterWrapper clusters={clusters} clustersDetail={this.clusters} />
+      },      
+      {
+        title: '是否为Master机柜',
+        dataIndex: 'isMaster',
+        isHideable: true,
+        render: isMaster => (
+          isMaster == 1 ? "是" : "否"
         ),
-      })
-    }
-
+      },
+      {
+        title: '机柜号',
+        dataIndex: 'rackTag',
+        isHideable: true,
+      },            
+    ]
     return columns
   }
 
@@ -144,14 +120,6 @@ export default class ClusterComm extends React.Component {
       success: getData,
     })
   }
-
-  // onDelete = () => {
-  //   const { getData,selectedRows } = this.props
-  //   console.log("selectedRows==>",selectedRows);
-  //   return this.props.trigger('rack.delete', {
-  //     success: getData,
-  //   })
-  // }
 
   render() {
     const { tableProps } = this.props
@@ -169,10 +137,7 @@ export default class ClusterComm extends React.Component {
           itemActions={this.itemActions}
           tableActions={this.tableActions}
           onCreate={this.showCreate}
-          // onDelete={this.onDelete}
           isClusterLoading={isClusterLoading}
-          // hideHeader
-          // hideCustom
           alwaysUpdate
         />
       </ListPage>

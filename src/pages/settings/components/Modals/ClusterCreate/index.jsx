@@ -33,11 +33,16 @@ export default class ClusterCreateModal extends React.Component {
     this.state = {
       currentStep: 0,
       formTemplate: {
-        rack_cidr: "",
-        rack_cidr_gw: "",
-        provider_cidr: "",
-        rack_tag: "",
-        abc: "1111"
+        clustrName:"",
+        ClusterType:"",
+        ClusterRack:"",
+        ClusterIP:"",
+        ClusterUser:"",
+        UserPass: "",
+        ClusterVersion:"",
+        DockerVersion:"",
+        InitTemplate:"",
+        CustomScript:"",
       }
     }
 
@@ -103,7 +108,6 @@ export default class ClusterCreateModal extends React.Component {
   }
 
   renderHeader() {
-    const { onCancel } = this.props
     const { currentStep } = this.state
     return (
       <div className={styles.header}>

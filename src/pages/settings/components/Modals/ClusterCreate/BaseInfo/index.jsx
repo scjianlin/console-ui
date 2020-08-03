@@ -1,10 +1,8 @@
 
-import { debounce,cloneDeep, times } from 'lodash'
 import React from 'react'
 import { observer } from 'mobx-react'
 import { Input,Select } from '@pitrix/lego-ui'
 import { Form } from 'components/Base'
-import FORM_TEMPLATES from 'utils/form.templates'
 import { Button } from 'components/Base'
 import RackStore from 'stores/rackcidr'
 
@@ -16,12 +14,10 @@ export default class BaseInfo extends React.Component {
     super(props)
 
     this.rackStore = new RackStore()
-    this.rackStore.fetchList()
+    this.rackStore.fetchList(),
     this.state = {
       currentStep: 0,
-      formTemplate: cloneDeep(FORM_TEMPLATES['workspaces']()),
-    },
-    this.isHosted = false
+    }
   }
 
   cluserType = [{
@@ -32,62 +28,16 @@ export default class BaseInfo extends React.Component {
     value: "Hosted",
   }]
 
-  get networkOptions() {
-    return [
-      { label: t('Off'), value: 'false' },
-      { label: t('On'), value: 'true' },
-    ]
-  }
-
-  nameValidator = (rule, value, callback) => {
-    if (!value) {
-      return callback()
-    }
-
-    if (value === 'workspaces') {
-      return callback({
-        message: t('current name is not available'),
-        field: rule.field,
-      })
-    }
-
-    this.props.store.checkName({ name: value }).then(resp => {
-      if (resp.exist) {
-        return callback({
-          message: t('Workspace name exists'),
-          field: rule.field,
-        })
-      }
-      callback()
-    })
-  }
-
-  handleScrollToBottom = () => {
-    if (
-      !this.scrolling &&
-      this.userStore.list.total > this.userStore.list.data.length
-    ) {
-      this.scrolling = true
-      this.userStore
-        .fetchList({
-          more: true,
-          page: this.userStore.list.page + 1,
-        })
-        .then(() => {
-          this.scrolling = false
-        })
-    }
-  }
-
-
-  handleChange = value => {
-    if (value === "Hosted") {
-      this.isHosted = true
-    } 
-    if (value === "Baremetal") {
-      this.isHosted = false
-    }
-  }
+  clusterIP = [{
+    label: "192.168.56.241",
+    value: "192.168.56.241",
+  },{
+    label: "192.168.57.241",
+    value: "192.168.57.241",
+  },{
+    label: "192.168.58.241",
+    value: "192.168.58.241",    
+  }]
 
   getRack() {
     let res = []
@@ -131,7 +81,7 @@ export default class BaseInfo extends React.Component {
         </div>
       </div>
     )
-  }  
+  }
 
   render() {
     const { formRef, formTemplate } = this.props
@@ -140,7 +90,7 @@ export default class BaseInfo extends React.Component {
       <div className={styles.wrapper}>
         <div className={styles.step}>
           <div>{t('Basic Info')}</div>
-          <p>{"增加自定义K8S集群!"}</p>
+          <p>{"增加集群基本信息"}</p>
         </div>
         <Form data={formTemplate} ref={formRef}>
           <Form.Item
@@ -151,7 +101,6 @@ export default class BaseInfo extends React.Component {
                 required: true,
                 message: "请输入集群名称.",
               },
-              { validator: this.nameValidator },
             ]}
           >
             <Input name="clustrName" autoFocus={true} placeholder="请输入集群名称." />
@@ -168,12 +117,10 @@ export default class BaseInfo extends React.Component {
               name="ClusterType"
               searchable
               options={this.cluserType}
-              onChange={this.handleChange}
               onBlurResetsInput={false}
               onCloseResetsInput={false}
               openOnClick={true}
               isLoadingAtBottom
-              isLoading={this.rackStore.list.isLoading}
             />
           </Form.Item>
           <Form.Item 
@@ -187,43 +134,51 @@ export default class BaseInfo extends React.Component {
             <Select
               name="ClusterRack"
               searchable
+              multi
               options={this.getRack()}
-              onChange={this.handleChange}
               onBlurResetsInput={false}
               onCloseResetsInput={false}
               openOnClick={true}
               isLoadingAtBottom
-              isLoading={this.rackStore.list.isLoading}
             />
           </Form.Item>
           <Form.Item 
-            label={"机柜号"}
-            rules={[
-              {
+            label={"选择IP地址"}
+            rules={[{
                 required: true,
-                message: "请输入机柜号!",
+                message: "请选择IP地址!",
               }]}
           >
-            <Input name="rack_tag" placeholder="请输入机柜号!" />
-            {/* <Select
-              name="spec.template.spec.networkIsolation"
-              options={this.networkOptions}
-              defaultValue={String(globals.config.defaultNetworkIsolation)}
-            /> */}
-          </Form.Item>
-          {/* <Form.Item
-            controlClassName={styles.textarea}
-            label={t('Description')}
-            desc={t('DESCRIPTION_DESC')}
-          >
-            <TextArea
-              name="metadata.annotations['kubesphere.io/description']"
-              maxLength={256}
-              rows="3"
+           <Select
+              name="ClusterIP"
+              searchable
+              multi
+              options={this.clusterIP}
+              onBlurResetsInput={false}
+              onCloseResetsInput={false}
+              openOnClick={true}
+              isLoadingAtBottom
             />
-          </Form.Item> */}
+          </Form.Item>
+          <Form.Item 
+            label={"输入服务器用户"}
+            rules={[{
+                required: true,
+                message: "输入服务器用户!",
+              }]}
+          >
+            <Input name="ClusterUser" placeholder="输入服务器用户!" />
+          </Form.Item>
+          <Form.Item 
+            label={"输入服务器密码"}
+            rules={[{
+                required: true,
+                message: "输入服务器密码!",
+              }]}
+          >
+            <Input name="UserPass" placeholder="输入服务器密码!" type="password" />
+          </Form.Item>          
         </Form>
-        {/* {this.renderFooter()} */}
       </div>
     )
   }

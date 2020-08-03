@@ -1,5 +1,4 @@
 
-// import { get, isEmpty, round } from 'lodash'
 import { action, observable } from 'mobx'
 import ObjectMapper from 'utils/object.mapper'
 
@@ -78,7 +77,6 @@ export default class RackStore {
       isLoading: false,
       ...(this.list.silent ? {} : { selectedRowKeys: [] }),
     })
-
     return data
   }
 
@@ -99,7 +97,7 @@ export default class RackStore {
 
   @action
   delete(data,params={}) {
-    return this.submitting(request.delete('sailor/DelRackCidr', data))
+    return this.submitting(request.delete('sailor/delRackCidr', data))
   }
 
   reject = res => {

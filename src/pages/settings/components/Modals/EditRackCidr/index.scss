@@ -4,8 +4,8 @@
 .modal {
   min-width: 800px;
   width: 30vw;
-  height: 60vh;
-  border-radius: 0;
+  height: 75vh;
+  border-radius: 10px;
   background-color: $light-color02;
 }
 
@@ -114,14 +114,7 @@
 
 .footer {
   position: absolute;
-  top: 470px;
+  top: 610px;
   left: 100px;
-  // bottom: 50;
-  // left: 0;
-  // right: 0;
-  // display: flex;
-  // height: 56px;
   align-items: center;
-  // box-shadow: 0 -1px 0 0 $light-color04;
-  // background-color: #ffffff;
 }
