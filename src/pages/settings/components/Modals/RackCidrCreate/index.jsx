@@ -1,33 +1,13 @@
-/*
- * This file is part of KubeSphere Console.
- * Copyright (C) 2019 The KubeSphere Console Authors.
- *
- * KubeSphere Console is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * KubeSphere Console is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
- */
 
-import { cloneDeep } from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Icon } from '@pitrix/lego-ui'
 import { Modal, Button } from 'components/Base'
-import FORM_TEMPLATES from 'utils/form.templates'
 
 import RouterStore from 'stores/router'
 
 import Steps from './Steps'
 import BaseInfo from './BaseInfo'
-import ClusterSettings from './ClusterSettings'
 
 import styles from './index.scss'
 
@@ -52,12 +32,12 @@ export default class RackCidrCreateModal extends React.Component {
     this.state = {
       currentStep: 0,
       formTemplate: {
-        rackCidr: "",
-        rackCidrGw: "",
-        providerCidr: "",
-        rackTag: "",
-        isMaster: "",
-        podNum: "",
+        // rackCidr: "",
+        // rackCidrGw: "",
+        // providerCidr: "",
+        // rackTag: "",
+        // isMaster: "",
+        // podNum: "",
       }
     }
 
@@ -67,17 +47,6 @@ export default class RackCidrCreateModal extends React.Component {
   }
 
   get steps() {
-    if (!globals.app.isMultiCluster) {
-      return [
-        {
-          title: 'Basic Info',
-          component: BaseInfo,
-          required: true,
-          isForm: true,
-        },
-      ]
-    }
-
     return [
       {
         title: 'Basic Info',
@@ -85,16 +54,15 @@ export default class RackCidrCreateModal extends React.Component {
         required: true,
         isForm: true,
       },
-      {
-        title: 'Cluster Settings',
-        component: ClusterSettings,
-        required: true,
-      },
     ]
   }
 
   handleOk = () => {
-    this.props.onOk(this.state.formTemplate)
+    if (this.state.formTemplate.length !== 6) {
+        this.handleNext()
+    } else {
+        this.props.onOk(this.state.formTemplate)
+    }
   }
 
   handlePrev = () => {
@@ -114,8 +82,8 @@ export default class RackCidrCreateModal extends React.Component {
   }
 
   renderForm() {
-    const { store } = this.props
     const { formTemplate, currentStep } = this.state
+    const { onCancel, isSubmitting ,store} = this.props
 
     const step = this.steps[currentStep]
     const Component = step.component
@@ -130,6 +98,7 @@ export default class RackCidrCreateModal extends React.Component {
     } else {
       props.ref = this.formRef
     }
+    const total = this.steps.length - 1
 
     return (
       <div className={styles.formWrapper}>
@@ -137,6 +106,29 @@ export default class RackCidrCreateModal extends React.Component {
           <div className={styles.form}>
             <Component {...props} />
           </div>
+          <div className={styles.footer}>
+          <div > 
+            <Button onClick={onCancel}>{t('Cancel')}</Button>
+            {currentStep > 0 && (
+              <Button type="control" onClick={this.handlePrev}>
+                {t('Previous')}
+              </Button>
+            )}
+            {currentStep < total ? (
+              <Button type="control" onClick={this.handleNext}>
+                {t('Next')}
+              </Button>
+            ) : (
+              <Button
+                type="control"
+                onClick={this.handleOk}
+                loading={isSubmitting}
+              >
+                {t('Create')}
+              </Button>
+            )}
+          </div>
+        </div>          
         </div>
       </div>
     )
@@ -167,7 +159,6 @@ export default class RackCidrCreateModal extends React.Component {
     const { onCancel, isSubmitting } = this.props
     const { currentStep } = this.state
 
-    const total = this.steps.length - 1
     return (
       // className={styles.wrapper}
       <div className={styles.footer}>
@@ -211,7 +202,7 @@ export default class RackCidrCreateModal extends React.Component {
       >
         {this.renderHeader()}
         {this.renderForm()}
-        {this.renderFooter()}
+        {/* {this.renderFooter()} */}
       </Modal>
     )
   }

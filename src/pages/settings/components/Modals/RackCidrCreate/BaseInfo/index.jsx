@@ -11,9 +11,6 @@ export default class BaseInfo extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      currentStep: 0,
-    }
   }
 
   getRackState() {
@@ -49,39 +46,6 @@ export default class BaseInfo extends React.Component {
       return false
     }
   }
-  renderFooter() {
-    const { onCancel, isSubmitting } = this.props
-    const { currentStep } = this.state
-
-    const total = 1
-    return (
-      <div className={styles.footer}>
-        <div className={styles.wrapper}>
-          <div className="text-right">
-            <Button onClick={onCancel}>{t('Cancel')}</Button>
-            {currentStep > 0 && (
-              <Button type="control" onClick={this.handlePrev}>
-                {t('Previous')}
-              </Button>
-            )}
-            {currentStep < total ? (
-              <Button type="control" onClick={this.handleNext}>
-                {t('Next')}
-              </Button>
-            ) : (
-              <Button
-                type="control"
-                onClick={this.handleOk}
-                loading={isSubmitting}
-              >
-                {t('Create')}
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }  
 
   render() {
     const { formRef, formTemplate } = this.props
