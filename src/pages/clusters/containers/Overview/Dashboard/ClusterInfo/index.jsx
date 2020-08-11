@@ -34,7 +34,7 @@ export default class ClusterInfo extends Component {
     return (
       <Panel title={t('Cluster Info')}>
         <div className={styles.level}>
-          <Text title={cluster.provider} description={t('Provider')} />
+          {/* <Text title={"goshship"} description={"集群提供方"} /> */}
           <Text
             title={cluster.kubernetesVersion || version}
             description={t('Kubernetes Version')}

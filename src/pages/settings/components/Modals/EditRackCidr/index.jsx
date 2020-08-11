@@ -1,18 +1,12 @@
 
-import { cloneDeep } from 'lodash'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Icon } from '@pitrix/lego-ui'
 import { Modal, Button } from 'components/Base'
-import FORM_TEMPLATES from 'utils/form.templates'
 import copy from 'fast-copy'
-
 import RouterStore from 'stores/router'
-
 import Steps from './Steps'
 import BaseInfo from './BaseInfo'
-// import ClusterSettings from './ClusterSettings'
-
 import styles from './index.scss'
 
 export default class RackCidrEditModal extends React.Component {
@@ -44,28 +38,12 @@ export default class RackCidrEditModal extends React.Component {
   }
 
   get steps() {
-    if (!globals.app.isMultiCluster) {
-      return [
-        {
-          title: 'Basic Info',
-          component: BaseInfo,
-          required: true,
-          isForm: true,
-        },
-      ]
-    }
-
     return [
       {
         title: 'Basic Info',
         component: BaseInfo,
         required: true,
         isForm: true,
-      },
-      {
-        title: 'Cluster Settings',
-        component: ClusterSettings,
-        required: true,
       },
     ]
   }
@@ -91,7 +69,7 @@ export default class RackCidrEditModal extends React.Component {
   }
 
   renderForm() {
-    const { store } = this.props
+    const { onCancel, isSubmitting,store } = this.props
     const { formTemplate, currentStep } = this.state
 
     const step = this.steps[currentStep]
@@ -108,11 +86,35 @@ export default class RackCidrEditModal extends React.Component {
       props.ref = this.formRef
     }
 
+    const total = this.steps.length - 1
     return (
       <div className={styles.formWrapper}>
         <div className={styles.wrapper}>
           <div className={styles.form}>
             <Component {...props} />
+          </div>
+          <div className={styles.footer}>
+          <div > 
+            <Button onClick={onCancel}>{t('Cancel')}</Button>
+            {currentStep > 0 && (
+              <Button type="control" onClick={this.handlePrev}>
+                {t('Previous')}
+              </Button>
+            )}
+            {currentStep < total ? (
+              <Button type="control" onClick={this.handleNext}>
+                {t('Next')}
+              </Button>
+            ) : (
+              <Button
+                type="control"
+                onClick={this.handleOk}
+                loading={isSubmitting}
+              >
+                {"提交"}
+              </Button>
+            )}
+            </div>
           </div>
         </div>
       </div>
@@ -139,41 +141,6 @@ export default class RackCidrEditModal extends React.Component {
       </div>
     )
   }
-
-  renderFooter() {
-    const { onCancel, isSubmitting } = this.props
-    const { currentStep } = this.state
-
-    const total = this.steps.length - 1
-    return (
-      <div className={styles.footer}>
-        <div > 
-          <div className="text-right">
-            <Button onClick={onCancel}>{t('Cancel')}</Button>
-            {currentStep > 0 && (
-              <Button type="control" onClick={this.handlePrev}>
-                {t('Previous')}
-              </Button>
-            )}
-            {currentStep < total ? (
-              <Button type="control" onClick={this.handleNext}>
-                {t('Next')}
-              </Button>
-            ) : (
-              <Button
-                type="control"
-                onClick={this.handleOk}
-                loading={isSubmitting}
-              >
-                {"提交"}
-              </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   render() {
     const { visible } = this.props
     return (
@@ -187,7 +154,7 @@ export default class RackCidrEditModal extends React.Component {
       >
         {this.renderHeader()}
         {this.renderForm()}
-        {this.renderFooter()}
+        {/* {this.renderFooter()} */}
       </Modal>
     )
   }

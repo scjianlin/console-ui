@@ -33,20 +33,20 @@ export default {
       success && success()
     },
   },
-  'cluster.edit': {
-    on({ store, detail, success, ...props }) {
-      const modal = Modal.open({
-        onOk: data => {
-          store.patch(detail, data).then(() => {
-            Modal.close(modal)
-            success && success()
-          })
-        },
-        detail: toJS(detail._originData || detail),
-        modal: EditModal,
-        store,
-        ...props,
-      })
-    },
-  },
+  // 'cluster.edit': {
+  //   on({ store, detail, success, ...props }) {
+  //     const modal = Modal.open({
+  //       onOk: data => {
+  //         store.patch(detail, data).then(() => {
+  //           Modal.close(modal)
+  //           success && success()
+  //         })
+  //       },
+  //       detail: toJS(detail._originData || detail),
+  //       modal: EditModal,
+  //       store,
+  //       ...props,
+  //     })
+  //   },
+  // },
 }

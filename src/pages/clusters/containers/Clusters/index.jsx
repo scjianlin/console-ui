@@ -61,14 +61,14 @@ class Clusters extends React.Component {
     this.store.fetchList({
       ...params,
       limit: 10,
-      labelSelector: '!cluster-role.kubesphere.io/host',
+      labelSelector: 'member',
     })
   }
 
   fetchHostData = (params = {}) => {
     this.hostStore.fetchList({
       ...params,
-      labelSelector: 'cluster-role.kubesphere.io/host=',
+      labelSelector: 'meta',
       limit: -1,
     })
   }

@@ -1,15 +1,10 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Icon } from '@pitrix/lego-ui'
 import { Modal, Button } from 'components/Base'
-
-import RouterStore from 'stores/router'
-
 import Steps from './Steps'
 import BaseInfo from './BaseInfo'
 import Configuration from './Configuration'
-
 import styles from './index.scss'
 
 export default class ClusterCreateModal extends React.Component {
@@ -33,22 +28,21 @@ export default class ClusterCreateModal extends React.Component {
     this.state = {
       currentStep: 0,
       formTemplate: {
-        clustrName:"",
-        ClusterType:"",
-        ClusterRack:"",
-        ClusterIP:"",
-        ClusterUser:"",
-        UserPass: "",
-        ClusterVersion:"",
-        DockerVersion:"",
-        InitTemplate:"",
-        CustomScript:"",
+        // clustrName:"",
+        // ClusterType:"",
+        // ClusterRack:"",
+        // ClusterIP:"",
+        // ClusterUser:"",
+        // UserPass: "",
+        // ClusterVersion:"",
+        // DockerVersion:"",
+        // InitTemplate:"",
+        // CustomScript:"",
       }
     }
 
     this.formRef = React.createRef()
 
-    this.routerStore = new RouterStore()
   }
 
   get steps() {
@@ -69,7 +63,17 @@ export default class ClusterCreateModal extends React.Component {
   }
 
   handleOk = () => {
-    this.props.onOk(this.state.formTemplate)
+    let checkNum = 0
+    if (this.state.formTemplate.clusterTyoe=="Baremetal") {
+      checkNum = Object.keys(this.state.formTemplate).length - 1
+    } else {
+      checkNum = Object.keys(this.state.formTemplate).length - 2
+    }
+    if (Object.keys(this.state.formTemplate).length < checkNum) {
+      this.handleNext()
+    } else {
+      this.props.onOk(this.state.formTemplate)
+    }
   }
 
   handlePrev = () => {
@@ -79,14 +83,20 @@ export default class ClusterCreateModal extends React.Component {
   }
 
   handleNext = () => {
-    this.setState(({ currentStep }) => ({
-      currentStep: Math.min(this.steps.length - 1, currentStep + 1),
-    }))
+    const form = this.formRef.current
+    form &&
+      form.validate(() => {
+        this.setState(({ currentStep }) => ({
+          currentStep: Math.min(this.steps.length - 1, currentStep + 1),
+        }))
+      })
   }
 
   renderForm() {
-    const { store } = this.props
     const { formTemplate, currentStep } = this.state
+    const { onCancel, isSubmitting ,store} = this.props
+
+    const total = this.steps.length - 1
 
     const step = this.steps[currentStep]
     const Component = step.component
@@ -96,42 +106,21 @@ export default class ClusterCreateModal extends React.Component {
       formTemplate,
     }
 
+    if (step.isForm) {
+      props.formRef = this.formRef
+    } else {
+      props.ref = this.formRef
+    }    
+
     return (
       <div className={styles.formWrapper}>
         <div className={styles.wrapper}>
           <div className={styles.form}>
             <Component {...props} />
           </div>
-        </div>
-      </div>
-    )
-  }
-
-  renderHeader() {
-    const { currentStep } = this.state
-    return (
-      <div className={styles.header}>
-        <div className={styles.wrapper}>
-          {this.steps.length > 1 && (
-            <Steps steps={this.steps} current={currentStep} />
-          )}
-        </div>
-        <div className={styles.headerBottom} />
-      </div>
-    )
-  }
-
-  renderFooter() {
-    const { onCancel, isSubmitting } = this.props
-    const { currentStep } = this.state
-
-    const total = this.steps.length - 1
-    return (
-      // className={styles.wrapper}
-      <div className={styles.footer}>
-        <div > 
-          <div className="text-right">
-            <Button onClick={onCancel} >{t('Cancel')}</Button>
+          <div className={styles.footer}>
+          <div > 
+            <Button onClick={onCancel}>{t('Cancel')}</Button>
             {currentStep > 0 && (
               <Button type="control" onClick={this.handlePrev}>
                 {t('Previous')}
@@ -151,10 +140,26 @@ export default class ClusterCreateModal extends React.Component {
               </Button>
             )}
           </div>
+        </div>          
         </div>
       </div>
     )
   }
+
+  renderHeader() {
+    const { currentStep } = this.state
+    return (
+      <div className={styles.header}>
+        <div className={styles.wrapper}>
+          {this.steps.length > 1 && (
+            <Steps steps={this.steps} current={currentStep} />
+          )}
+        </div>
+        <div className={styles.headerBottom} />
+      </div>
+    )
+  }
+
 
   render() {
     const { visible } = this.props
@@ -169,7 +174,6 @@ export default class ClusterCreateModal extends React.Component {
       >
         {this.renderHeader()}
         {this.renderForm()}
-        {this.renderFooter()}
       </Modal>
     )
   }

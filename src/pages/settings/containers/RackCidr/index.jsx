@@ -123,7 +123,7 @@ export default class ClusterComm extends React.Component {
 
   render() {
     const { tableProps } = this.props
-    const isClusterLoading = this.clusterStore.list.isLoading
+
     return (
       <ListPage {...this.props} noWatch>
         <Banner
@@ -137,7 +137,6 @@ export default class ClusterComm extends React.Component {
           itemActions={this.itemActions}
           tableActions={this.tableActions}
           onCreate={this.showCreate}
-          isClusterLoading={isClusterLoading}
           alwaysUpdate
         />
       </ListPage>

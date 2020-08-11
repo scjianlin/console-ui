@@ -1031,18 +1031,20 @@ const VolumeSnapshotMapper = detail => {
 }
 
 const ClusterMapper = item => {
+  console.log("cluster-map==>",item);
   const conditions = keyBy(get(item, 'status.conditions', []), 'type')
   return {
     ...getBaseInfo(item),
     conditions,
-    configz: get(item, 'status.configz', {}),
+    configz: get(item, 'status.configz', {
+      'kubernetes': true,
+      'monitoring': true,
+      'multicluster': true,
+    }),
     provider: get(item, 'spec.provider'),
-    isHost: has(
-      get(item, 'metadata.labels', {}),
-      'cluster-role.kubesphere.io/host'
-    ),
+    isHost: get(item, 'metadata.labels["cluster-role.kunkka.io/cluster-role"]') === 'meta' ? true : false,
     nodeCount: get(item, 'status.nodeCount'),
-    kubernetesVersion: get(item, 'status.kubernetesVersion'),
+    kubernetesVersion: get(item, 'status.version'),
     labels: get(item, 'metadata.labels'),
     group: get(item, 'metadata.labels["cluster.kubesphere.io/group"]'),
     isReady: globals.app.isMultiCluster

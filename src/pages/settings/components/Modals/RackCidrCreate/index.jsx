@@ -58,7 +58,7 @@ export default class RackCidrCreateModal extends React.Component {
   }
 
   handleOk = () => {
-    if (this.state.formTemplate.length !== 6) {
+    if (Object.keys(this.state.formTemplate).length < 6) {
         this.handleNext()
     } else {
         this.props.onOk(this.state.formTemplate)

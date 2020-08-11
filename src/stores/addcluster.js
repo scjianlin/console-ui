@@ -61,9 +61,8 @@ export default class AddClusterStore {
     params.limit = params.limit || 9
     params.page = params.page || 1
 
-    const result = await request.get('sailor/getRackCidr',params)
-
-    const data = result.items.map(this.mapper)
+    const result = await request.get('sailor/getCluster',params)
+    const data = result.items
 
     this.list.update({
       data: data,
@@ -74,7 +73,6 @@ export default class AddClusterStore {
       isLoading: false,
       ...(this.list.silent ? {} : { selectedRowKeys: [] }),
     })
-
     return data
   }
 
@@ -85,17 +83,13 @@ export default class AddClusterStore {
 
   @action
   create(data, params = {}) {
+    console.log("data=>",data);
     return this.submitting(request.post('sailor/addCluster', data))
   }
 
   @action
-  patch(params, newObject) {
-    return this.submitting(request.post('sailor/updateRackCidr', newObject))
-  }
-
-  @action
   delete(data,params={}) {
-    return this.submitting(request.delete('sailor/DelRackCidr', data))
+    return this.submitting(request.delete('sailor/delCluster', data))
   }
 
   reject = res => {

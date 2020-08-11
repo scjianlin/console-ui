@@ -1,50 +1,20 @@
 
 import React from 'react'
-import { computed } from 'mobx'
 import Banner from 'components/Cards/Banner'
 import withList, { ListPage } from 'components/HOCs/withList'
 import Table from 'components/Tables/List'
-
-import ClusterStore from 'stores/cluster'
-import RackStore from 'stores/rackcidr'
+import AddClusterStore from 'stores/addcluster'
 
 @withList({
-  store: new RackStore(),
+  store: new AddClusterStore(),
   module: 'settings',
-  name: 'rackcidr',
-  rowKey: 'rackCidr'
+  name: 'addcluster',
+  rowKey: 'clustrName'
 })
-
-export default class ClusterComm extends React.Component {
-  clusterStore = new ClusterStore()
-
-  componentDidMount() {
-    this.clusterStore.fetchList({ limit: -1 })
-  }
-
-  @computed
-  get clusters() {
-    return this.clusterStore.list.data
-  }
-
-  showAction(record) {
-    return globals.config.systemWorkspace !== record.name
-  }
-
+export default class AddCluster extends React.Component {
   get itemActions() {
     const { name, routing, trigger } = this.props
     return [
-      {
-        key: 'edit',
-        icon: 'pen',
-        text: t('Edit'),
-        action: 'edit',
-        onClick: item =>
-          trigger('rack.edit', {
-            detail: item,
-            success: routing.query,
-          }),
-      },
       {
         key: 'delete',
         icon: 'trash',
@@ -76,60 +46,52 @@ export default class ClusterComm extends React.Component {
   getColumns = () => {
     const columns = [
       {
-        title: 'CIDR地址',
-        key: 'rackCidr',
-        dataIndex: 'rackCidr',
+        title: '集群名称',
+        key: 'clustrName',
+        dataIndex: 'clustrName',
         sorter: true,
         search: true,
       },      
       {
-        title: '网关地址',
-        dataIndex: 'rackCidrGw',
+        title: '集群类型',
+        dataIndex: 'clusterType',
         isHideable: true,
       },
       {
-        title: '所属网络',
-        dataIndex: 'providerCidr',
+        title: '集群版本',
+        dataIndex: 'clusterVersion',
         isHideable: true,
       },
       {
-        title: 'POD数量',
-        dataIndex: 'podNum',
+        title: '容器版本',
+        dataIndex: 'dockerVersion',
         isHideable: true,
-      },      
-      {
-        title: '是否为Master机柜',
-        dataIndex: 'isMaster',
-        isHideable: true,
-        render: isMaster => (
-          isMaster == 1 ? "是" : "否"
-        ),
       },
       {
-        title: '机柜号',
-        dataIndex: 'rackTag',
+        title: '集群IP',
+        dataIndex: 'clusterIp',
         isHideable: true,
-      },            
+      },
     ]
     return columns
   }
 
   showCreate = () => {
     const { getData } = this.props
-    return this.props.trigger('rack.create', {
+    return this.props.trigger('cluster.create', {
       success: getData,
     })
   }
 
   render() {
     const { tableProps } = this.props
-    const isClusterLoading = this.clusterStore.list.isLoading
+    console.log("tableProps==>",tableProps);
     return (
       <ListPage {...this.props} noWatch>
         <Banner
-          icon="hammer"
-          title={"机柜网络"}
-          description={"规划IDC集群机柜网络"}
+          icon="cluster"
+          title={"添加集群"}
+          description={"创建自定义集群"}
         />
         <Table
           {...tableProps}
@@ -137,7 +99,6 @@ export default class ClusterComm extends React.Component {
           itemActions={this.itemActions}
           tableActions={this.tableActions}
           onCreate={this.showCreate}
-          isClusterLoading={isClusterLoading}
           alwaysUpdate
         />
       </ListPage>

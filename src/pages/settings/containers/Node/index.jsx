@@ -128,8 +128,8 @@ export default class AddCluster extends React.Component {
       <ListPage {...this.props} noWatch>
         <Banner
           icon="cluster"
-          title={"添加集群"}
-          description={"创建自定义集群"}
+          title={"添加节点"}
+          description={"创建节点"}
         />
         <Table
           {...tableProps}

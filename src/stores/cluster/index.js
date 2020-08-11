@@ -1,20 +1,3 @@
-/*
- * This file is part of KubeSphere Console.
- * Copyright (C) 2019 The KubeSphere Console Authors.
- *
- * KubeSphere Console is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * KubeSphere Console is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
- */
 
 import { get, cloneDeep } from 'lodash'
 import { action, observable } from 'mobx'
@@ -47,11 +30,11 @@ export default class ClusterStore extends Base {
 
   projects = new List()
 
-  getAgentUrl = ({ cluster }) =>
-    `kapis/cluster.kubesphere.io/v1alpha1/clusters/${cluster}/agent/deployment`
+  // getAgentUrl = ({ cluster }) =>
+  //   `kapis/cluster.kubesphere.io/v1alpha1/clusters/${cluster}/agent/deployment`
 
-  getTenantUrl = (params = {}) =>
-    `kapis/tenant.kubesphere.io/v1alpha2${this.getPath(params)}/${this.module}`
+  // getTenantUrl = (params = {}) =>
+  //   `kapis/tenant.kubesphere.io/v1alpha2${this.getPath(params)}/${this.module}`
 
   @action
   async fetchList({ cluster, workspace, namespace, more, ...params } = {}) {
@@ -68,23 +51,8 @@ export default class ClusterStore extends Base {
 
     params.limit = params.limit || 10
 
-    let result
-    if (!globals.app.isMultiCluster) {
-      result = { items: [DEFAULT_CLUSTER] }
-    } else if (
-      globals.app.hasPermission({ module: 'clusters', action: 'view' })
-    ) {
-      result = await request.get(
-        this.getResourceUrl({ cluster, workspace, namespace }),
-        params
-      )
-    } else {
-      result = await request.get(
-        this.getTenantUrl({ cluster, workspace, namespace }),
-        params
-      )
-    }
-
+    const result = await request.get('sailor/getClusterList', params)
+    
     const data = get(result, 'items', []).map(item => ({
       cluster,
       ...this.mapper(item),
@@ -108,26 +76,22 @@ export default class ClusterStore extends Base {
     this.isLoading = true
 
     let detail
-    if (!globals.app.isMultiCluster) {
-      detail = this.mapper(cloneDeep(DEFAULT_CLUSTER))
-    } else {
-      const result = await request.get(
-        `${this.getResourceUrl(params)}/${params.name}`,
-        null,
-        null,
-        (_, err) => {
-          if (err.reason === 'Not Found') {
-            global.navigateTo('/404')
-          }
+    const result = await request.get(
+      'sailor/getClusterDetail', 
+      params,
+      (_, err ) => {
+        if (err.reason === 'Not Found') {
+          global.navigateTo('/404')
         }
-      )
-      detail = { ...params, ...this.mapper(result) }
-    }
+      }
+    )
+    detail = { ...params, ...this.mapper(result.items) }
 
     this.detail = detail
     this.isLoading = false
     return detail
   }
+
 
   @action
   async fetchAgent(params) {

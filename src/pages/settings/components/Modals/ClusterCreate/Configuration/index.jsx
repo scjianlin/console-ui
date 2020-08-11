@@ -3,8 +3,8 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { Select,TextArea } from '@pitrix/lego-ui'
 import { Form } from 'components/Base'
-import { Button } from 'components/Base'
 import RackStore from 'stores/rackcidr'
+import ClusterVersion from 'stores/clusterVersion'
 
 import styles from './index.scss'
 
@@ -13,8 +13,11 @@ export default class BaseInfo extends React.Component {
   constructor(props) {
     super(props)
 
+    //  http request
     this.rackStore = new RackStore()
     this.rackStore.fetchList()
+    this.clusterVersion = new ClusterVersion()
+    this.clusterVersion.fetchList()
   }
 
   getType() {
@@ -28,64 +31,45 @@ export default class BaseInfo extends React.Component {
     return cluserType
   }
 
-  clusterIP = [{
-    label: "192.168.56.241",
-    value: "192.168.56.241",
-  },{
-    label: "192.168.57.241",
-    value: "192.168.57.241",
-  },{
-    label: "192.168.58.241",
-    value: "192.168.58.241",    
-  }]  
+  getClusterVersion() {
+    let ves = []
+    this.clusterVersion.list.data.filter(function(item) {
+      ves.push({
+        label: item.masterVersion,
+        value: item.masterVersion
+      })
+    })
+    return ves
+  }
 
-  // nameValidator = (rule, value, callback) => {
-  //   if (!value) {
-  //     return callback()
-  //   }
-
-  //   if (value === 'workspaces') {
-  //     return callback({
-  //       message: t('current name is not available'),
-  //       field: rule.field,
-  //     })
-  //   }
-
-  //   this.props.store.checkName({ name: value }).then(resp => {
-  //     if (resp.exist) {
-  //       return callback({
-  //         message: t('Workspace name exists'),
-  //         field: rule.field,
-  //       })
-  //     }
-  //     callback()
-  //   })
-  // }
-
-  handleOk = () => {
-    this.props.onOk(this.state.formTemplate)
+  getDockerVersion() {
+    let ves = []
+    this.clusterVersion.list.data.filter(function(item) {
+      ves.push({
+        label: item.dockerVersion,
+        value: item.dockerVersion
+      })
+    })
+    return ves
   }  
 
-  renderFooter() {
-    const { onCancel, isSubmitting } = this.props
+  getClusterIp =() => {
+    let ips = []
+    const { formTemplate } = this.props
 
-    return (
-      <div className={styles.footer}>
-        <div className={styles.wrapper}>
-          <div className="text-right">
-            <Button onClick={onCancel}>{t('Cancel')}</Button>
-              <Button
-                type="control"
-                onClick={this.handleOk}
-                loading={isSubmitting}
-              >
-                {t('Create')}
-              </Button>
-          </div>
-        </div>
-      </div>
-    )
-  }  
+    this.rackStore.list.data.filter(function(item) {
+      if (formTemplate.clusterRack.indexOf(item.rackTag) > -1) { //获取已经选择的master机柜
+
+        for (let i=0;i<item.hostAddr.length;i++) {
+          ips.push({
+            label: item.hostAddr[i].ipAddr + "-" + item.rackTag,
+            value: item.hostAddr[i].ipAddr
+          })
+        }
+      }
+    })
+    return ips
+  }
 
   render() {
     const { formRef, formTemplate } = this.props
@@ -97,6 +81,25 @@ export default class BaseInfo extends React.Component {
           <p>{"集群配置"}</p>
         </div>
         <Form data={formTemplate} ref={formRef}>
+        { formTemplate.clusterType=="Baremetal" && (
+          <Form.Item 
+            label={"选择IP地址"}
+            rules={[{
+                required: true,
+                message: "请选择IP地址",
+              }]}
+          >
+            <Select
+              name="clusterIp"
+              searchable
+              multi
+              options={this.getClusterIp()}
+              onBlurResetsInput={false}
+              onCloseResetsInput={false}
+              openOnClick={true}
+              isLoadingAtBottom
+            />
+          </Form.Item>)}
         <Form.Item 
             label={"请选择集群版本"}
             rules={[{
@@ -105,10 +108,9 @@ export default class BaseInfo extends React.Component {
               }]}
           >
            <Select
-              name="ClusterVersion"
+              name="clusterVersion"
               searchable
-              multi
-              options={this.clusterIP}
+              options={this.getClusterVersion()}
               onBlurResetsInput={false}
               onCloseResetsInput={false}
               openOnClick={true}
@@ -120,33 +122,13 @@ export default class BaseInfo extends React.Component {
             rules={[
               {
                 required: true,
-                message: "请选择容器版本!",
+                message: "请选择容器版本",
               }]}
           >
            <Select
-              name="DockerVersion"
+              name="dockerVersion"
               searchable
-              multi
-              options={this.clusterIP}
-              onBlurResetsInput={false}
-              onCloseResetsInput={false}
-              openOnClick={true}
-              isLoadingAtBottom
-            />
-          </Form.Item>
-          <Form.Item 
-            label={"请选择集群初始化模板"}
-            rules={[
-              {
-                required: true,
-                message: "请选择集群初始化模板!",
-              }]}
-          >
-           <Select
-              name="InitTemplate"
-              searchable
-              multi
-              options={this.clusterIP}
+              options={this.getDockerVersion()}
               onBlurResetsInput={false}
               onCloseResetsInput={false}
               openOnClick={true}
@@ -158,9 +140,10 @@ export default class BaseInfo extends React.Component {
             label={"自定义配置"}
           >
             <TextArea
-              name="CustomScript"
+              name="customScript"
               placeholder="自定义脚本"
-              rows="10"
+              defaultValue=" "
+              rows="5"
             />
           </Form.Item>
         </Form>

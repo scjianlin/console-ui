@@ -2,22 +2,23 @@
 @import '~scss/mixins';
 
 .modal {
-  min-width: 800px;
+  min-width: 700px;
   width: 30vw;
   height: 75vh;
   border-radius: 10px;
   background-color: $light-color02;
+  overflow: auto;
 }
 
 .body {
   top: 0 !important;
   bottom: 0 !important;
   padding: 0;
-  max-height: unset;
+  // min-height: 75%;
 }
 
 .wrapper {
-  width: 600px;
+  width: 550px;
   margin: 0 auto;
 }
 
@@ -106,15 +107,11 @@
 }
 
 .formWrapper {
-  height: calc(100vh - 80px);
+  // height: 60%;
   padding-top: 12px;
-  padding-bottom: 68px;
-  overflow: auto;
 }
 
 .footer {
-  position: absolute;
-  top: 610px;
-  left: 100px;
-  align-items: center;
+  position: relative;
+  top: 20px;
 }

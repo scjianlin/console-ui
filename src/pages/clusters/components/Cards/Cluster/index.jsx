@@ -33,7 +33,6 @@ export default class ClusterCard extends React.Component {
 
   render() {
     const { data } = this.props
-
     return (
       <li className={styles.wrapper} data-test="cluster-item">
         <Columns>
@@ -43,18 +42,15 @@ export default class ClusterCard extends React.Component {
           <Column className="is-2">
             <Text title={data.nodeCount} description={t('Node Count')} />
           </Column>
-          <Column className="is-2">
+          <Column className="is-3">
             <Text
               title={data.kubernetesVersion}
               description={t('Kubernetes Version')}
             />
           </Column>
-          <Column className="is-2">
-            <Text title={data.provider} description={t('Provider')} />
-          </Column>
-          <Column className="is-2">
+          <Column className="is-3">
             <Text
-              title={getLocalTime(data.createTime).format(
+              title={getLocalTime(data.lastProbeTime).format(
                 `YYYY-MM-DD HH:mm:ss`
               )}
               description={t('Created Time')}

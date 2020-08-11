@@ -104,7 +104,7 @@ export default class ClusterTitle extends Component {
                 className={classNames('margin-l12', tagClass)}
                 type="warning"
               >
-                {t('Host Cluster')}
+                {"Meta集群"}
               </Tag>
             )}
             &nbsp;
