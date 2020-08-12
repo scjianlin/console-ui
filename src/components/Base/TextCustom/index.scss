@@ -1,0 +1,85 @@
+@import '~scss/variables';
+@import '~scss/mixins';
+
+.wrapper {
+  position: relative;
+  display: flex;
+}
+
+.text {
+  & > div {
+    @include TypographyTitleH6($dark-color07);
+  }
+  & > p {
+    @include TypographyParagraph($dark-color01);
+  }
+}
+.init {
+  & > div {
+    @include TypographyTitleH6($dark-color07);
+    color: #f5a623;
+  }
+  & > p {
+    @include TypographyParagraph($dark-color01);
+  }
+}
+
+.success {
+  & > div {
+    @include TypographyTitleH6($dark-color07);
+    color: #00aa72;
+  }
+  & > p {
+    @include TypographyParagraph($dark-color01);
+  }  
+}
+
+.failed {
+  & > div {
+    @include TypographyTitleH6($dark-color07);
+    color: #ff0000;
+  }
+  & > p {
+    @include TypographyParagraph($dark-color01);
+  }  
+}
+
+.ellipsis {
+  flex: 1;
+  overflow: hidden;
+
+  .text {
+    flex: 1;
+    overflow: hidden;
+
+    & > div {
+      @include ellipsis;
+    }
+    & > p {
+      @include ellipsis;
+    }
+  }
+}
+
+.icon {
+  margin-right: 12px;
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    .text {
+      & > div,
+      & > p {
+        color: $primary;
+      }
+    }
+    .icon {
+      :global .qicon {
+        color: #00aa72;
+        fill: #90e0c5;
+      }
+    }
+  }
+}

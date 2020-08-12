@@ -79,6 +79,40 @@ const config = {
           loader: 'file-loader',
         },
       },
+      // antd setting
+      // {
+      //   test:/(\.jsx|\.js)$/,
+      //   exclude: /node_modules/,
+      //   loader:'babel-loader',
+      //   query:
+      //       {
+      //           presets:["env", "react"],
+      //           plugins: [
+      //               [
+      //                   "import",
+      //                   {libraryName: "antd", style: 'css'}
+      //               ] //antd按需加载
+      //           ]
+      //       },
+      // },
+      // {
+      //   test: /\.css$/,
+      //   loader: "style-loader!css-loader?modules",
+      //   exclude: /node_modules/,
+      // },
+      {
+        test:/\.css$/,
+        exclude:/src/,
+        use:[
+            { loader: "style-loader",},
+            {
+                loader: "css-loader",
+                options:{
+                    importLoaders:1
+                }
+            }
+        ]
+      }
     ],
   },
   optimization: {

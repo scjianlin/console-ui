@@ -1031,7 +1031,6 @@ const VolumeSnapshotMapper = detail => {
 }
 
 const ClusterMapper = item => {
-  console.log("cluster-map==>",item);
   const conditions = keyBy(get(item, 'status.conditions', []), 'type')
   return {
     ...getBaseInfo(item),

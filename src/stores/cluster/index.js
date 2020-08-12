@@ -30,12 +30,6 @@ export default class ClusterStore extends Base {
 
   projects = new List()
 
-  // getAgentUrl = ({ cluster }) =>
-  //   `kapis/cluster.kubesphere.io/v1alpha1/clusters/${cluster}/agent/deployment`
-
-  // getTenantUrl = (params = {}) =>
-  //   `kapis/tenant.kubesphere.io/v1alpha2${this.getPath(params)}/${this.module}`
-
   @action
   async fetchList({ cluster, workspace, namespace, more, ...params } = {}) {
     this.list.isLoading = true
