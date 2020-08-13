@@ -77,27 +77,18 @@ export default class BaseInfo extends React.Component {
               pattern: PATTERN_NAME,
               message: `${t('Invalid name')}, ${t('NAME_DESC')}`,
             },
-            { validator: this.nameValidator },
           ]}
         >
-          <Input name="metadata.name" />
+          <Input name="clusterName" />
         </Form.Item>
         <Form.Item label={t('CLUSTER_TAG')} desc={t('CLUSTER_TAG_DESC')}>
           <SelectInput
-            name="metadata.labels['cluster.kubesphere.io/group']"
+            name="clusterGroup"
             options={CLUSTER_PRESET_GROUPS}
             placeholder={t('Please select or input a tag')}
             optionRenderer={this.groupOptionRenderer}
           />
         </Form.Item>
-        {/* <Form.Item label={t('Provider')} desc={t('CLUSTER_PROVIDER_DESC')}>
-          <SelectInput
-            name="spec.provider"
-            options={CLUSTER_PROVIDERS}
-            placeholder={t('Please select or input a provider')}
-            optionRenderer={this.providerOptionRenderer}
-          />
-        </Form.Item> */}
         <Form.Item 
           label={"集群类型"}
           rules={[
@@ -130,10 +121,10 @@ export default class BaseInfo extends React.Component {
               multi
               options={this.getRack()}
             />
-          </Form.Item>        
+          </Form.Item>
         <Form.Item label={t('Description')} desc={t('DESCRIPTION_DESC')}>
           <TextArea
-            name="metadata.annotations['kubesphere.io/description']"
+            name="description"
             maxLength={256}
           />
         </Form.Item>

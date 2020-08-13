@@ -61,7 +61,7 @@ export default class AddClusterStore {
     params.limit = params.limit || 9
     params.page = params.page || 1
 
-    const result = await request.get('sailor/getCluster',params)
+    const result = await request.get('sailor/getClusterList',params)
     const data = result.items
 
     this.list.update({

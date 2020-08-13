@@ -103,15 +103,23 @@ export default class AddCluster extends React.Component {
     }
   }
 
+  // handleNext = () => {
+  //   const form = this.formRef.current
+  //   console.log("form==>", form);
+  //   // console.log("from && form.validate()==<",form && form.validate());
+  //   // this.formRef.current.validate(() => {
+  //   // this.setState(() => ({
+  //   //   currentStep: 1,
+  //   // }))
+  // }
   handleNext = () => {
     const form = this.formRef.current
-    form &&
       form.validate(() => {
         this.setState(({ currentStep }) => ({
           currentStep: Math.min(this.steps.length - 1, currentStep + 1),
         }))
       })
-  }
+  }  
 
   renderForm() {
     const { currentStep } = this.state
