@@ -968,6 +968,16 @@ export const CLUSTER_PRESET_GROUPS = [
   },
 ]
 
+export const CLUSTER_TYPE = [
+  {
+    label: "裸金属集群",
+    value: "Baremetal",
+  },{
+    label: "全托管集群",
+    value: "Hosted",
+  }  
+]
+
 export const CLUSTER_GROUP_TAG_TYPE = {
   production: 'warning',
   development: 'secondary',

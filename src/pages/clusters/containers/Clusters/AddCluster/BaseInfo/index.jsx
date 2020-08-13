@@ -1,27 +1,10 @@
-/*
- * This file is part of KubeSphere Console.
- * Copyright (C) 2019 The KubeSphere Console Authors.
- *
- * KubeSphere Console is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * KubeSphere Console is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
- */
 
 import React from 'react'
-import { Icon, Input } from '@pitrix/lego-ui'
+import { Icon, Input,Select } from '@pitrix/lego-ui'
 import {
   PATTERN_NAME,
   CLUSTER_GROUP_TAG_TYPE,
-  CLUSTER_PROVIDERS,
+  CLUSTER_TYPE,
   CLUSTER_PRESET_GROUPS,
 } from 'utils/constants'
 import { Form, Tag, TextArea } from 'components/Base'
@@ -67,12 +50,23 @@ export default class BaseInfo extends React.Component {
     })
   }
 
+  getRack() {
+    const {rackMaster} = this.props
+    let res = []
+    rackMaster.filter(function(item) {
+      if (item.isMaster==1) {
+        res.push({label:item.rackTag,value:item.rackTag})
+      }
+    })
+    return res
+  }  
+
   render() {
     return (
       <div>
         <SubTitle
           title={t('Cluster Settings')}
-          description={t('CLUSTER_SETTINGS_DESC')}
+          description={"管理集群设置，编辑集群信息，集群网络设置等等."}
         />
         <Form.Item
           label={t('Cluster Name')}
@@ -96,14 +90,47 @@ export default class BaseInfo extends React.Component {
             optionRenderer={this.groupOptionRenderer}
           />
         </Form.Item>
-        <Form.Item label={t('Provider')} desc={t('CLUSTER_PROVIDER_DESC')}>
+        {/* <Form.Item label={t('Provider')} desc={t('CLUSTER_PROVIDER_DESC')}>
           <SelectInput
             name="spec.provider"
             options={CLUSTER_PROVIDERS}
             placeholder={t('Please select or input a provider')}
             optionRenderer={this.providerOptionRenderer}
           />
-        </Form.Item>
+        </Form.Item> */}
+        <Form.Item 
+          label={"集群类型"}
+          rules={[
+            {
+              required: true,
+              message: "请选择集群类型",
+            }]}
+        >
+          <Select
+            name="clusterType"
+            searchable
+            options={CLUSTER_TYPE}
+            onBlurResetsInput={false}
+            onCloseResetsInput={false}
+            openOnClick={true}
+            isLoadingAtBottom
+          />
+        </Form.Item>        
+        <Form.Item 
+            label={"选择机柜"}
+            rules={[
+              {
+                required: true,
+                message: "请选择选择机柜",
+              }]}
+          >
+            <Select
+              name="clusterRack"
+              searchable
+              multi
+              options={this.getRack()}
+            />
+          </Form.Item>        
         <Form.Item label={t('Description')} desc={t('DESCRIPTION_DESC')}>
           <TextArea
             name="metadata.annotations['kubesphere.io/description']"

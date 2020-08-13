@@ -28,40 +28,52 @@ import ClusterStore from 'stores/cluster'
 import BaseInfo from './BaseInfo'
 import Configuration from './Configuration'
 import styles from './index.scss'
+import RackStore from 'stores/rackcidr'
+
 
 @inject('rootStore')
 @observer
 export default class AddCluster extends React.Component {
-  state = {
-    currentStep: 0,
-    formTemplate: {
-      apiVersion: 'cluster.kubesphere.io/v1alpha1',
-      kind: 'Cluster',
-      spec: {
-        provider: '',
-        connection: {
-          type: 'direct',
-          kubeconfig: '',
-        },
-        joinFederation: true,
-      },
-    },
+  // state = {
+  //   currentStep: 0,
+  //   formTemplate: {
+  //     apiVersion: 'cluster.kubesphere.io/v1alpha1',
+  //     kind: 'Cluster',
+  //     spec: {
+  //       provider: '',
+  //       connection: {
+  //         type: 'direct',
+  //         kubeconfig: '',
+  //       },
+  //       joinFederation: true,
+  //     },
+  //   },
+  // }
+  constructor(props) {
+    super(props)
+    this.store = new ClusterStore()
+    this.rack = new RackStore()
+    this.rack.fetchList()
+    this.state = {
+      currentStep: 0,
+      formTemplate: {}
+    }
   }
-
-  store = new ClusterStore()
 
   formRef = React.createRef()
 
-  steps = [
-    {
-      name: 'baseinfo',
-      component: BaseInfo,
-    },
-    {
-      name: 'configuration',
-      component: Configuration,
-    },
-  ]
+  get steps() {
+    return [
+      {
+        name: 'baseinfo',
+        component: BaseInfo,
+      },
+      {
+        name: 'configuration',
+        component: Configuration,
+      },
+    ]
+}
 
   routing = this.props.rootStore.routing
 
@@ -105,7 +117,12 @@ export default class AddCluster extends React.Component {
     const { currentStep } = this.state
     const step = this.steps[currentStep]
     const Component = step.component
-    return <Component store={this.store} />
+    const props = {
+      store: this.state,
+      rackMaster: this.rack.list.data,
+    }
+    return <Component {...props} />
+    // return <Component store={this.store} />
   }
 
   renderFooter() {
@@ -142,8 +159,8 @@ export default class AddCluster extends React.Component {
           </a>
         </div>
         <div className={styles.title}>
-          <div className="h4">{t('Import Kubernetes Cluster')}</div>
-          <p>{t('IMPORT_CLUSTER_DESC')}</p>
+          <div className="h4">{"创建Kubernetes集群"}</div>
+          <p>{"现已支持裸金属和托管集群."}</p>
         </div>
         <Form
           data={formTemplate}
