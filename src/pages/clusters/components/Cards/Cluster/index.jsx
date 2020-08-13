@@ -47,7 +47,6 @@ export default  class ClusterCard extends React.Component {
 
   render() {
     const { data } = this.props
-    console.log("data=card=>",data);
     const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
     return (
@@ -74,7 +73,7 @@ export default  class ClusterCard extends React.Component {
             />
           </Column>
           <Column className="is-1">
-            { data.isReady===true && (
+           { data.isReady===true && (
               <TextCustom
                 title={"健康"}
                 description={"集群状态"}

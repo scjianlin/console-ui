@@ -84,7 +84,7 @@ export default class ClusterTitle extends Component {
           <div className={styles.name}>
             {onClick ? (
               <a title={cluster.name} onClick={onClick}>
-                {cluster.name}
+                {cluster.name == 'host' ? 'Meta集群' : cluster.name }
               </a>
             ) : (
               <span title={cluster.name}>{cluster.name}</span>

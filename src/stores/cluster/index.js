@@ -172,4 +172,10 @@ export default class ClusterStore extends Base {
 
     this.version = get(result, 'kubernetes.gitVersion')
   }
+
+  @action
+  create(data, params = {}) {
+    console.log("data=>",data);
+    // return this.submitting(request.post('sailor/addCluster', data))
+  }
 }

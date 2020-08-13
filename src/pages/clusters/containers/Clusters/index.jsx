@@ -154,7 +154,7 @@ class Clusters extends React.Component {
         {!isEmpty(hostClusters) && (
           <div className="margin-b12">
             <div className="h6">
-              {hostClusters.length > 1 ? t('Host Clusters') : t('Host Cluster')}
+              {hostClusters.length > 1 ? "Meta集群" : "Meta集群"}
             </div>
             {hostClusters.map(item => (
               <ClusterCard

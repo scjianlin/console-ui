@@ -30,26 +30,6 @@ export default class BaseInfo extends React.Component {
     </>
   )
 
-  nameValidator = (rule, value, callback) => {
-    if (!value) {
-      return callback()
-    }
-
-    if (value.length > 63) {
-      return callback({
-        message: `${t('Invalid name')}, ${t('NAME_DESC')}`,
-        field: rule.field,
-      })
-    }
-
-    this.props.store.checkName({ name: value }).then(resp => {
-      if (resp.exist) {
-        return callback({ message: t('Name exists'), field: rule.field })
-      }
-      callback()
-    })
-  }
-
   getRack() {
     const {rackMaster} = this.props
     let res = []
@@ -65,8 +45,8 @@ export default class BaseInfo extends React.Component {
     return (
       <div>
         <SubTitle
-          title={t('Cluster Settings')}
-          description={"管理集群设置，编辑集群信息，集群网络设置等等."}
+          title={"基础设置"}
+          description={"管理集群设置，编辑集群信息，，设置集群的环境等等."}
         />
         <Form.Item
           label={t('Cluster Name')}

@@ -34,21 +34,6 @@ import RackStore from 'stores/rackcidr'
 @inject('rootStore')
 @observer
 export default class AddCluster extends React.Component {
-  // state = {
-  //   currentStep: 0,
-  //   formTemplate: {
-  //     apiVersion: 'cluster.kubesphere.io/v1alpha1',
-  //     kind: 'Cluster',
-  //     spec: {
-  //       provider: '',
-  //       connection: {
-  //         type: 'direct',
-  //         kubeconfig: '',
-  //       },
-  //       joinFederation: true,
-  //     },
-  //   },
-  // }
   constructor(props) {
     super(props)
     this.store = new ClusterStore()
@@ -79,18 +64,11 @@ export default class AddCluster extends React.Component {
 
   handleImport = async data => {
     const postData = cloneDeep(data)
-
-    if (get(postData, 'spec.connection.type') === 'proxy') {
-      unset(postData, 'spec.connection.kubeconfig')
-    } else {
-      const config = get(postData, 'spec.connection.kubeconfig', '')
-      set(postData, 'spec.connection.kubeconfig', btoa(config))
-      await this.store.validate(postData)
-    }
-
-    await this.store.create(postData)
-    const name = get(postData, 'metadata.name')
-    this.routing.push(`/clusters/${name}`)
+    console.log("postData==>", postData);
+    console.log("store==>", this.store);
+    this.store.create(postData)
+    
+    // this.routing.push(`/clusters/${name}`)
   }
 
   handlePrev = () => {
@@ -103,15 +81,6 @@ export default class AddCluster extends React.Component {
     }
   }
 
-  // handleNext = () => {
-  //   const form = this.formRef.current
-  //   console.log("form==>", form);
-  //   // console.log("from && form.validate()==<",form && form.validate());
-  //   // this.formRef.current.validate(() => {
-  //   // this.setState(() => ({
-  //   //   currentStep: 1,
-  //   // }))
-  // }
   handleNext = () => {
     const form = this.formRef.current
       form.validate(() => {
@@ -122,15 +91,15 @@ export default class AddCluster extends React.Component {
   }  
 
   renderForm() {
-    const { currentStep } = this.state
+    const { currentStep, formTemplate } = this.state
     const step = this.steps[currentStep]
     const Component = step.component
     const props = {
       store: this.state,
       rackMaster: this.rack.list.data,
+      formTemplate: formTemplate,
     }
     return <Component {...props} />
-    // return <Component store={this.store} />
   }
 
   renderFooter() {
@@ -149,7 +118,7 @@ export default class AddCluster extends React.Component {
             htmlType="submit"
             loading={isValidating || isSubmitting}
           >
-            {isValidating ? t('Validating') : t('Import')}
+            {isValidating ? t('Validating') : "创建"}
           </Button>
         )}
       </div>
