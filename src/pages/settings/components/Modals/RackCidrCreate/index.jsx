@@ -4,12 +4,10 @@ import PropTypes from 'prop-types'
 import { Icon } from '@pitrix/lego-ui'
 import { Modal, Button } from 'components/Base'
 
-import RouterStore from 'stores/router'
-
 import Steps from './Steps'
 import BaseInfo from './BaseInfo'
-
 import styles from './index.scss'
+
 
 export default class RackCidrCreateModal extends React.Component {
   static propTypes = {
@@ -42,8 +40,6 @@ export default class RackCidrCreateModal extends React.Component {
     }
 
     this.formRef = React.createRef()
-
-    this.routerStore = new RouterStore()
   }
 
   get steps() {

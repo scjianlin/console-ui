@@ -22,10 +22,10 @@ export default class ClusterComm extends React.Component {
     this.clusterStore.fetchList({ limit: -1 })
   }
 
-  @computed
-  get clusters() {
-    return this.clusterStore.list.data
-  }
+  // @computed
+  // get clusters() {
+  //   return this.clusterStore.list.data
+  // }
 
   showAction(record) {
     return globals.config.systemWorkspace !== record.name

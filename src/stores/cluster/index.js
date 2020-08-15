@@ -15,6 +15,9 @@ export default class ClusterStore extends Base {
   isAgentLoading = true
 
   @observable
+  clusterCondition = new List()
+
+  @observable
   agent = ''
 
   @observable
@@ -29,6 +32,7 @@ export default class ClusterStore extends Base {
   project = ''
 
   projects = new List()
+
 
   @action
   async fetchList({ cluster, workspace, namespace, more, ...params } = {}) {
@@ -46,12 +50,10 @@ export default class ClusterStore extends Base {
     params.limit = params.limit || 10
 
     const result = await request.get('sailor/getClusterList', params)
-    
     const data = get(result, 'items', []).map(item => ({
       cluster,
       ...this.mapper(item),
     }))
-
     this.list.update({
       data: more ? [...this.list.data, ...data] : data,
       total: result.totalItems || result.total_count || data.length || 0,
@@ -175,7 +177,23 @@ export default class ClusterStore extends Base {
 
   @action
   create(data, params = {}) {
-    console.log("data=>",data);
-    // return this.submitting(request.post('sailor/addCluster', data))
+    return this.submitting(request.post('sailor/addCluster', data))
+  }
+
+  @action
+  async fetchCondition(params,more)  {
+    console.log("data==>",params);
+
+    const result = await request.get('sailor/getCondition', params)
+    const data = result.items.length >0 ? result.items :  []
+  
+    this.clusterCondition.update({
+      data: more ? [...this.clusterCondition.data, ...data] : data,
+      total: result.total_count,
+      limit: 10,
+      page: 1,
+      isLoading: false,
+    })
+    return data
   }
 }

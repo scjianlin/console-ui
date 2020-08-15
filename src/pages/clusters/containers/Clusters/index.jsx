@@ -101,7 +101,6 @@ class Clusters extends React.Component {
       isLoading: isHostLoading,
       filters: hostFilters,
     } = this.hostStore.list
-
     if (
       isEmpty(data) &&
       !isLoading &&

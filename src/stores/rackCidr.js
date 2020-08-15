@@ -65,8 +65,7 @@ export default class RackStore {
     params.page = params.page || 1
 
     const result = await request.get('sailor/getRackCidr',params)
-    console.log("result=1=>",result.items);
-    const data = result.items.map(this.mapper)
+    const data = (result.items !== null ? result.items.map(this.mapper) : [] )
 
     this.list.update({
       data: data,

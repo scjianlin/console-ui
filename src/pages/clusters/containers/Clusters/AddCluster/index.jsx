@@ -64,11 +64,8 @@ export default class AddCluster extends React.Component {
 
   handleImport = async data => {
     const postData = cloneDeep(data)
-    console.log("postData==>", postData);
-    console.log("store==>", this.store);
     this.store.create(postData)
-    
-    // this.routing.push(`/clusters/${name}`)
+    this.routing.push(`/clusters`)
   }
 
   handlePrev = () => {

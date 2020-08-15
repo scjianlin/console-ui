@@ -1040,15 +1040,15 @@ const ClusterMapper = item => {
       'monitoring': true,
       'multicluster': true,
     }),
-    provider: get(item, 'spec.provider'),
+    // provider: get(item, 'spec.provider'),
     isHost: get(item, 'metadata.labels["cluster-role.kunkka.io/cluster-role"]') === 'meta' ? true : false,
     nodeCount: get(item, 'status.nodeCount'),
+    description: get(item, 'metadata.annotations["kunkka.io/description"]'),
     kubernetesVersion: get(item, 'status.version'),
     labels: get(item, 'metadata.labels'),
-    group: get(item, 'metadata.labels["cluster.kubesphere.io/group"]'),
-    isReady: globals.app.isMultiCluster
-      ? get(conditions, 'Ready.status') === 'True'
-      : true,
+    group: get(item, 'metadata.labels["cluster.kunkka.io/group"]'),
+    isReady: get(item, 'status.phase'),
+    clusterType: get(item, 'spec.type'),
     visibility: get(
       item,
       'metadata.labels["cluster.kubesphere.io/visibility"]'
