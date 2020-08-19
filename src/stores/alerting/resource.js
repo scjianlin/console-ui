@@ -88,6 +88,7 @@ export default class ResourceStore extends Base {
       })}/monitoring.kubesphere.io/v1alpha3/nodes`,
       params
     )
+
     const data = (get(result, 'results') || []).reduce(
       (nodeList, metric = {}) => {
         const metricName = metric.metric_name

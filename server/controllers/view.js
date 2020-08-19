@@ -31,7 +31,6 @@ const { client: clientConfig } = getServerConfig()
 const renderView = async ctx => {
   try {
     const { user, config, ksConfig } = await getCurrentUser(ctx)
-
     await ctx.render('index', {
       isDev: global.MODE_DEV,
       title: config.title,

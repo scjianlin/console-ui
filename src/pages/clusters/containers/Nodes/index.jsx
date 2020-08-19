@@ -100,10 +100,10 @@ export default class Nodes extends React.Component {
   }
 
   get tableActions() {
-    const { trigger, routing, tableProps } = this.props
+    const { trigger, routing, tableProps,store } = this.props
     return {
       ...tableProps.tableActions,
-      actions: [],
+      actions: store.nodeRole== 'host' ? [] : null,  //屏蔽master集群添加节点
       selectActions: [
         {
           key: 'taint',
@@ -399,27 +399,34 @@ export default class Nodes extends React.Component {
     )
   }
 
+  showCreate = () => {
+    const { getData } = this.props
+    return this.props.trigger('cluster.create', {
+      success: getData,
+    })
+  }
+
   renderOverview() {
     const { masterCount, masterWorkerCount, list } = this.store
     const totalCount = list.total
-    const workerCount = Math.max(
-      Number(totalCount) - Number(masterCount) + Number(masterWorkerCount),
-      0
-    )
+    // const workerCount = Math.max(
+    //   Number(totalCount) - Number(masterCount) + Number(masterWorkerCount),
+    //   0
+    // )
 
     return (
       <Panel className="margin-b12">
         <div className={styles.overview}>
           <Text icon="nodes" title={totalCount} description={t('Node Count')} />
           <Text title={masterCount} description={t('Master Node')} />
-          <Text title={workerCount} description={t('Worker Node')} />
+          <Text title={masterWorkerCount} description={t('Worker Node')} />
         </div>
       </Panel>
     )
   }
 
   render() {
-    const { bannerProps, tableProps } = this.props
+    const { bannerProps, tableProps, store } = this.props
     const isLoadingMonitor = this.monitoringStore.isLoading
 
     return (
@@ -432,6 +439,8 @@ export default class Nodes extends React.Component {
           tableActions={this.tableActions}
           columns={this.getColumns()}
           monitorLoading={isLoadingMonitor}
+          onCreate={this.showCreate}
+          store={store}
           alwaysUpdate
         />
       </ListPage>

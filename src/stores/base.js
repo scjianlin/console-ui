@@ -128,12 +128,13 @@ export default class BaseStore {
     }
 
     params.limit = params.limit || 10
-
+    console.log("url==>",      this.getResourceUrl({ cluster, workspace, namespace, devops }),
+    );
     const result = await request.get(
       this.getResourceUrl({ cluster, workspace, namespace, devops }),
       this.getFilterParams(params)
     )
-    
+    console.log("resp==>",result);
     const data = get(result, 'items', []).map(item => ({
       cluster,
       ...this.mapper(item),

@@ -37,7 +37,7 @@ export default class ClusterStore extends Base {
   @action
   async fetchList({ cluster, workspace, namespace, more, ...params } = {}) {
     this.list.isLoading = true
-
+    console.log("start=>list", );
     if (!params.sortBy && params.ascending === undefined) {
       params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
     }
@@ -70,7 +70,6 @@ export default class ClusterStore extends Base {
   @action
   async fetchDetail(params) {
     this.isLoading = true
-
     let detail
     const result = await request.get(
       'sailor/getClusterDetail', 
@@ -92,7 +91,6 @@ export default class ClusterStore extends Base {
   @action
   async fetchAgent(params) {
     this.isAgentLoading = true
-
     const result = await request.get(this.getAgentUrl(params))
 
     this.agent = result
@@ -138,18 +136,8 @@ export default class ClusterStore extends Base {
     }
 
     params.limit = params.limit || 10
+    const result = await request.get(`sailor/getMemberMeta`, {'clusterName': cluster})
 
-    const result = await request.get(
-      `kapis/resources.kubesphere.io/v1alpha3${this.getPath({
-        cluster,
-        namespace,
-      })}/namespaces`,
-      {
-        labelSelector:
-          '!kubesphere.io/kubefed-host-namespace,!kubesphere.io/devopsproject',
-        ...params,
-      }
-    )
     const data = get(result, 'items', []).map(item => ({
       cluster,
       ...this.mapper(item),
@@ -171,7 +159,6 @@ export default class ClusterStore extends Base {
     const result = await request.get(
       `kapis/clusters/${cluster}/version`.replace('/clusters/default', '')
     )
-
     this.version = get(result, 'kubernetes.gitVersion')
   }
 
@@ -182,7 +169,6 @@ export default class ClusterStore extends Base {
 
   @action
   async fetchCondition(params,more)  {
-    console.log("data==>",params);
 
     const result = await request.get('sailor/getCondition', params)
     const data = result.items.length >0 ? result.items :  []

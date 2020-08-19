@@ -330,7 +330,6 @@ export default class WorkloadTable extends React.Component {
 
   renderActions() {
     const { onCreate, actions } = this.props
-
     if (actions) {
       return actions.map(action => (
         <Button
@@ -344,11 +343,9 @@ export default class WorkloadTable extends React.Component {
         </Button>
       ))
     }
-
     if (!onCreate) {
       return null
     }
-
     return (
       <Button
         type="control"

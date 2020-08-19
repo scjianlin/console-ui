@@ -55,7 +55,6 @@ export default class ClusterSelectModal extends React.Component {
   render() {
     const { visible, onCancel } = this.props
     const { data, total, page, isLoading } = this.store.list
-
     const keyword = get(this.store.list, 'filters.name')
 
     return (

@@ -43,7 +43,7 @@ export default class App extends Component {
       this.init(this.props.match.params)
     }
   }
-
+  
   async init(params) {
     this.store.initializing = true
 

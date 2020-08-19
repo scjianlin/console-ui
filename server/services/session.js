@@ -47,13 +47,13 @@ const login = async (data, headers) => {
     redirect: 'manual',
   })
 
-  console.log("parse==>",resp.headers.get('location'));
+  // console.log("parse==>",resp.headers.get('location'));
 
   const { access_token } = parse(
     resp.headers.get('location').replace(/http.*(\?|#)/, '')
   )
 
-  console.log("access_token==>",access_token);
+  // console.log("access_token==>",access_token);
 
   if (!access_token) {
     throw new Error(resp.message)
@@ -164,9 +164,9 @@ const getKSConfig = async token => {
       url: `/kapis/config.kubesphere.io/v1alpha2/configs/configz`,
       token,
     })
-    console.log("Resp_KSconfig==>",resp);
+    // console.log("Resp_KSconfig==>",resp);
   } catch (error) {
-    console.log("Resp_KSconfigE==>",error);
+    // console.log("Resp_KSconfigE==>",error);
     console.error(error)
   }
 

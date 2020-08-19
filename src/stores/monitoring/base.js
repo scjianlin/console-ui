@@ -265,7 +265,9 @@ export default class BaseMonitoringStore {
 
     const params = this.getParams(filters)
     const api = this.getApi(filters)
+    // console.log("api===>",api);
     const response = await to(request.get(api, params))
+    // console.log("response===>",response);
 
     let result = this.getResult(response)
     if (autoRefresh) {

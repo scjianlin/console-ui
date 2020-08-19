@@ -60,7 +60,6 @@ export default class ClusterTitle extends Component {
     }
 
     const isReady = get(cluster, 'isReady') === "Running"
-    console.log("cluster===>", cluster);
     return (
       <div
         className={classNames(

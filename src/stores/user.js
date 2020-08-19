@@ -103,18 +103,18 @@ export default class UsersStore extends Base {
       module = 'clusterroles'
     }
 
-    const resp = await request.get(
-      `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${this.getModule(
-        params
-      )}/${name}/${module}`,
-      {},
-      {},
-      () => {}
-    )
-
+    // const resp = await request.get(
+    //   `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${this.getModule(
+    //     params
+    //   )}/${name}/${module}`,
+    //   {},
+    //   {},
+    //   () => {}
+    // )
+    const resp = await request.get('sailor/getClusterRole', {})
     const rules = {}
     resp &&
-      resp.forEach(item => {
+      resp.items.forEach(item => {
         const rule = safeParseJSON(
           get(
             item,

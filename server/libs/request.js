@@ -37,10 +37,10 @@ const send_gateway_request = ({
   headers = {},
   ...rest
 }) => {
-  console.log("method=>",method);
-  console.log("url=>",url);
-  console.log("params=>",params);
-  console.log("token=>",token);
+  // console.log("method=>",method);
+  // console.log("url=>",url);
+  // console.log("params=>",params);
+  // console.log("token=>",token);
 
   const options = { headers, ...rest }
 
@@ -52,7 +52,7 @@ const send_gateway_request = ({
       'x-client-ip': headers['x-client-ip'],
     }
   }
-  console.log("options==>",options);
+  // console.log("options==>",options);
   return request[method.toLowerCase()](
     `${serverConfig.apiServer.url}${url}`,
     params,

@@ -17,12 +17,17 @@
  */
 
 import { action, observable } from 'mobx'
+import { get} from 'lodash'
 
 import { getNodeRoles } from 'utils/node'
+import List from './base.list'
+import { LIST_DEFAULT_ORDER, API_VERSIONS } from 'utils/constants'
 
 import Base from './base'
 
 export default class NodeStore extends Base {
+  list = new List()
+
   @observable
   nodesMetrics = []
 
@@ -35,32 +40,73 @@ export default class NodeStore extends Base {
   @observable
   masterWorkerCount = 0
 
+  @observable
+  nodeRole = null
+
   module = 'nodes'
 
-  getFilterParams = params => {
+  getFilterParams = (params,cluster) => {
     const result = { ...params }
     if (result.role) {
       result.labelSelector = result.labelSelector || ''
       result.labelSelector += `node-role.kubernetes.io/${result.role}=`
       delete result.role
     }
+    if (cluster) {
+      result.clusterName = cluster.clusterName
+    }
     return result
   }
 
   @action
-  async fetchCount(params) {
-    const resp = await request.get(this.getResourceUrl(params), {
-      labelSelector: 'node-role.kubernetes.io/master=',
+  async fetchList({
+    cluster,
+    workspace,
+    namespace,
+    more,
+    devops,
+    ...params
+  } = {}) {
+    this.list.isLoading = true
+
+    if (!params.sortBy && params.ascending === undefined) {
+      params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
+    }
+
+    if (params.limit === Infinity || params.limit === -1) {
+      params.limit = -1
+      params.page = 1
+    }
+    params.limit = params.limit || 10
+
+    const result = await request.get(
+      `sailor/getNodeCount`,
+      this.getFilterParams(params,{'clusterName':cluster}),
+    )
+    const data = get(result, 'items', []).map(item => ({
+      cluster,
+      ...this.mapper(item),
+    }))
+
+    this.list.update({
+      data: more ? [...this.list.data, ...data] : data,
+      total: result.totalItems || result.total_count || data.length || 0,
+      ...params,
+      limit: Number(params.limit) || 10,
+      page: Number(params.page) || 1,
+      isLoading: false,
+      ...(this.list.silent ? {} : { selectedRowKeys: [] }),
     })
 
-    const masterWorker = resp.items.filter(
-      item =>
-        getNodeRoles(item.metadata.labels).filter(role => role !== 'master')
-          .length > 0
-    ).length
+    return data
+  }
 
-    this.masterCount = resp.totalItems
-    this.masterWorkerCount = masterWorker
+  @action
+  async fetchCount(params) {
+    const resp = await request.get(`sailor/getClusterCounts`,{'clusterName': params.cluster})
+    this.masterCount = resp.items.masterCount
+    this.masterWorkerCount =  resp.items.masterWorkerCount
+    this.nodeRole = params.cluster
   }
 
   @action

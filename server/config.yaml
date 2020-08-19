@@ -229,8 +229,8 @@ client:
     - cate: 'platformsettings'
       items:
         - { name: base-info, title: Platform Info, icon: home, authKey: platform-settings}
-        - { name: cluster, title: '添加集群', icon: cluster, authKey: platform-settings}
-        - { name: node, title: '添加节点', icon: nodes, authKey: platform-settings}
+        # - { name: cluster, title: '添加集群', icon: cluster, authKey: platform-settings}
+        # - { name: node, title: '添加节点', icon: nodes, authKey: platform-settings}
         - { name: racckcommon, title: '机柜网络', icon: hammer, authKey: platform-settings}
         - { name: podcommon, title: '容器网络', icon: pod, authKey: platform-settings}        
 
