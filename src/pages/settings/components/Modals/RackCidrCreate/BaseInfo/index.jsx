@@ -37,6 +37,9 @@ export default class BaseInfo extends React.Component {
     },{
       label: "120",
       value: 120,
+    },{
+      label: "240",
+      value: 240,      
     }]
     return state
   }

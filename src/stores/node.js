@@ -19,7 +19,7 @@
 import { action, observable } from 'mobx'
 import { get} from 'lodash'
 
-import { getNodeRoles } from 'utils/node'
+// import { getNodeRoles } from 'utils/node'
 import List from './base.list'
 import { LIST_DEFAULT_ORDER, API_VERSIONS } from 'utils/constants'
 
@@ -83,6 +83,7 @@ export default class NodeStore extends Base {
       `sailor/getNodeCount`,
       this.getFilterParams(params,{'clusterName':cluster}),
     )
+
     const data = get(result, 'items', []).map(item => ({
       cluster,
       ...this.mapper(item),
@@ -164,5 +165,11 @@ export default class NodeStore extends Base {
       })
     )
     this.list.selectedRowKeys = []
+  }
+
+  @action
+  create(data) {
+    console.log("data=>",data);
+    return this.submitting(request.post('sailor/addClusterNode', data))
   }
 }

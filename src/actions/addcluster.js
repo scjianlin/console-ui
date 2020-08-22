@@ -1,8 +1,7 @@
 
-import { toJS } from 'mobx'
+// import { toJS } from 'mobx'
 import { Modal, Notify } from 'components/Base'
-import CreateModal from 'settings/components/Modals/ClusterCreate'
-import EditModal from 'settings/components/Modals/EditCluster'
+import CreateModal from 'clusters/components/Modals/AddCluster'
 
 export default {
   'cluster.create': {

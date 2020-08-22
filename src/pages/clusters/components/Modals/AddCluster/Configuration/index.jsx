@@ -20,17 +20,6 @@ export default class BaseInfo extends React.Component {
     this.clusterVersion.fetchList()
   }
 
-  getType() {
-    const cluserType = [{
-      label: "裸金属集群",
-      value: "Baremetal",
-    },{
-      label: "全托管集群",
-      value: "Hosted",
-    }]
-    return cluserType
-  }
-
   getClusterVersion() {
     let ves = []
     this.clusterVersion.list.data.filter(function(item) {
@@ -78,37 +67,17 @@ export default class BaseInfo extends React.Component {
       <div className={styles.wrapper}>
         <div className={styles.step}>
           <div>{"集群配置"}</div>
-          <p>{"集群配置"}</p>
         </div>
         <Form data={formTemplate} ref={formRef}>
-        { formTemplate.clusterType=="Baremetal" && (
-          <Form.Item 
-            label={"选择IP地址"}
-            rules={[{
-                required: true,
-                message: "请选择IP地址",
-              }]}
-          >
-            <Select
-              name="clusterIp"
-              searchable
-              multi
-              options={this.getClusterIp()}
-              onBlurResetsInput={false}
-              onCloseResetsInput={false}
-              openOnClick={true}
-              isLoadingAtBottom
-            />
-          </Form.Item>)}
-        <Form.Item 
-            label={"请选择集群版本"}
+        <Form.Item
+            label={"请选择Kubelet版本"}
             rules={[{
                 required: true,
                 message: "请选择集群版本!",
               }]}
           >
            <Select
-              name="clusterVersion"
+              name="nodeVersion"
               searchable
               options={this.getClusterVersion()}
               onBlurResetsInput={false}

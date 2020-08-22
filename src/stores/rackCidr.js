@@ -10,6 +10,9 @@ export default class RackStore {
   list = new List()
 
   @observable
+  addrList = []
+
+  @observable
   detail = {}
 
   @observable
@@ -66,6 +69,20 @@ export default class RackStore {
 
     const result = await request.get('sailor/getRackCidr',params)
     const data = (result.items !== null ? result.items.map(this.mapper) : [] )
+
+    //  获取机柜IP信息
+    for (let i=0;i<data.length;i++) {
+      for (let j=0;j<data[i].hostAddr.length;j++) {
+        let state = (data[i].hostAddr[j].useState === 0)  //获取未使用的node列表
+        if (state) {
+          this.addrList.push({
+            label: data[i].hostAddr[j].ipAddr + "-" + data[i].rackTag,
+            value: data[i].hostAddr[j].ipAddr,
+            rackTag: data[i].rackTag
+          })
+        }
+      }
+    }
 
     this.list.update({
       data: data,

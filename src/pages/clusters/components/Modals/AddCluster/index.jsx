@@ -24,13 +24,11 @@ export default class ClusterCreateModal extends React.Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
       currentStep: 0,
       formTemplate: {
-        // clustrName:"",
-        // ClusterType:"",
-        // ClusterRack:"",
+        clusterName: this.props.store.list.data[0].cluster,
+        nodeRack:[],
         // ClusterIP:"",
         // ClusterUser:"",
         // UserPass: "",

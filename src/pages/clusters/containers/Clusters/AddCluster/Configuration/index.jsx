@@ -19,6 +19,10 @@ export default class BaseInfo extends React.Component {
     this.clusterVersion = new ClusterVersion()
     this.clusterVersion.fetchList()
   }
+
+  // pod 地址池
+  podPool = []
+
   get editOptions() {
     return {
       width: '74%',
@@ -26,21 +30,27 @@ export default class BaseInfo extends React.Component {
   }
 
   getClusterIp =() => {
-    let ips = []
     const { formTemplate } = this.props
-
+    let node = []
+    let pod = []
     this.rackStore.list.data.filter(function(item) {
       if (formTemplate.clusterRack.indexOf(item.rackTag) > -1) { //获取已经选择的master机柜
-
         for (let i=0;i<item.hostAddr.length;i++) {
-          ips.push({
+          node.push({
             label: item.hostAddr[i].ipAddr + "-" + item.rackTag,
             value: item.hostAddr[i].ipAddr
           })
         }
+        for (let j =0;j<item.podCidr.length;j++) {
+          pod.push({
+            label: item.rackTag +": " + item.podCidr[j].rangeStart +"-" + item.podCidr[j].rangeEnd,
+            value: item.podCidr[j].id
+          })
+        }
       }
     })
-    return ips
+    this.podPool = pod;
+    return node
   }
 
   getDockerVersion() {
@@ -88,6 +98,22 @@ export default class BaseInfo extends React.Component {
               options={this.getClusterIp()}
             />
           </Form.Item>)}
+          { formTemplate.clusterType=="Baremetal" && (
+          <Form.Item 
+            label={"请选择Pod地址段"}
+            rules={[{
+                required: true,
+                message: "请选择Pod地址段",
+            }]}
+          >
+            <Select
+              name="podPool"
+              searchable
+              multi
+              options={this.podPool}
+            />
+          </Form.Item>
+          )}          
           { formTemplate.clusterType=="Baremetal" && (
           <Form.Item 
             label={"输入服务器用户"}
