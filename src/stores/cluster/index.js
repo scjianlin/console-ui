@@ -170,7 +170,7 @@ export default class ClusterStore extends Base {
   @action
   async fetchCondition(params,more)  {
 
-    const result = await request.get('sailor/getCondition', params)
+    const result = await request.get('sailor/getClusterCondition', params)
     const data = result.items.length >0 ? result.items :  []
   
     this.clusterCondition.update({

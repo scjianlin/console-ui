@@ -18,6 +18,16 @@ import Table from 'components/Tables/List'
 
 import styles from './index.scss'
 
+
+//  import antd
+import { Modal, Steps} from 'antd'
+import { LoadingOutlined } from '@ant-design/icons';
+import 'antd/lib/button/style/index.css'
+import 'antd/lib/spin/style/index.css'
+import 'antd/lib/steps/style/index.css'
+import 'antd/lib/modal/style/index.css'
+import { observer } from 'mobx-react'
+
 const MetricTypes = {
   cpu_used: 'node_cpu_usage',
   cpu_total: 'node_cpu_total',
@@ -29,14 +39,24 @@ const MetricTypes = {
   pod_total: 'node_pod_quota',
 }
 
+//  def time
+let ConditionTime = undefined;
+
 @withList({
   store: new NodeStore(),
   name: 'Cluster Node',
   module: 'nodes',
 })
 export default class Nodes extends React.Component {
-  store = this.props.store
+  constructor(props) {
+    super(props)
+    this.state = {
+      visible: false,
+      conditions: []
+    }
+  }
 
+  store = this.props.store
   monitoringStore = new NodeMonitoringStore({ cluster: this.cluster })
 
   componentDidMount() {
@@ -157,6 +177,48 @@ export default class Nodes extends React.Component {
     }))
   }
 
+  handleCreate = (ip,clusterName) =>() => {
+    this.setState({
+      visible: true,
+    });
+    this.getCondition(ip,clusterName)
+  };
+  // timer start
+  getCondition = (ip,clusterName) => {
+    ConditionTime = setInterval(() => 
+      this.store.fetchCondition({'ipAddr': ip,'clusterName': clusterName}).then(resp=>{
+        this.setState({
+          conditions: resp,
+        })
+      }),
+    10000);
+  }
+
+  handleOk = e => {
+    this.setState({
+      visible: false,
+    });
+  }
+
+  handleCancel = e => {
+    this.setState({
+      visible: false,
+    });
+    clearInterval(ConditionTime);
+  };
+
+  showConditions() {
+    if (this.state.conditions.length >0 ) 
+      return this.state.conditions
+    else {
+      return [{
+          type: 'EnsureSystem',
+          name: '准备中...',
+          status: "False",
+      }]
+    }
+  }  
+
   getColumns = () => {
     const { module, prefix, getSortOrder, getFilteredValue } = this.props
     return [
@@ -185,19 +247,49 @@ export default class Nodes extends React.Component {
         search: true,
         render: (_, record) => {
           const status = getNodeStatus(record)
+          const ipaddr = record.name
+          const clusterName = record.labels.clusterName
           const taints = record.taints
+          const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
           return (
-            <div className={styles.status}>
-              <Status
-                type={status}
-                name={t(`NODE_STATUS_${status.toUpperCase()}`)}
-              />
+            <div 
+              className={styles.status}
+            > 
+              { status !== "Running" ? (
+                <div onClick={this.handleCreate(ipaddr,clusterName)}>
+                  <Status
+                    type={status}
+                    name={t(`NODE_STATUS_${status.toUpperCase()}`)}
+                  />
+                </div>
+               ) : (
+                <Status
+                  type={status}
+                  name={t(`NODE_STATUS_${status.toUpperCase()}`)}
+                />
+              )} 
               {!isEmpty(taints) && (
                 <Tooltip content={this.renderTaintsTip(taints)}>
                   <span className={styles.taints}>{taints.length}</span>
                 </Tooltip>
               )}
+              <div>
+                <Modal
+                  visible={this.state.visible}
+                  title="集群初始化进度"
+                  onOk={this.handleOk}
+                  onCancel={this.handleCancel}
+                  footer={null}
+                  destroyOnClose
+                >
+                  <Steps direction="vertical" size="small">
+                    { this.showConditions().map( (cond, index) => (
+                      (cond.status === "True" ? <Steps.Step key={index} title={cond.name} status="finish" description={`完成时间: ${cond.time}`} /> : <Steps.Step key={index} icon={antIcon} title={cond.name} status="wait" /> )
+                    ))}
+                  </Steps>
+                </Modal>
+              </div>
             </div>
           )
         },

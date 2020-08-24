@@ -24,6 +24,7 @@ import List from './base.list'
 import { LIST_DEFAULT_ORDER, API_VERSIONS } from 'utils/constants'
 
 import Base from './base'
+import { node } from 'prop-types'
 
 export default class NodeStore extends Base {
   list = new List()
@@ -33,6 +34,9 @@ export default class NodeStore extends Base {
 
   @observable
   nodeMetrics = {}
+
+  @observable
+  nodeCondition = new List()
 
   @observable
   masterCount = 0
@@ -89,8 +93,14 @@ export default class NodeStore extends Base {
       ...this.mapper(item),
     }))
 
+    // 返回未ready的node节点.
+    const resp = await request.get(`sailor/getNoreadyNode`, {'clusterName': cluster})
+    const nodes = get(resp, 'items', []).map(item => ({
+      ...this.mapper(item),
+    }))
+    
     this.list.update({
-      data: more ? [...this.list.data, ...data] : data,
+      data: more ? [...this.list.data, ...data,...nodes] : [...data,...nodes],
       total: result.totalItems || result.total_count || data.length || 0,
       ...params,
       limit: Number(params.limit) || 10,
@@ -98,7 +108,7 @@ export default class NodeStore extends Base {
       isLoading: false,
       ...(this.list.silent ? {} : { selectedRowKeys: [] }),
     })
-
+    
     return data
   }
 
@@ -108,6 +118,22 @@ export default class NodeStore extends Base {
     this.masterCount = resp.items.masterCount
     this.masterWorkerCount =  resp.items.masterWorkerCount
     this.nodeRole = params.cluster
+  }
+
+  @action
+  async fetchCondition(params)  {
+    console.log("params==>",params);
+    const result = await request.get('sailor/getNodeCondition', params)
+    const data = result.items.length >0 ? result.items :  []
+    console.log("backent-data==>",data);
+    this.nodeCondition.update({
+      data:  more ? [...this.list.data, ...data] : data,
+      total: result.total_count,
+      limit: 10,
+      page: 1,
+      isLoading: false,
+    })
+    return data
   }
 
   @action
@@ -169,7 +195,6 @@ export default class NodeStore extends Base {
 
   @action
   create(data) {
-    console.log("data=>",data);
     return this.submitting(request.post('sailor/addClusterNode', data))
   }
 }
