@@ -58,7 +58,6 @@ export default class ClusterTitle extends Component {
     if (!cluster) {
       return null
     }
-
     const isReady = get(cluster, 'isReady') === "Running"
     return (
       <div
@@ -98,12 +97,14 @@ export default class ClusterTitle extends Component {
                 })}
               </Tag>
             )}
-            {cluster.isHost && (
+            {cluster.clusterType && (
               <Tag
                 className={classNames('margin-l12', tagClass)}
-                type="warning"
+                type={CLUSTER_GROUP_TAG_TYPE[cluster.clusterType]}
               >
-                {"Meta集群"}
+                {t(`ENV_${cluster.clusterType.toUpperCase()}`, {
+                  defaultValue: cluster.clusterType,
+                })}
               </Tag>
             )}
             &nbsp;

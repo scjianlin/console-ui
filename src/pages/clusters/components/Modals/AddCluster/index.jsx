@@ -7,6 +7,9 @@ import BaseInfo from './BaseInfo'
 import Configuration from './Configuration'
 import styles from './index.scss'
 
+import {observer} from 'mobx-react'
+
+@observer
 export default class ClusterCreateModal extends React.Component {
   static propTypes = {
     namespace: PropTypes.string,
@@ -21,13 +24,13 @@ export default class ClusterCreateModal extends React.Component {
     onOk() {},
     onCancel() {},
   }
-
+  
   constructor(props) {
     super(props)
     this.state = {
       currentStep: 0,
       formTemplate: {
-        clusterName: this.props.store.list.data[0].cluster,
+        clusterName: this.props.store.clusterName,
         nodeRack:[],
         // ClusterIP:"",
         // ClusterUser:"",

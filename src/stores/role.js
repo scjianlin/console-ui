@@ -79,7 +79,6 @@ export default class RoleStore extends Base {
     }
 
     params.limit = params.limit || 10
-    console.log("geturl==>",this.getResourceUrl({cluster,workspace,namespace,devops,}));
     const result = await request.get(
       this.getResourceUrl({
         cluster,

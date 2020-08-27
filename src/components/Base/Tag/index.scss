@@ -34,4 +34,14 @@
     color: $white;
     background-color: $blue-color03;
   }
+
+  &.barem {
+    color: $white;
+    background-color: $blue-color10;
+  }
+  
+  &.hosted {
+    color: $white;
+    background-color: $red-color10;
+  }  
 }

@@ -1042,7 +1042,7 @@ const ClusterMapper = item => {
     }),
     // provider: get(item, 'spec.provider'),
     isHost: get(item, 'metadata.labels["cluster-role.kunkka.io/cluster-role"]') === 'meta' ? true : false,
-    nodeCount: get(item, 'status.nodeCount'),
+    nodeCount: get(item, 'status.nodeCount', 0),
     description: get(item, 'metadata.annotations["kunkka.io/description"]'),
     kubernetesVersion: get(item, 'status.version'),
     labels: get(item, 'metadata.labels'),

@@ -85,7 +85,6 @@ export default class AddCluster extends React.Component {
 
   render() {
     const { tableProps } = this.props
-    console.log("tableProps==>",tableProps);
     return (
       <ListPage {...this.props} noWatch>
         <Banner

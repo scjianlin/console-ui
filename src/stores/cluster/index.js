@@ -37,7 +37,6 @@ export default class ClusterStore extends Base {
   @action
   async fetchList({ cluster, workspace, namespace, more, ...params } = {}) {
     this.list.isLoading = true
-    console.log("start=>list", );
     if (!params.sortBy && params.ascending === undefined) {
       params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
     }

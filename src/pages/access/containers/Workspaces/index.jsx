@@ -148,7 +148,6 @@ export default class Workspaces extends React.Component {
 
   render() {
     const { bannerProps, tableProps } = this.props
-    console.log("workspace-props==>",tableProps);
     const isClusterLoading = this.clusterStore.list.isLoading
     return (
       <ListPage {...this.props} noWatch>

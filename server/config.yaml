@@ -45,7 +45,7 @@ server:
   dockerHubUrl: https://hub.docker.com
 
 client:
-  title: KubeSphere
+  title: GostShip
   description: ''
 
   version:

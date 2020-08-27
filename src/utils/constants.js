@@ -983,6 +983,8 @@ export const CLUSTER_GROUP_TAG_TYPE = {
   development: 'secondary',
   testing: 'info',
   demo: 'primary',
+  Hosted: 'hosted',
+  Baremetal: 'barem',
 }
 
 export const ROLE_QUERY_KEY = {

@@ -547,6 +547,8 @@ export default {
   ENV_DEVELOPMENT: '开发环境',
   ENV_TESTING: '测试环境',
   ENV_DEMO: '演示环境',
+  ENV_HOSTED: '托管集群',
+  ENV_BAREMETAL: '裸金属集群',
 
   HOW_TO_MODIFY_PLATFORM_INFO: '如何修改平台信息?',
   PLATFORM_INFO_DESC: '查看平台标题及描述等信息',

@@ -118,14 +118,13 @@ export default class NodeStore extends Base {
     this.masterCount = resp.items.masterCount
     this.masterWorkerCount =  resp.items.masterWorkerCount
     this.nodeRole = params.cluster
+    this.clusterName = params.cluster
   }
 
   @action
   async fetchCondition(params)  {
-    console.log("params==>",params);
     const result = await request.get('sailor/getNodeCondition', params)
     const data = result.items.length >0 ? result.items :  []
-    console.log("backent-data==>",data);
     this.nodeCondition.update({
       data:  more ? [...this.list.data, ...data] : data,
       total: result.total_count,

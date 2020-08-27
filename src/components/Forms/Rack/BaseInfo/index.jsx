@@ -25,7 +25,6 @@ import { MODULE_KIND_MAP } from 'utils/constants'
 export default class BaseInfo extends React.Component {
   get formTemplate() {
     const { formTemplate, module } = this.props
-    console.log("formTemplate==>",formTemplate,module);
     return get(formTemplate, MODULE_KIND_MAP[module], formTemplate)
   }
 
