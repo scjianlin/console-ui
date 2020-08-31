@@ -277,7 +277,7 @@ export default class Nodes extends React.Component {
               <div>
                 <Modal
                   visible={this.state.visible}
-                  title="集群初始化进度"
+                  title="集群节点进度"
                   onOk={this.handleOk}
                   onCancel={this.handleCancel}
                   footer={null}

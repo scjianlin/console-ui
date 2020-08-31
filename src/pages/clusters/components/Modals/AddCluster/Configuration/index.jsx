@@ -48,7 +48,6 @@ export default class BaseInfo extends React.Component {
 
     this.rackStore.list.data.filter(function(item) {
       if (formTemplate.clusterRack.indexOf(item.rackTag) > -1) { //获取已经选择的master机柜
-
         for (let i=0;i<item.hostAddr.length;i++) {
           ips.push({
             label: item.hostAddr[i].ipAddr + "-" + item.rackTag,

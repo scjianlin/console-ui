@@ -58,7 +58,7 @@ class Clusters extends React.Component {
   }
 
   fetchData = (params = {}) => {
-    this.store.fetchList({
+    this.store.fetchMemberList({
       ...params,
       limit: 10,
       labelSelector: 'member',

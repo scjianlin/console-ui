@@ -36,16 +36,20 @@ export default class BaseInfo extends React.Component {
     this.rackStore.list.data.filter(function(item) {
       if (formTemplate.clusterRack.indexOf(item.rackTag) > -1) { //获取已经选择的master机柜
         for (let i=0;i<item.hostAddr.length;i++) {
-          node.push({
-            label: item.hostAddr[i].ipAddr + "-" + item.rackTag,
-            value: item.hostAddr[i].ipAddr
-          })
+          if (item.hostAddr[i].useState === 0) {  // 过滤未被使用 IP
+            node.push({
+              label: item.hostAddr[i].ipAddr + "-" + item.rackTag,
+              value: item.hostAddr[i].ipAddr
+            })
+          }
         }
         for (let j =0;j<item.podCidr.length;j++) {
-          pod.push({
-            label: item.rackTag +": " + item.podCidr[j].rangeStart +"-" + item.podCidr[j].rangeEnd,
-            value: item.podCidr[j].id
-          })
+          if (item.podCidr[j].useState === 0) { // 过滤pod未被使用的地址段
+            pod.push({
+              label: item.rackTag +": " + item.podCidr[j].rangeStart +"-" + item.podCidr[j].rangeEnd,
+              value: item.podCidr[j].id
+            })
+          }
         }
       }
     })
