@@ -87,18 +87,29 @@ export default class NodeStore extends Base {
       `sailor/getNodeCount`,
       this.getFilterParams(params,{'clusterName':cluster}),
     )
-
     const data = get(result, 'items', []).map(item => ({
       cluster,
       ...this.mapper(item),
     }))
-
+    // console.log("data==>",data);
     // 返回未ready的node节点.
     const resp = await request.get(`sailor/getNoreadyNode`, {'clusterName': cluster})
     const nodes = get(resp, 'items', []).map(item => ({
       ...this.mapper(item),
     }))
-    
+    console.log("resp==>",resp);
+
+    //  删除已经存在node节点的数据。
+    for (let i=0;i<data.length;i++) {
+        for (let j=0;j<nodes.length;j++) {
+          if (nodes[j].name===data[i].ip) {
+            nodes.splice(j,1)
+          } else {
+            console.log("not into");
+          }
+        }
+    }
+
     this.list.update({
       data: more ? [...this.list.data, ...data,...nodes] : [...data,...nodes],
       total: result.totalItems || result.total_count || data.length || 0,

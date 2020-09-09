@@ -45,7 +45,8 @@ export default class BaseRankStore {
 
   get apiVersion() {
     if (globals.app.isMultiCluster && this.cluster) {
-      return `kapis/clusters/${this.cluster}/monitoring.kubesphere.io/v1alpha3`
+      // return `kapis/clusters/${this.cluster}/monitoring.kubesphere.io/v1alpha3`
+      return `sailor/Monitoring/${this.cluster}`
     }
     return `kapis/monitoring.kubesphere.io/v1alpha3`
   }
@@ -111,7 +112,7 @@ export default class BaseRankStore {
       request.get(this.fetchUrl, assign(defaultParams, params))
     )
 
-    const data = this.handleResult(result)
+    const data = this.handleResult(result.items)
 
     this.total_page = result.total_page
 

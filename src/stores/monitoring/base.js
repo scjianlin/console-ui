@@ -74,7 +74,8 @@ export default class BaseMonitoringStore {
 
   get apiVersion() {
     if (globals.app.isMultiCluster && this.cluster) {
-      return `kapis/clusters/${this.cluster}/monitoring.kubesphere.io/v1alpha3`
+      // return `kapis/clusters/${this.cluster}/monitoring.kubesphere.io/v1alpha3`
+      return `sailor/Monitoring/${this.cluster}`
     }
     return 'kapis/monitoring.kubesphere.io/v1alpha3'
   }
@@ -265,11 +266,9 @@ export default class BaseMonitoringStore {
 
     const params = this.getParams(filters)
     const api = this.getApi(filters)
-    // console.log("api===>",api);
     const response = await to(request.get(api, params))
-    // console.log("response===>",response);
 
-    let result = this.getResult(response)
+    let result = this.getResult(response.items)
     if (autoRefresh) {
       result = this.getRefreshResult(result, this.data)
     }
