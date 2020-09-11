@@ -27,7 +27,7 @@ export default class Events extends Base {
     const { name } = this.store.detail
 
     const fields = {
-      'involvedObject.name': name,
+      'source.host': name,
       'involvedObject.kind': this.kind,
     }
 

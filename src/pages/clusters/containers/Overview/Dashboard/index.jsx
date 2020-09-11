@@ -32,9 +32,9 @@ import ServiceComponents from './ServiceComponents'
 @inject('clusterStore')
 @observer
 export default class Dashboard extends React.Component {
-  componentDidMount() {
-    this.cluster.fetchVersion(this.props.match.params)
-  }
+  // componentDidMount() {
+  //   this.cluster.fetchVersion(this.props.match.params)
+  // }
 
   get cluster() {
     return this.props.clusterStore
@@ -55,7 +55,7 @@ export default class Dashboard extends React.Component {
         <Columns>
           <Column>
             {globals.app.isMultiCluster && (
-              <ClusterInfo cluster={detail} version={this.cluster.version} />
+              <ClusterInfo cluster={detail}  />
             )}
             <ServiceComponents cluster={match.params.cluster} />
             <ResourcesUsage cluster={match.params.cluster} />

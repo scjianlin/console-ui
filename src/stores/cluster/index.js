@@ -186,14 +186,6 @@ export default class ClusterStore extends Base {
   }
 
   @action
-  async fetchVersion({ cluster }) {
-    const result = await request.get(
-      `kapis/clusters/${cluster}/version`.replace('/clusters/default', '')
-    )
-    this.version = get(result, 'kubernetes.gitVersion')
-  }
-
-  @action
   create(data, params = {}) {
     return this.submitting(request.post('sailor/addCluster', data))
   }

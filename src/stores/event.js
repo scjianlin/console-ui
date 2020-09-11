@@ -38,10 +38,9 @@ export default class EventsStore {
     const clusterPath = cluster ? `/klusters/${cluster}` : ''
     const namespacePath = namespace ? `/namespaces/${namespace}` : ''
     const result = await request.get(
-      `api/v1${clusterPath}${namespacePath}/events`,
+      `sailor${clusterPath}${namespacePath}/events`,
       rest
     )
-
     this.list = {
       data: orderBy(result.items.map(ObjectMapper.events), 'startTime', 'desc'),
       total: result.items.length,

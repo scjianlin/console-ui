@@ -52,7 +52,6 @@ const send_gateway_request = ({
       'x-client-ip': headers['x-client-ip'],
     }
   }
-  // console.log("options==>",options);
   return request[method.toLowerCase()](
     `${serverConfig.apiServer.url}${url}`,
     params,
@@ -70,7 +69,7 @@ const send_dockerhub_request = ({ params, path, headers }) => {
       })
     },
   })
-
+  
   const options = {
     headers,
     agent: httpsAgent,

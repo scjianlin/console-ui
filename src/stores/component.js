@@ -44,7 +44,8 @@ export default class ComponentStore {
   isLoading = true
 
   get apiVersion() {
-    return 'kapis/resources.kubesphere.io/v1alpha2'
+    // return 'kapis/resources.kubesphere.io/v1alpha2'
+    return 'sailor'
   }
 
   getListUrl = ({ cluster }) =>
@@ -62,7 +63,7 @@ export default class ComponentStore {
   @action
   async fetchList(params) {
     this.isLoading = true
-
+    console.log("url==>",this.getListUrl(params));
     const result = await request.get(this.getListUrl(params))
     const components = groupBy(result, 'namespace')
 

@@ -42,7 +42,7 @@ const METRIC_TYPES = [
 export default class RunningStatus extends React.Component {
   constructor(props) {
     super(props)
-
+    console.log("this.props==>",props.detailStore);
     this.store = props.detailStore
     this.monitoringStore = new NodeMonitoringStore({ cluster: this.cluster })
   }

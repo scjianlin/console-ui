@@ -72,19 +72,19 @@ export default class ProjectStore extends Base {
       )}/namespaces`
     }
 
-    return `kapis/resources.kubesphere.io/v1alpha3${this.getPath(
+    return `sailor/resource${this.getPath(
       params
     )}/namespaces`
   }
 
-  getWatchListUrl = ({ workspace, ...params }) => {
-    if (workspace) {
-      return `${this.apiVersion}/watch${this.getPath(
-        params
-      )}/namespaces?labelSelector=kubesphere.io/workspace=${workspace}`
-    }
-    return `${this.apiVersion}/watch${this.getPath(params)}/namespaces`
-  }
+  // getWatchListUrl = ({ workspace, ...params }) => {
+  //   if (workspace) {
+  //     return `${this.apiVersion}/watch${this.getPath(
+  //       params
+  //     )}/namespaces?labelSelector=kubesphere.io/workspace=${workspace}`
+  //   }
+  //   return `${this.apiVersion}/watch${this.getPath(params)}/namespaces`
+  // }
 
   getListUrl = (params = {}) => {
     if (params.workspace) {
@@ -118,6 +118,7 @@ export default class ProjectStore extends Base {
 
     params.limit = params.limit || 10
 
+    // console.log("res==>",this.getResourceUrl({ cluster, workspace, namespace }));
     const result = await request.get(
       this.getResourceUrl({ cluster, workspace, namespace }),
       withTypeSelectParams(params, type)
@@ -144,6 +145,7 @@ export default class ProjectStore extends Base {
   @action
   async fetchDetail({ cluster, workspace, namespace }) {
     this.isLoading = true
+    console.log("fetchDetail");
     const detail = await request.get(
       this.getDetailUrl({ cluster, workspace, name: namespace }),
       null,

@@ -83,7 +83,6 @@ const renderLogin = async ctx => {
   ctx.session.salt = uid.sync(12)
 
   const oauthServers = await getOAuthInfo(ctx)
-  console.log("RendLogin===>",ctx);
 
   await ctx.render('login', {
     loginPath,

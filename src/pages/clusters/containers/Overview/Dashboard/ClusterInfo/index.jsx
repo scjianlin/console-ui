@@ -30,13 +30,12 @@ export default class ClusterInfo extends Component {
   }
 
   render() {
-    const { cluster, version } = this.props
+    const { cluster } = this.props
     return (
       <Panel title={t('Cluster Info')}>
         <div className={styles.level}>
-          {/* <Text title={"goshship"} description={"集群提供方"} /> */}
           <Text
-            title={cluster.kubernetesVersion || version}
+            title={cluster.kubernetesVersion}
             description={t('Kubernetes Version')}
           />
           <Text

@@ -53,7 +53,7 @@ export default class BaseList extends React.Component {
 
     if (namespace && 'getWatchListUrl' in this.store) {
       const url = this.store.getWatchListUrl({ cluster, namespace })
-      // console.log("Url==>",url);
+      console.log("Url==>",url);
       this.websocket.watch(url)
 
       this.getData = throttle(this.getData, 1000)

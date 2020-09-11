@@ -260,47 +260,47 @@ export class ListPage extends React.Component {
   }
 
   initWebsocket() {
-    const { isFederated } = this.props
-    if ('getWatchListUrl' in this.store) {
-      const url = this.store.getWatchListUrl(this.props.match.params)
+  //   const { isFederated } = this.props
+  //   if ('getWatchListUrl' in this.store) {
+  //     const url = this.store.getWatchListUrl(this.props.match.params)
 
-      this.websocket.watch(url)
+  //     this.websocket.watch(url)
 
-      const _getData = throttle(query => {
-        if (this.store.list.isLoading) {
-          return
-        }
-        const params = parse(location.search.slice(1))
-        return this.props.getData({ ...params, ...query, silent: true })
-      }, 1000)
+  //     const _getData = throttle(query => {
+  //       if (this.store.list.isLoading) {
+  //         return
+  //       }
+  //       const params = parse(location.search.slice(1))
+  //       return this.props.getData({ ...params, ...query, silent: true })
+  //     }, 1000)
 
-      let kind = MODULE_KIND_MAP[this.props.module]
+  //     let kind = MODULE_KIND_MAP[this.props.module]
 
-      if (isFederated) {
-        kind = `Federated${kind}`
-      }
+  //     if (isFederated) {
+  //       kind = `Federated${kind}`
+  //     }
 
-      const mapper = isFederated
-        ? ObjectMapper.federated(this.store.mapper)
-        : this.store.mapper
+  //     const mapper = isFederated
+  //       ? ObjectMapper.federated(this.store.mapper)
+  //       : this.store.mapper
 
-      this.disposer = reaction(
-        () => this.websocket.message,
-        message => {
-          if (message.object.kind === kind) {
-            if (message.type === 'MODIFIED') {
-              const data = {
-                ...this.props.match.params,
-                ...mapper(toJS(message.object)),
-              }
-              this.store.list.updateItem(data)
-            } else if (message.type === 'DELETED' || message.type === 'ADDED') {
-              _getData(isFederated ? { page: 1 } : {})
-            }
-          }
-        }
-      )
-    }
+  //     this.disposer = reaction(
+  //       () => this.websocket.message,
+  //       message => {
+  //         if (message.object.kind === kind) {
+  //           if (message.type === 'MODIFIED') {
+  //             const data = {
+  //               ...this.props.match.params,
+  //               ...mapper(toJS(message.object)),
+  //             }
+  //             this.store.list.updateItem(data)
+  //           } else if (message.type === 'DELETED' || message.type === 'ADDED') {
+  //             _getData(isFederated ? { page: 1 } : {})
+  //           }
+  //         }
+  //       }
+  //     )
+  //   }
   }
 
   render() {

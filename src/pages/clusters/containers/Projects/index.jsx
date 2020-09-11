@@ -164,11 +164,11 @@ export default class Projects extends React.Component {
         search: true,
         render: status => <Status type={status} name={t(status)} flicker />,
       },
-      {
-        title: t('Workspace'),
-        dataIndex: 'workspace',
-        isHideable: true,
-      },
+      // {
+      //   title: t('Workspace'),
+      //   dataIndex: 'workspace',
+      //   isHideable: true,
+      // },
       {
         title: t('CPU Usage'),
         key: 'namespace_cpu_usage',

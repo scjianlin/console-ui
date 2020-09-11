@@ -35,7 +35,6 @@ const login = async (data, headers) => {
   )
 
   // console.log("headers==>",headers);
-  // console.log("data==>",data);
 
   const resp = await send_gateway_request({
     method: 'GET',

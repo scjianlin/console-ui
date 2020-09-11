@@ -16,13 +16,20 @@
  * along with KubeSphere Console.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+ import {get} from 'lodash'
 import { action } from 'mobx'
 import { isEmpty } from 'lodash'
 import { getWorkloadVolumes } from 'utils/workload'
 import Base from './base'
+import { LIST_DEFAULT_ORDER, API_VERSIONS } from 'utils/constants'
 
 export default class PodStore extends Base {
   module = 'pods'
+
+  getResourceUrl = (params = {}) =>
+    `sailor${this.getPath(params)}/${
+      this.module
+  }`
 
   @action
   async fetchDetail({ cluster, namespace, name, silent }) {
@@ -62,4 +69,49 @@ export default class PodStore extends Base {
 
     return detail
   }
+
+  @action
+  async fetchList({
+    cluster,
+    workspace,
+    namespace,
+    more,
+    devops,
+    ...params
+  } = {}) {
+    this.list.isLoading = true
+
+    if (!params.sortBy && params.ascending === undefined) {
+      params.sortBy = LIST_DEFAULT_ORDER[this.module] || 'createTime'
+    }
+
+    if (params.limit === Infinity || params.limit === -1) {
+      params.limit = -1
+      params.page = 1
+    }
+
+    params.limit = params.limit || 10
+
+    const result = await request.get(
+      this.getResourceUrl({ cluster, workspace, namespace, devops }),
+      this.getFilterParams(params)
+    )
+    const data = get(result, 'items', []).map(item => ({
+      cluster,
+      ...this.mapper(item),
+    }))
+
+    this.list.update({
+      data: more ? [...this.list.data, ...data] : data,
+      total: result.totalItems || result.total_count || data.length || 0,
+      ...params,
+      limit: Number(params.limit) || 10,
+      page: Number(params.page) || 1,
+      isLoading: false,
+      ...(this.list.silent ? {} : { selectedRowKeys: [] }),
+    })
+
+    return data
+  }
+
 }
