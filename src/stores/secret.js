@@ -23,6 +23,11 @@ import Base from './base'
 export default class SecretStore extends Base {
   module = 'secrets'
 
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`  
+
   @action
   async validateImageRegistrySecret(data) {
     const { url, username, password } = data

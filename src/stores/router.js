@@ -33,6 +33,11 @@ export default class RouterStore extends Base {
     this.module = 'ingresses'
   }
 
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`
+
   getGatewayUrl = params =>
     `kapis/resources.kubesphere.io/v1alpha2${this.getPath(params)}/router`
 

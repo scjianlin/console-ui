@@ -34,6 +34,11 @@ export default class WorkloadStore extends Base {
     this.hpaStore = new HpaStore()
   }
 
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`
+
   @action
   async create(data, params) {
     const requests = []

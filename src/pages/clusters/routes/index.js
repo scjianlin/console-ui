@@ -111,11 +111,11 @@ export default [
             component: Projects,
             exact: true,
           },
-          {
-            path: `${PATH}/customresources`,
-            component: CustomResources,
-            exact: true,
-          },
+          // {
+          //   path: `${PATH}/customresources`,
+          //   component: CustomResources,
+          //   exact: true,
+          // },
           {
             path: `${PATH}/deployments`,
             component: Deployments,
@@ -176,11 +176,11 @@ export default [
             component: Volumes,
             exact: true,
           },
-          {
-            path: `${PATH}/volume-snapshots`,
-            component: VolumeSnapshots,
-            exact: true,
-          },
+          // {
+          //   path: `${PATH}/volume-snapshots`,
+          //   component: VolumeSnapshots,
+          //   exact: true,
+          // },
           {
             path: `${PATH}/monitor-cluster`,
             component: ClusterMonitor,
@@ -202,11 +202,11 @@ export default [
             component: BaseInfo,
             exact: true,
           },
-          {
-            path: `${PATH}/visibility`,
-            component: Visibility,
-            exact: true,
-          },
+          // {
+          //   path: `${PATH}/visibility`,
+          //   component: Visibility,
+          //   exact: true,
+          // },
           {
             path: `${PATH}/members`,
             component: Members,

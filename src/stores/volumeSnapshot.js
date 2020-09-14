@@ -20,6 +20,11 @@ import Base from './base'
 export default class VolumeSnapshotStore extends Base {
   module = 'volumesnapshots'
 
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`
+  
   get resourceKind() {
     return 'VolumeSnapshot'
   }

@@ -41,7 +41,6 @@ export default class DashboardStore {
   @action
   async fetchResourceStatus(params) {
     this.resource.isLoading = true
-
     const [quota, status] = await Promise.all([
       to(
         request.get(
@@ -56,7 +55,6 @@ export default class DashboardStore {
         )
       ),
     ])
-
     this.resource = {
       quota: quota.data,
       status: status.data,

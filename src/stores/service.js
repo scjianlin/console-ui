@@ -101,6 +101,12 @@ export default class ServiceStore extends Base {
     this.S2iBuilderStore = new S2iBuilderStore()
   }
 
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`
+
+
   @action
   async fetchEndpoints({ name, cluster, namespace }) {
     this.endpoints.isLoading = true

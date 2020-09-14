@@ -79,7 +79,6 @@ export default class Overview extends React.Component {
   }
 
   fetchData = () => {
-    this.store.fetchVersion({ cluster: this.store.detail.name })
     this.monitorStore.fetchMetrics({
       cluster: this.store.detail.name,
       metrics: Object.values(MetricTypes),
@@ -124,13 +123,13 @@ export default class Overview extends React.Component {
     ]
   }
 
-  showEdit = () => {
-    this.trigger('resource.baseinfo.edit', {
-      detail: this.store.detail,
-      modal: EditBasicInfoModal,
-      success: this.fetchClusterDetail,
-    })
-  }
+  // showEdit = () => {
+  //   this.trigger('resource.baseinfo.edit', {
+  //     detail: this.store.detail,
+  //     modal: EditBasicInfoModal,
+  //     success: this.fetchClusterDetail,
+  //   })
+  // }
 
   handleChange = (e, checked) => {
     this.setState({ confirm: checked })
@@ -169,11 +168,11 @@ export default class Overview extends React.Component {
               title={kubernetesVersion || this.store.version}
               description={t('Kubernetes Version')}
             />
-            {actions.includes('edit') && globals.app.isMultiCluster && (
+            {/* {actions.includes('edit') && globals.app.isMultiCluster && (
               <Button className={styles.action} onClick={this.showEdit}>
                 {t('Edit Info')}
               </Button>
-            )}
+            )} */}
           </div>
           <div className={styles.content}>
             {options.map(option => (
@@ -186,7 +185,7 @@ export default class Overview extends React.Component {
             ))}
           </div>
         </Panel>
-        {globals.app.isMultiCluster && actions.includes('delete') && (
+        {/* {globals.app.isMultiCluster && actions.includes('delete') && (
           <Panel title={t('Unbind Cluster')}>
             <Alert
               className={styles.tip}
@@ -206,7 +205,7 @@ export default class Overview extends React.Component {
               {t('SURE_TO_UNBIND_CLUSTER')}
             </Checkbox>
           </Panel>
-        )}
+        )} */}
       </>
     )
   }

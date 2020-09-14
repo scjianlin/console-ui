@@ -149,7 +149,7 @@ class ResourceUsage extends React.Component {
   getResourceData = () => {
     const { quota = {}, status = {} } = toJS(this.dashboardStore.resource)
     const used = quota.used || {}
-
+    // console.log("resource==>",status);
     return [
       {
         key: 'pods',

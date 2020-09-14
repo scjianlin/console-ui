@@ -97,7 +97,6 @@ export default class NodeStore extends Base {
     const nodes = get(resp, 'items', []).map(item => ({
       ...this.mapper(item),
     }))
-    console.log("resp==>",resp);
 
     //  删除已经存在node节点的数据。
     for (let i=0;i<data.length;i++) {

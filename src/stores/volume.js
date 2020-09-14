@@ -35,6 +35,11 @@ export default class VolumeStore extends Base {
 
   module = 'persistentvolumeclaims'
 
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`
+
   async fetchVolumeMountStatus() {
     const { name, namespace } = this.detail
 

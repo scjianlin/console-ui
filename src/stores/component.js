@@ -63,7 +63,6 @@ export default class ComponentStore {
   @action
   async fetchList(params) {
     this.isLoading = true
-    console.log("url==>",this.getListUrl(params));
     const result = await request.get(this.getListUrl(params))
     const components = groupBy(result, 'namespace')
 

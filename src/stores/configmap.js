@@ -20,4 +20,9 @@ import Base from './base'
 
 export default class ConfigMapStore extends Base {
   module = 'configmaps'
+
+  getResourceUrl = (params = {}) =>
+  `sailor${this.getPath(params)}/${
+    this.module
+  }`    
 }

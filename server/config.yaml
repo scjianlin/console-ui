@@ -141,18 +141,18 @@ client:
                 clusterModule: network,
               }
         # Contains dangerous operations, only available for platform-admin.
-        - {
-            name: customresources,
-            title: Custom Resources,
-            icon: select,
-            admin: true,
-          }
+        # - {
+        #     name: customresources,
+        #     title: Custom Resources,
+        #     icon: select,
+        #     admin: true,
+        #   }
         - name: storage
           title: Storage Management
           icon: database
           children:
             - { name: volumes, title: Volumes }
-            - { name: volume-snapshots, title: Snapshots }
+            # - { name: volume-snapshots, title: Snapshots }
             - { name: storageclasses, title: Storage Classes }
         - name: monitoring-alerting
           title: Monitoring & Alerting
@@ -193,12 +193,12 @@ client:
                 skipAuth: true,
                 showInDisable: true,
               }
-            - {
-                name: visibility,
-                title: Cluster Visibility,
-                authKey: 'cluster-settings',
-                multiCluster: true,
-              }
+            # - {
+            #     name: visibility,
+            #     title: Cluster Visibility,
+            #     authKey: 'cluster-settings',
+            #     multiCluster: true,
+            #   }
             # - { name: members, title: Cluster Members }
             # - { name: roles, title: Cluster Roles }
             - {
