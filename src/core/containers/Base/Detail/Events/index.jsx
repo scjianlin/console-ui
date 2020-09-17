@@ -64,17 +64,20 @@ class Events extends React.Component {
   fetchData() {
     const { uid, name, namespace } = this.store.detail
 
-    const fields = {
-      'involvedObject.name': name,
-      'involvedObject.namespace': namespace,
-      'involvedObject.kind': this.kind,
-      'involvedObject.uid': uid,
-    }
-
+    // const fields = {
+    //   'involvedObject.name': name,
+    //   'involvedObject.namespace': namespace,
+    //   'involvedObject.kind': this.kind,
+    //   'involvedObject.uid': uid,
+    // }
+    // const parm = joinSelector(fields);
     this.eventStore.fetchList({
       namespace,
       cluster: this.cluster,
-      fieldSelector: joinSelector(fields),
+      'involvedObject.name': name,
+      'involvedObject.namespace': namespace,
+      'involvedObject.kind': this.kind,
+      'involvedObject.uid': uid,      
     })
   }
 

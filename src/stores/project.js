@@ -173,11 +173,11 @@ export default class ProjectStore extends Base {
   @action
   async fetchLimitRanges({ cluster, namespace }) {
     this.limitRanges.isLoading = false
-    const result = await request.get(
-      `api/v1${this.getPath({ cluster, namespace })}/limitranges`
-    )
-    const data = result.items.map(ObjectMapper.limitranges)
-
+    // const result = await request.get(
+    //   `api/v1${this.getPath({ cluster, namespace })}/limitranges`
+    // )
+    // const data = result.items.map(ObjectMapper.limitranges)
+    const data = []
     this.limitRanges.update({
       data,
       total: result.items.length,

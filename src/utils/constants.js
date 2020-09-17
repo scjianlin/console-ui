@@ -807,14 +807,14 @@ export const LIST_DEFAULT_ORDER = {
 }
 
 export const API_VERSIONS = {
-  deployments: 'apis/apps/v1',
-  statefulsets: 'apis/apps/v1',
-  daemonsets: 'apis/apps/v1',
-  jobs: 'apis/batch/v1',
-  cronjobs: 'apis/batch/v1beta1',
-  pods: 'api/v1',
+  deployments: 'sailor/',
+  statefulsets: 'sailor/',
+  daemonsets: 'sailor/',
+  jobs: 'sailor/',
+  cronjobs: 'sailor/',
+  pods: 'sailor/',
   namespaces: 'sailor/',
-  services: 'api/v1',
+  services: 'sailor/',
   volumes: 'api/v1',
   secrets: 'api/v1',
   configmaps: 'api/v1',

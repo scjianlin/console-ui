@@ -30,11 +30,12 @@ export default class QuotaStore extends Base {
   async fetch(params) {
     this.isLoading = true
 
-    const result = await request.get(
-      `kapis/resources.kubesphere.io/v1alpha2${this.getPath(params)}/quotas`
-    )
+    // const result = await request.get(
+    //   `kapis/resources.kubesphere.io/v1alpha2${this.getPath(params)}/quotas`
+    // )
 
-    this.data = result.data
+    // this.data = result.data
+    this.data = ""
 
     this.isLoading = false
   }

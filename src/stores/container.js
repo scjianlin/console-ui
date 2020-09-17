@@ -43,7 +43,7 @@ export default class ContainerStore {
   module = 'containers'
 
   getDetailUrl = ({ cluster, namespace, podName }) => {
-    let path = `api/v1`
+    let path = `sailor`
 
     if (cluster) {
       path += `/klusters/${cluster}`

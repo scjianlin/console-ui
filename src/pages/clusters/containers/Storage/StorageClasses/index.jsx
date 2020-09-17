@@ -112,7 +112,7 @@ export default class StorageClasses extends React.Component {
         <Table
           {...tableProps}
           columns={this.getColumns()}
-          onCreate={this.showCreate}
+          // onCreate={this.showCreate}
         />
       </ListPage>
     )

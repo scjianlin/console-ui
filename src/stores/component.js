@@ -107,7 +107,6 @@ export default class ComponentStore {
     this.isLoading = true
 
     const result = await request.get(this.getDetailUrl({ cluster, name }))
-
     this.detail = result
     this.isLoading = false
   }

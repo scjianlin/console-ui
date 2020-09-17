@@ -50,8 +50,8 @@ export default class RevisionStore extends Base {
     const labelSelector = joinSelector(selector)
     const prefix =
       this.module === 'deployments'
-        ? `apis/apps/v1${this.getPath({ cluster, namespace })}/replicasets`
-        : `apis/apps/v1${this.getPath({
+        ? `sailor${this.getPath({ cluster, namespace })}/replicasets`
+        : `sailor${this.getPath({
             cluster,
             namespace,
           })}/controllerrevisions`

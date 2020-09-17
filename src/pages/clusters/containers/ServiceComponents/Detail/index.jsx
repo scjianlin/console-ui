@@ -58,7 +58,6 @@ export default class ComponentDetail extends React.Component {
 
   getAttrs = () => {
     const { detail } = this.store
-
     const status = getComponentStatus(detail)
 
     return [

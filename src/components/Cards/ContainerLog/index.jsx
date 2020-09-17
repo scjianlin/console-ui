@@ -151,7 +151,7 @@ export default class ContainerLog extends React.Component {
     const { isRealtime, isDownloading } = this.state
     return (
       <div className={styles.operations}>
-        <Tooltip
+        {/* <Tooltip
           content={t(isRealtime ? 'STOP_REAL_TIME_LOG' : 'START_REAL_TIME_LOG')}
         >
           <Icon
@@ -162,7 +162,7 @@ export default class ContainerLog extends React.Component {
             clickable
             changeable
           />
-        </Tooltip>
+        </Tooltip> */}
         <span className={styles.split}>|</span>
         <Tooltip content={t('Refresh')}>
           <Icon

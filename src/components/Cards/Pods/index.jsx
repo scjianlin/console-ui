@@ -92,36 +92,36 @@ export default class PodsCard extends React.Component {
       params: this.getParams(selectCluster),
     }
 
-    this.websocket = props.rootStore.websocket
-    this.initWebsocket()
+    // this.websocket = props.rootStore.websocket
+    // this.initWebsocket()
   }
 
-  initWebsocket() {
-    const { onUpdate } = this.props
-    const { selectCluster, params = {} } = this.state
-    const { namespace, labelSelector } = params
+  // initWebsocket() {
+  //   const { onUpdate } = this.props
+  //   const { selectCluster, params = {} } = this.state
+  //   const { namespace, labelSelector } = params
 
-    const url = `api/v1/watch${
-      selectCluster ? `/klusters/${selectCluster}` : ''
-    }/namespaces/${namespace}/pods?labelSelector=${labelSelector}`
+  //   const url = `api/v1/watch${
+  //     selectCluster ? `/klusters/${selectCluster}` : ''
+  //   }/namespaces/${namespace}/pods?labelSelector=${labelSelector}`
 
-    if (url && namespace && labelSelector) {
-      this.websocket.watch(url)
+  //   if (url && namespace && labelSelector) {
+  //     this.websocket.watch(url)
 
-      this.fetchData = throttle(this.fetchData, 2000)
+  //     this.fetchData = throttle(this.fetchData, 2000)
 
-      this.disposer = reaction(
-        () => this.websocket.message,
-        message => {
-          if (message.object.kind === 'Pod' && message.type === 'MODIFIED') {
-            this.fetchData({ noMetrics: true, silent: true }).then(() => {
-              onUpdate && onUpdate(selectCluster)
-            })
-          }
-        }
-      )
-    }
-  }
+  //     this.disposer = reaction(
+  //       () => this.websocket.message,
+  //       message => {
+  //         if (message.object.kind === 'Pod' && message.type === 'MODIFIED') {
+  //           this.fetchData({ noMetrics: true, silent: true }).then(() => {
+  //             onUpdate && onUpdate(selectCluster)
+  //           })
+  //         }
+  //       }
+  //     )
+  //   }
+  // }
 
   componentDidUpdate(prevProps) {
     const { detail, details, isFederated } = this.props
@@ -293,7 +293,7 @@ export default class PodsCard extends React.Component {
       { selectCluster: cluster, params: this.getParams(cluster) },
       () => {
         this.fetchData()
-        this.initWebsocket()
+        // this.initWebsocket()
       }
     )
   }

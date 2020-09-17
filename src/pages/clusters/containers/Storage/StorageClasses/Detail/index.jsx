@@ -37,7 +37,7 @@ export default class StorageClassDetail extends React.Component {
   store = new StorageClassStore()
 
   componentDidMount() {
-    this.store.fetchList({ limit: -1 })
+    // this.store.fetchList({ limit: -1 })
     this.fetchData()
   }
 
@@ -163,7 +163,7 @@ export default class StorageClassDetail extends React.Component {
       module: this.module,
       name: getDisplayName(this.store.detail),
       desc: t(`STORAGE_CLASS_DESC`),
-      operations: this.getOperations(),
+      // operations: this.getOperations(),
       attrs: this.getAttrs(),
       breadcrumbs: [
         {

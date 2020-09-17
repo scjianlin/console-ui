@@ -74,7 +74,7 @@ export default class ResourceStatus extends React.Component {
       }
     }
 
-    this.routerStore.getGateway(params)
+    // this.routerStore.getGateway(params)
   }
 
   handlePodUpdate = () => {

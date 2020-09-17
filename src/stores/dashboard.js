@@ -41,23 +41,29 @@ export default class DashboardStore {
   @action
   async fetchResourceStatus(params) {
     this.resource.isLoading = true
-    const [quota, status] = await Promise.all([
-      to(
-        request.get(
-          `kapis/resources.kubesphere.io/v1alpha2${this.getPath(params)}/quotas`
-        )
-      ),
-      to(
-        request.get(
-          `kapis/resources.kubesphere.io/v1alpha2${this.getPath(
-            params
-          )}/abnormalworkloads`
-        )
-      ),
-    ])
+    // const [quota, status] = await Promise.all([
+    //   to(
+    //     request.get(
+    //       `kapis/resources.kubesphere.io/v1alpha2${this.getPath(params)}/quotas`
+    //     )
+    //   ),
+    //   to(
+    //     request.get(
+    //       `kapis/resources.kubesphere.io/v1alpha2${this.getPath(
+    //         params
+    //       )}/abnormalworkloads`
+    //     )
+    //   ),
+    // ])
+    // const [quota, status] = {}
+    // this.resource = {
+    //   quota: quota.data,
+    //   status: status.data,
+    //   isLoading: false,
+    // }
     this.resource = {
-      quota: quota.data,
-      status: status.data,
+      quota: "",
+      status: "",
       isLoading: false,
     }
   }

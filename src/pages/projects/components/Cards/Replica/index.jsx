@@ -79,9 +79,9 @@ export default class HPACard extends React.Component {
   }
 
   handleReplicaChange = newReplicas => {
-    if (newReplicas >= 0) {
-      this.props.onScale(newReplicas)
-    }
+    // if (newReplicas >= 0) {
+    //   this.props.onScale(newReplicas)
+    // }
   }
 
   render() {

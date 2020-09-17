@@ -29,7 +29,9 @@ module.exports = function(app) {
   })
 
   app.server.on('upgrade', (req, socket, head) => {
-    const target = serverConfig.apiServer.wsUrl
+    
+    const target = serverConfig.sailorServer.wsUrl
+    console.log("target=",target);
     wsProxy.ws(req, socket, head, { target })
 
     wsProxy.on('proxyReqWs', (proxyReq, _req) => {

@@ -186,7 +186,7 @@ export default class Pods extends React.Component {
           {...tableProps}
           itemActions={this.itemActions}
           columns={this.getColumns()}
-          onCreate={null}
+          // onCreate={null}
           cluster={match.params.cluster}
         />
       </ListPage>

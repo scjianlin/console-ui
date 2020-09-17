@@ -197,7 +197,7 @@ export default class StatefulSetDetail extends React.Component {
       module: this.module,
       name: getDisplayName(this.store.detail),
       desc: this.store.detail.description,
-      operations: this.getOperations(),
+      // operations: this.getOperations(),
       attrs: this.getAttrs(),
       breadcrumbs: [
         {

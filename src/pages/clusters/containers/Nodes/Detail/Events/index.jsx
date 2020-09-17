@@ -26,14 +26,16 @@ export default class Events extends Base {
   fetchData() {
     const { name } = this.store.detail
 
-    const fields = {
-      'source.host': name,
-      'involvedObject.kind': this.kind,
-    }
+    // const fields = {
+    //   'source.host': name,
+    //   'involvedObject.kind': this.kind,
+    // }
 
     this.eventStore.fetchList({
       cluster: this.cluster,
-      fieldSelector: joinSelector(fields),
+      // fieldSelector: joinSelector(fields),
+      'source.host': name,
+      'involvedObject.kind': this.kind,
     })
   }
 }

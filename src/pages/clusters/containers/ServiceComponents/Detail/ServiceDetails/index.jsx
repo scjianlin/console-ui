@@ -46,7 +46,6 @@ export default class ServiceDetails extends React.Component {
     if (this.serviceStore.isLoading) {
       return null
     }
-
     return (
       <PodsCard
         detail={this.serviceStore.detail}

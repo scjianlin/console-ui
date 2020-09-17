@@ -25,7 +25,7 @@ export default class TerminalStore {
   @computed
   get kubeWebsocketUrl() {
     const { cluster, namespace, pod, container, shell = 'sh' } = this.kubectl
-    return `kapis/terminal.kubesphere.io/v1alpha2${this.getClusterPath({
+    return `/apis/${this.getClusterPath({
       cluster,
     })}/namespaces/${namespace}/pods/${pod}?container=${container}&shell=${shell}`
   }
@@ -58,7 +58,7 @@ export default class TerminalStore {
   async fetchKubeCtl({ cluster }) {
     this.kubectl.isLoading = true
     const result = await request.get(
-      `kapis/resources.kubesphere.io/v1alpha2${this.getClusterPath({
+      `sailor${this.getClusterPath({
         cluster,
       })}/users/${this.username}/kubectl`,
       null,
@@ -75,7 +75,7 @@ export default class TerminalStore {
   @action
   async fetchKubeConfig(params) {
     const result = await request.get(
-      `kapis/resources.kubesphere.io/v1alpha2${this.getClusterPath(
+      `sailor${this.getClusterPath(
         params
       )}/users/${this.username}/kubeconfig`
     )

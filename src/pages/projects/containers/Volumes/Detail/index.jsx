@@ -276,7 +276,7 @@ export default class VolumeDetail extends React.Component {
       authKey: this.authKey,
       name: getDisplayName(this.store.detail),
       attrs: this.getAttrs(),
-      operations: this.getOperations(),
+      // operations: this.getOperations(),
       icon: 'storage',
       breadcrumbs: [
         {

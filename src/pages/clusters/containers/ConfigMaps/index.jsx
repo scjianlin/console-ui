@@ -166,7 +166,7 @@ export default class ConfigMaps extends React.Component {
           {...tableProps}
           itemActions={this.itemActions}
           columns={this.getColumns()}
-          onCreate={this.showCreate}
+          // onCreate={this.showCreate}
           cluster={match.params.cluster}
           getCheckboxProps={this.getCheckboxProps}
         />

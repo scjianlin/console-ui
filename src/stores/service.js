@@ -106,7 +106,6 @@ export default class ServiceStore extends Base {
     this.module
   }`
 
-
   @action
   async fetchEndpoints({ name, cluster, namespace }) {
     this.endpoints.isLoading = true
@@ -115,7 +114,7 @@ export default class ServiceStore extends Base {
     let endpoints = []
     try {
       const result = await request.get(
-        `api/v1${this.getPath({ cluster, namespace })}/endpoints/${name}`,
+        `sailor${this.getPath({ cluster, namespace })}/endpoints/${name}`,
         null,
         null,
         () => {
@@ -181,7 +180,7 @@ export default class ServiceStore extends Base {
     const [deployments, statefulsets] = await Promise.all(
       workloadTypes.map(type =>
         request.get(
-          `apis/apps/v1${this.getPath({ cluster, namespace })}/${type}`,
+          `sailor${this.getPath({ cluster, namespace })}/${type}`,
           params
         )
       )

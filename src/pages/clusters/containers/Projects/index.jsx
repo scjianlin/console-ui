@@ -217,7 +217,7 @@ export default class Projects extends React.Component {
           {...tableProps}
           itemActions={this.itemActions}
           columns={this.getColumns()}
-          onCreate={this.showCreate}
+          // onCreate={this.showCreate}
           monitorLoading={isLoadingMonitor}
           searchType="name"
           alwaysUpdate

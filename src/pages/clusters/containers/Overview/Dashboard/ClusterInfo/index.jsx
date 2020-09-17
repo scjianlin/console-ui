@@ -26,7 +26,7 @@ import styles from './index.scss'
 export default class ClusterInfo extends Component {
   handleClick = () => {
     const { cluster, rootStore } = this.props
-    rootStore.routing.push(`/clusters/${cluster.name}/visibility`)
+    rootStore.routing.push(`/`)
   }
 
   render() {
@@ -45,7 +45,7 @@ export default class ClusterInfo extends Component {
                 : t('VISIBILITY_PART')
             }
             description={t('Cluster Visibility')}
-            onClick={this.handleClick}
+            // onClick={this.handleClick}
           />
         </div>
       </Panel>

@@ -184,7 +184,7 @@ const WorkLoadMapper = item => ({
 })
 
 const RevisionMapper = item => {
-  const spec = get(item, 'data.spec', get(item, 'spec', {}))
+  const spec = get(item, 'spec', get(item, 'spec', {}))
 
   return {
     spec,
