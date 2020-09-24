@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { observer } from 'mobx-react'
-import { Select,TextArea } from '@pitrix/lego-ui'
+import { Select,TextArea, Input } from '@pitrix/lego-ui'
 import { Form } from 'components/Base'
 import RackStore from 'stores/rackcidr'
 import ClusterVersion from 'stores/clusterVersion'
@@ -33,11 +33,14 @@ export default class BaseInfo extends React.Component {
 
   getDockerVersion() {
     let ves = []
+    const { formTemplate } = this.props
     this.clusterVersion.list.data.filter(function(item) {
-      ves.push({
-        label: item.dockerVersion,
-        value: item.dockerVersion
-      })
+      if (formTemplate.nodeVersion == item.masterVersion) {
+        ves.push({
+          label: item.dockerVersion,
+          value: item.dockerVersion
+        })
+      }
     })
     return ves
   }  
@@ -69,21 +72,23 @@ export default class BaseInfo extends React.Component {
         </div>
         <Form data={formTemplate} ref={formRef}>
         <Form.Item
-            label={"请选择Kubelet版本"}
+            label={"Kubelet版本"}
             rules={[{
                 required: true,
-                message: "请选择集群版本!",
+                message: "请选择Kubelet版本!",
               }]}
           >
-           <Select
+           {/* <Select
+              disabled
               name="nodeVersion"
-              searchable
-              options={this.getClusterVersion()}
+              // searchable
+              // options={this.getClusterVersion()}
               onBlurResetsInput={false}
               onCloseResetsInput={false}
               openOnClick={true}
               isLoadingAtBottom
-            />
+            /> */}
+            <Input name="nodeVersion" autoFocus={true} disabled />
           </Form.Item>
           <Form.Item 
             label={"请选择容器版本"}

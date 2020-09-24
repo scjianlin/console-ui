@@ -41,13 +41,12 @@ export default class WorkspaceStore extends Base {
 
   getResourceUrl = (params = {}) =>
     params.cluster
-      ? `kapis/resources.kubesphere.io/v1alpha3${this.getPath(params)}/${
+      ? `sailor${this.getPath(params)}/${
           this.module
         }`
-      : `kapis/tenant.kubesphere.io/v1alpha2${this.getPath(params)}/${
+      : `sailor${this.getPath(params)}/${
           this.module
         }`
-
   getListUrl = this.getResourceUrl
 
   @action

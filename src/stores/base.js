@@ -136,7 +136,7 @@ export default class BaseStore {
       cluster,
       ...this.mapper(item),
     }))
-
+    console.log("data==>",data);
     this.list.update({
       data: more ? [...this.list.data, ...data] : data,
       total: result.totalItems || result.total_count || data.length || 0,

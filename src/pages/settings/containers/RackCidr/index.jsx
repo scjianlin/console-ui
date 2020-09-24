@@ -1,6 +1,5 @@
 
 import React from 'react'
-import { computed } from 'mobx'
 import Banner from 'components/Cards/Banner'
 import withList, { ListPage } from 'components/HOCs/withList'
 import Table from 'components/Tables/List'
@@ -81,7 +80,7 @@ export default class ClusterComm extends React.Component {
         dataIndex: 'rackCidr',
         sorter: true,
         search: true,
-      },      
+      },
       {
         title: '网关地址',
         dataIndex: 'rackCidrGw',
@@ -93,10 +92,15 @@ export default class ClusterComm extends React.Component {
         isHideable: true,
       },
       {
+        title: 'Service路由',
+        dataIndex: 'serviceRoute',
+        isHideable: true,
+      },
+      {
         title: 'POD数量',
         dataIndex: 'podNum',
         isHideable: true,
-      },      
+      },
       {
         title: '是否为Master机柜',
         dataIndex: 'isMaster',

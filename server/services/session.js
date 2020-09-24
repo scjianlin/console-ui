@@ -26,6 +26,7 @@ const jwtDecode = require('jwt-decode')
 const { send_gateway_request } = require('../libs/request')
 
 const { getServerConfig, isAppsRoute, safeParseJSON } = require('../libs/utils')
+const { url } = require('koa-router')
 
 const { client: clientConfig } = getServerConfig()
 
@@ -33,8 +34,6 @@ const login = async (data, headers) => {
   const base64Str = Buffer.from(`${data.username}:${data.password}`).toString(
     'base64'
   )
-
-  // console.log("headers==>",headers);
 
   const resp = await send_gateway_request({
     method: 'GET',
@@ -46,13 +45,9 @@ const login = async (data, headers) => {
     redirect: 'manual',
   })
 
-  // console.log("parse==>",resp.headers.get('location'));
-
   const { access_token } = parse(
     resp.headers.get('location').replace(/http.*(\?|#)/, '')
   )
-
-  // console.log("access_token==>",access_token);
 
   if (!access_token) {
     throw new Error(resp.message)
@@ -78,80 +73,88 @@ const oAuthLogin = async params => {
   return { username, token: resp.access_token }
 }
 
-const getUserGlobalRules = async (username, token) => {
-  const resp = await send_gateway_request({
-    method: 'GET',
-    url: `/kapis/iam.kubesphere.io/v1alpha2/users/${username}/globalroles`,
-    token,
-  })
+// const getUserGlobalRules = async (username, token) => {
+//   const resp = await send_gateway_request({
+//     method: 'GET',
+//     url: `/kapis/iam.kubesphere.io/v1alpha2/users/${username}/globalroles`,
+//     token,
+//   })
+//   // console.log('resp==>',resp);
 
-  const rules = {}
-  resp.forEach(item => {
-    const rule = safeParseJSON(
-      get(
-        item,
-        "metadata.annotations['iam.kubesphere.io/role-template-rules']"
-      ),
-      {}
-    )
+//   // console.log("GlobalRules==>",resp);
+//   //  kind: 'GlobalRole' 
+//   const rules = {}
+//   resp.forEach(item => {
+//     const rule = safeParseJSON(
+//       get(
+//         item,
+//         "metadata.annotations['iam.kubesphere.io/role-template-rules']"
+//       ),
+//       {}
+//     )
 
-    Object.keys(rule).forEach(key => {
-      rules[key] = rules[key] || []
-      if (isArray(rule[key])) {
-        rules[key].push(...rule[key])
-      } else {
-        rules[key].push(rule[key])
-      }
-      rules[key] = uniq(rules[key])
-    })
-  })
+//     Object.keys(rule).forEach(key => {
+//       rules[key] = rules[key] || []
+//       if (isArray(rule[key])) {
+//         rules[key].push(...rule[key])
+//       } else {
+//         rules[key].push(rule[key])
+//       }
+//       rules[key] = uniq(rules[key])
+//     })
+//   })
 
-  return rules
-}
+//   return rules
+// }
 
 const getUserDetail = async (username, token) => {
   let user = {}
-
+  // 返回admin账户详情
   const resp = await send_gateway_request({
     method: 'GET',
-    url: `/kapis/iam.kubesphere.io/v1alpha2/users/${username}`,
+    url: `/apis/cluster/users/${username}`,
     token,
   })
-
   if (resp) {
-    user = {
-      email: get(resp, 'spec.email'),
-      lang: get(resp, 'spec.lang'),
-      username: get(resp, 'metadata.name'),
-      globalrole: get(
-        resp,
-        'metadata.annotations["iam.kubesphere.io/globalrole"]'
-      ),
-    }
+      user = resp
+    // user = {
+    //   email: get(resp, 'spec.email'),
+    //   lang: get(resp, 'spec.lang'),
+    //   username: get(resp, 'metadata.name'),
+    //   globalrole: get(
+    //     resp,
+    //     'metadata.annotations["iam.kubesphere.io/globalrole"]'
+    //   ),
+    // }
   } else {
     throw new Error(resp)
   }
 
   try {
-    user.globalRules = await getUserGlobalRules(username, token)
+    user.globalRules = { 
+      'workspaces': [ 'view', 'manage' ],
+      'users': [ 'view', 'manage' ],
+      'roles': [ 'view', 'manage' ],
+      'clusters': [ 'view', 'manage' ],
+      'app-templates': [ 'view', 'manage' ],
+      'platform-settings': [ 'manage' ] 
+    }
   } catch (error) {}
-
   return user
 }
 
 const getWorkspaces = async token => {
   let workspaces = []
-
+  // 返回 kind: 'WorkspaceTemplate'
   const resp = await send_gateway_request({
     method: 'GET',
-    url: '/kapis/tenant.kubesphere.io/v1alpha2/workspaces',
+    url: '/apis/cluster/workspaces',
     token,
   })
-
   if (resp && resp.items) {
     workspaces = resp.items.map(item => item.metadata.name)
+    // workspaces = resp.items.metadata.name
   }
-
   return workspaces
 }
 
@@ -160,12 +163,11 @@ const getKSConfig = async token => {
   try {
     resp = await send_gateway_request({
       method: 'GET',
-      url: `/kapis/config.kubesphere.io/v1alpha2/configs/configz`,
+      url: `/apis/cluster/configs/configz`,
       token,
     })
     // console.log("Resp_KSconfig==>",resp);
   } catch (error) {
-    // console.log("Resp_KSconfigE==>",error);
     console.error(error)
   }
 
@@ -206,12 +208,12 @@ const getOAuthInfo = async () => {
   try {
     resp = await send_gateway_request({
       method: 'GET',
-      url: `/kapis/config.kubesphere.io/v1alpha2/configs/oauth`,
+      url: '/apis/cluster/configs/oauth',
     })
+    // url: `/kapis/config.kubesphere.io/v1alpha2/configs/oauth`,
   } catch (error) {
     console.error(error)
   }
-
   const servers = []
   if (resp && !isEmpty(resp.identityProviders)) {
     resp.identityProviders.forEach(item => {
@@ -222,7 +224,6 @@ const getOAuthInfo = async () => {
           client_id: item.provider.clientID,
           response_type: 'code',
         }
-
         if (item.provider.redirectURL) {
           params.redirect_uri = item.provider.redirectURL
         }

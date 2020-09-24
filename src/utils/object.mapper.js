@@ -76,6 +76,7 @@ const DefaultMapper = item => ({
 })
 
 const WorkspaceMapper = item => {
+  console.log("WorkspaceMapper==",item);
   const overrides = get(item, 'spec.overrides', [])
   const template = get(item, 'spec.template', {})
   const clusters = get(item, 'spec.placement.clusters', [])

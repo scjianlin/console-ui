@@ -476,6 +476,7 @@ export default class Nodes extends React.Component {
 
   showCreate = () => {
     const { getData } = this.props
+    console.log("getData==>",this.props);
     return this.props.trigger('cluster.create', {
       success: getData,
     })

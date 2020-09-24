@@ -53,7 +53,7 @@ const send_gateway_request = ({
     }
   }
   return request[method.toLowerCase()](
-    `${serverConfig.apiServer.url}${url}`,
+    `${serverConfig.sailorServer.url}${url}`, //sailorServer
     params,
     options
   )

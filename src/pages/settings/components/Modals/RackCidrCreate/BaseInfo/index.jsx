@@ -59,9 +59,8 @@ export default class BaseInfo extends React.Component {
           <div>{t('Basic Info')}</div>
           <p>{"增加机柜网段,增加网络之后会计算出该机柜的POD网段"}</p>
         </div>
-        <Form data={formTemplate} ref={formRef}>
+        <Form data={formTemplate} ref={formRef}  >
           <Form.Item
-            controlClassName={styles.nameWrapper}
             label={"CIDR地址"}
             rules={[
               {
@@ -87,6 +86,16 @@ export default class BaseInfo extends React.Component {
           >
             <Input name="rackCidrGw" placeholder="请输入网关地址." />
           </Form.Item>
+          <Form.Item 
+            label={"Service路由"}
+            rules={[
+              {
+                required: true,
+                message: "请输入Service路由.",
+              }]}
+          >
+            <Input name="serviceRoute" placeholder="请输入Service路由." />
+          </Form.Item>          
           <Form.Item label={"所属网络"}>
             <Input name="providerCidr" placeholder="请输入所属网络地址." />
           </Form.Item>
@@ -113,6 +122,7 @@ export default class BaseInfo extends React.Component {
               name="podNum"
               searchable
               options={this.getPodNum()}
+              defaultValue={32}
               onBlurResetsInput={false}
               onCloseResetsInput={false}
               openOnClick={true}
@@ -131,6 +141,7 @@ export default class BaseInfo extends React.Component {
             <Select
               name="isMaster"
               searchable
+              defaultValue={0}
               options={this.getRackState()}
               onBlurResetsInput={false}
               onCloseResetsInput={false}

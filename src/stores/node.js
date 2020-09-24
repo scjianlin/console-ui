@@ -129,6 +129,7 @@ export default class NodeStore extends Base {
     this.masterWorkerCount =  resp.items.masterWorkerCount
     this.nodeRole = params.cluster
     this.clusterName = params.cluster
+    this.clusterVersion = resp.items.masterVersion
   }
 
   @action

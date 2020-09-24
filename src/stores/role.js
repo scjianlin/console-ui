@@ -50,7 +50,7 @@ export default class RoleStore extends Base {
   }
 
   getResourceUrl = params =>
-    `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${this.module}`
+    `sailor${this.getPath(params)}/${this.module}`
 
   getListUrl = this.getResourceUrl
 
@@ -135,7 +135,7 @@ export default class RoleStore extends Base {
     this.roleTemplates.isLoading = true
 
     const result = await request.get(
-      `kapis/iam.kubesphere.io/v1alpha2${this.getPath(params)}/${
+      `sailor${this.getPath(params)}/${
         this.module
       }?label=iam.kubesphere.io/role-template=true`
     )

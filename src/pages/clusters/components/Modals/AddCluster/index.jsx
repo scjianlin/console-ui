@@ -35,7 +35,7 @@ export default class ClusterCreateModal extends React.Component {
         // ClusterIP:"",
         // ClusterUser:"",
         // UserPass: "",
-        // ClusterVersion:"",
+        nodeVersion: this.props.store.clusterVersion,
         // DockerVersion:"",
         // InitTemplate:"",
         // CustomScript:"",

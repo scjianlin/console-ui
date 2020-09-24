@@ -29,8 +29,8 @@ server:
   apiServer:
     # url: http://localhost:8090
     # wsUrl: ws://localhost:8090
-    url: http://10.248.225.17:30882
-    wsUrl: ws://10.248.225.17:30882
+    url: http://10.248.225.4:30882
+    wsUrl: ws://10.248.225.4:30882
     # url: http://ks-apiserver.kubesphere-system.svc
     # wsUrl: ws://ks-apiserver.kubesphere-system.svc
 
