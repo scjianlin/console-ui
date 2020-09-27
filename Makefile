@@ -1,14 +1,8 @@
-setup:
-	docker volume create nodemodules
+VERSION ?= v0.0.4-dev1616
+IMG_REG ?= symcn.tencentcloudcr.com/symcn
+IMG_CTL := $(IMG_REG)/kunkka-console
 
-install:
-	docker-compose -f docker-compose.builder.yaml run --rm install
 
-dev:
-	docker-compose up
-
-build:
-	docker-compose -f docker-compose.builder.yaml run --rm build
-
-yarn-%:
-	docker-compose -f docker-compose.builder.yaml run --rm base yarn $*
+docker-push-console:
+	docker build -t ${IMG_CTL}:${VERSION}  .
+	docker push ${IMG_CTL}:${VERSION}

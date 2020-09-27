@@ -34,13 +34,12 @@ const login = async (data, headers) => {
   const base64Str = Buffer.from(`${data.username}:${data.password}`).toString(
     'base64'
   )
-
   const resp = await send_gateway_request({
     method: 'GET',
     url: '/oauth/authorize?client_id=default&response_type=token',
     headers: {
       ...headers,
-      Authorization: `Basic ${base64Str}`,
+      Authorization: `${base64Str}`,
     },
     redirect: 'manual',
   })

@@ -256,7 +256,7 @@
             !$submitBtn.classList.contains('loading')
           ) {
             $submitBtn.classList.add('loading')
-            $encryptPassword.value = encrypt($password.value)
+            $encryptPassword.value = $password.value
             $password.setAttribute('form', 'deniedform')
             setTimeout(function() {
               $submitBtn.disabled = true

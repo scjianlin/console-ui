@@ -27,19 +27,18 @@ server:
 
   # backend service gateway server
   apiServer:
-    # url: http://localhost:8090
-    # wsUrl: ws://localhost:8090
-    url: http://10.248.225.4:30882
-    wsUrl: ws://10.248.225.4:30882
-    # url: http://ks-apiserver.kubesphere-system.svc
-    # wsUrl: ws://ks-apiserver.kubesphere-system.svc
-
+    url: http://kunkka-api.kunkka-api.svc
+    wsUrl: ws://kunkka-api.kunkka-api.svc    
+    # url: http://127.0.0.1:8888
+    # wsUrl: ws://127.0.0.1:8888
+    # url: http://10.248.225.11:30888
+    # wsUrl: ws://10.248.225.11:30888    
   #backend server Sailor server
   sailorServer:
-    # url: http://sailor
-    # wsUrl: ws://sailor
-    url: http://127.0.0.1:8888
-    wsUrl: ws://127.0.0.1:8888
+    url: http://kunkka-api.kunkka-api.svc
+    wsUrl: ws://kunkka-api.kunkka-api.svc
+    # url: http://10.248.225.11:30888
+    # wsUrl: ws://10.248.225.11:30888   
 
   # docker image search default url
   dockerHubUrl: https://hub.docker.com

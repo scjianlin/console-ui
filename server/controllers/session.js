@@ -29,7 +29,6 @@ const {
 
 const handleLogin = async ctx => {
   const params = ctx.request.body
-
   let referer = ctx.cookies.get('referer')
   referer = referer ? decodeURIComponent(referer) : ''
 
@@ -67,10 +66,10 @@ const handleLogin = async ctx => {
   if (isEmpty(error)) {
     try {
       if (params.encrypt) {
-        params.password = decryptPassword(params.encrypt, ctx.session.salt)
+        params.password = params.encrypt // 'P@88w0rd' //decryptPassword(params.encrypt, ctx.session.salt)
         delete params.encrypt
       }
-
+      
       user = await login(params, { 'x-client-ip': ctx.request.ip })
       if (!user) {
         Object.assign(error, {
