@@ -29,21 +29,24 @@ export default class BaseInfo extends React.Component {
   }
 
   getPodNum() {
-   const state = [{
-      label: "32",
-      value: 32,
-    },{
-      label: "64",
-      value: 64,
-    },{
-      label: "100",
-      value: 100,      
-    },{
-      label: "120",
-      value: 120,
-    }]
-    return state
-  }
+    const state = [{
+       label: "32",
+       value: 32,
+     },{
+       label: "64",
+       value: 64,
+     },{
+       label: "100",
+       value: 100,      
+     },{
+       label: "120",
+       value: 120,
+     },{
+       label: "240",
+       value: 240,      
+     }]
+     return state
+   }
 
   renderFooter() {
     const { onCancel, isSubmitting } = this.props
@@ -110,6 +113,16 @@ export default class BaseInfo extends React.Component {
               }]}
           >
             <Input name="rackCidrGw" disabled placeholder="请输入网关地址." />
+          </Form.Item>
+          <Form.Item 
+            label={"Service路由"}
+            rules={[
+              {
+                required: true,
+                message: "请输入Service路由.",
+              }]}
+          >
+            <Input name="serviceRoute" placeholder="请输入Service路由." />
           </Form.Item>
           <Form.Item label={"所属网络"}>
             <Input name="providerCidr" placeholder="请输入所属网络地址." />
