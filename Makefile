@@ -1,4 +1,4 @@
-VERSION ?= v0.0.4-dev1616
+VERSION ?= v0.0.4-dev1617
 IMG_REG ?= symcn.tencentcloudcr.com/symcn
 IMG_CTL := $(IMG_REG)/kunkka-console
 

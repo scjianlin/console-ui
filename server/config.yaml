@@ -27,16 +27,16 @@ server:
 
   # backend service gateway server
   apiServer:
-    # url: http://kunkka-api.kunkka-api.svc
-    # wsUrl: ws://kunkka-api.kunkka-api.svc    
+    #url: http://kunkka-api.kunkka-api.svc
+    #wsUrl: ws://kunkka-api.kunkka-api.svc    
     url: http://127.0.0.1:8888
     wsUrl: ws://127.0.0.1:8888
     # url: http://10.248.225.11:30888
     # wsUrl: ws://10.248.225.11:30888    
   #backend server Sailor server
   sailorServer:
-    # url: http://kunkka-api.kunkka-api.svc
-    # wsUrl: ws://kunkka-api.kunkka-api.svc
+    #url: http://kunkka-api.kunkka-api.svc
+    #wsUrl: ws://kunkka-api.kunkka-api.svc
     url: http://127.0.0.1:8888
     wsUrl: ws://127.0.0.1:8888
 
