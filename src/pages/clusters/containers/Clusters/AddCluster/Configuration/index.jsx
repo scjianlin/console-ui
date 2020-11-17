@@ -81,13 +81,14 @@ export default class BaseInfo extends React.Component {
 
   render() {
     const { formTemplate } = this.props
+    console.log("formTemplate.clusterType==>",formTemplate.clusterType);
     return (
       <div>
         <SubTitle
           title={"集群设置"}
           description={"设置集群的网络，集群版本等等"}
         />
-         { formTemplate.clusterType=="Baremetal" && (
+         { formTemplate.clusterType=="Baremetal" || formTemplate.clusterType=="Include" && (
           <Form.Item 
             label={"选择IP地址"}
             rules={[{
@@ -102,7 +103,7 @@ export default class BaseInfo extends React.Component {
               options={this.getClusterIp()}
             />
           </Form.Item>)}
-          { formTemplate.clusterType=="Baremetal" && (
+          { formTemplate.clusterType=="Baremetal"  && (
           <Form.Item 
             label={"请选择Pod地址段"}
             rules={[{
@@ -167,6 +168,16 @@ export default class BaseInfo extends React.Component {
                 options={this.getDockerVersion()}
               />
           </Form.Item>
+          {formTemplate.clusterType == "Include" && (
+          <Form.Item label={"请输入外部集群配置"}>
+          <CodeEditor
+            mode="yaml"
+            name="customConfig"
+            className={styles.editor}
+            options={this.editOptions}
+          />
+          </Form.Item>
+          )}
           { formTemplate.clusterType=="Baremetal" && (
           <Form.Item label={"请输入自定义脚本"}>
             <CodeEditor

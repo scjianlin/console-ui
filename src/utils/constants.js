@@ -975,7 +975,11 @@ export const CLUSTER_TYPE = [
   },{
     label: "全托管集群",
     value: "Hosted",
-  }  
+  },
+  {
+    label: "外部集群",
+    value: "Include"
+  }
 ]
 
 export const CLUSTER_GROUP_TAG_TYPE = {

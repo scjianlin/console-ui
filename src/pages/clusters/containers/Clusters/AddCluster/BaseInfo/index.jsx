@@ -86,8 +86,8 @@ export default class BaseInfo extends React.Component {
             openOnClick={true}
             isLoadingAtBottom
           />
-        </Form.Item>        
-        <Form.Item 
+        </Form.Item>
+        <Form.Item
             label={"选择机柜"}
             rules={[
               {

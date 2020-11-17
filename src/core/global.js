@@ -37,7 +37,7 @@ export default class GlobalValue {
     if (globals.config.disableAuthorization) {
       return ['view', 'edit', 'create', 'delete', 'manage']
     }
-
+    
     const adapter = arr => {
       if (arr.includes('manage')) {
         return uniq([...arr, 'view', 'edit', 'create', 'delete'])
@@ -96,7 +96,6 @@ export default class GlobalValue {
         get(globals.user, `clusterRules[${cluster}][${module}]`, defaultActions)
       )
     }
-
     return adapter(get(globals.user, `globalRules[${module}]`, []))
   }
 

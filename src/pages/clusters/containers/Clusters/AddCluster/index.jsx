@@ -103,6 +103,8 @@ export default class AddCluster extends React.Component {
     const { currentStep } = this.state
     const total = this.steps.length - 1
     const { isValidating, isSubmitting } = this.store
+    console.log("total==>",total);
+    console.log("isValidating==>",isValidating);
     return (
       <div className={styles.footer}>
         {currentStep < total ? (

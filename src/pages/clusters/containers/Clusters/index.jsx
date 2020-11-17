@@ -116,9 +116,7 @@ class Clusters extends React.Component {
           desc={t('NO_CLUSTER_TIP_DESC')}
           actions={
             this.enabledActions.includes('create') ? (
-              <Button type="control" onClick={this.showAddCluster}>
-                {t('Add Cluster')}
-              </Button>
+              <Button type="control" onClick={this.showAddCluster}>{t('Add Cluster')}</Button>
             ) : null
           }
         />

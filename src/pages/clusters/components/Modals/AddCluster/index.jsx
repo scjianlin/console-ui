@@ -141,7 +141,7 @@ export default class ClusterCreateModal extends React.Component {
               </Button>
             )}
           </div>
-        </div>          
+        </div>
         </div>
       </div>
     )
