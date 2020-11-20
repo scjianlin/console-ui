@@ -43,5 +43,9 @@
   &.hosted {
     color: $white;
     background-color: $red-color10;
-  }  
+  }
+  &.include {
+    color: $white;
+    background-color: $dark-color07;
+  }
 }

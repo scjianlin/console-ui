@@ -970,16 +970,17 @@ export const CLUSTER_PRESET_GROUPS = [
 
 export const CLUSTER_TYPE = [
   {
-    label: "裸金属集群",
-    value: "Baremetal",
-  },{
-    label: "全托管集群",
-    value: "Hosted",
+    label: '裸金属集群',
+    value: 'Baremetal',
   },
   {
-    label: "外部集群",
-    value: "Include"
-  }
+    label: '全托管集群',
+    value: 'Hosted',
+  },
+  {
+    label: '外部集群',
+    value: 'Include',
+  },
 ]
 
 export const CLUSTER_GROUP_TAG_TYPE = {
@@ -989,6 +990,7 @@ export const CLUSTER_GROUP_TAG_TYPE = {
   demo: 'primary',
   Hosted: 'hosted',
   Baremetal: 'barem',
+  Include: 'include',
 }
 
 export const ROLE_QUERY_KEY = {

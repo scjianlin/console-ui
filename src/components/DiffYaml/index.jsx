@@ -24,8 +24,9 @@ import { Icon } from '@pitrix/lego-ui'
 import { createPatch } from 'diff'
 import { parse, html } from 'diff2html'
 
-import 'diff2html/bundles/css/diff2html.min.css'
 import styles from './index.scss'
+
+require('!style-loader!css-loader!diff2html/bundles/css/diff2html.min.css')
 
 export default class DiffYaml extends Component {
   static propTypes = {

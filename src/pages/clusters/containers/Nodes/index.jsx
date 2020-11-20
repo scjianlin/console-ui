@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { isEmpty, get } from 'lodash'
 import { Tooltip, Icon } from '@pitrix/lego-ui'
@@ -16,17 +15,19 @@ import { Avatar, Status, Panel, Text } from 'components/Base'
 import Banner from 'components/Cards/Banner'
 import Table from 'components/Tables/List'
 
-import styles from './index.scss'
-
-
 //  import antd
-import { Modal, Steps} from 'antd'
-import { LoadingOutlined } from '@ant-design/icons';
-import 'antd/lib/button/style/index.css'
-import 'antd/lib/spin/style/index.css'
-import 'antd/lib/steps/style/index.css'
-import 'antd/lib/modal/style/index.css'
-import { observer } from 'mobx-react'
+import { Modal, Steps } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
+import styles from './index.scss'
+// import 'antd/lib/button/style/index.css'
+// import 'antd/lib/spin/style/index.css'
+// import 'antd/lib/steps/style/index.css'
+// import 'antd/lib/modal/style/index.css'
+
+require('!style-loader!css-loader!antd/lib/modal/style/index.css')
+require('!style-loader!css-loader!antd/lib/button/style/index.css')
+require('!style-loader!css-loader!antd/lib/spin/style/index.css')
+require('!style-loader!css-loader!antd/lib/steps/style/index.css')
 
 const MetricTypes = {
   cpu_used: 'node_cpu_usage',
@@ -40,7 +41,7 @@ const MetricTypes = {
 }
 
 //  def time
-let ConditionTime = undefined;
+let ConditionTime
 
 @withList({
   store: new NodeStore(),
@@ -52,11 +53,12 @@ export default class Nodes extends React.Component {
     super(props)
     this.state = {
       visible: false,
-      conditions: []
+      conditions: [],
     }
   }
 
   store = this.props.store
+
   monitoringStore = new NodeMonitoringStore({ cluster: this.cluster })
 
   componentDidMount() {
@@ -103,10 +105,10 @@ export default class Nodes extends React.Component {
   }
 
   get tableActions() {
-    const { trigger, routing, tableProps,store } = this.props
+    const { trigger, routing, tableProps, store } = this.props
     return {
       ...tableProps.tableActions,
-      actions: store.nodeRole== 'host' ? [] : null,  //屏蔽master集群添加节点
+      actions: store.nodeRole == 'host' ? [] : null, // 屏蔽master集群添加节点
       selectActions: [
         {
           key: 'taint',
@@ -177,47 +179,50 @@ export default class Nodes extends React.Component {
     }))
   }
 
-  handleCreate = (ip,clusterName) =>() => {
+  handleCreate = (ip, clusterName) => () => {
     this.setState({
       visible: true,
-    });
-    this.getCondition(ip,clusterName)
-  };
+    })
+    this.getCondition(ip, clusterName)
+  }
+
   // timer start
-  getCondition = (ip,clusterName) => {
-    ConditionTime = setInterval(() => 
-      this.store.fetchCondition({'ipAddr': ip,'clusterName': clusterName}).then(resp=>{
-        this.setState({
-          conditions: resp,
-        })
-      }),
-    10000);
+  getCondition = (ip, clusterName) => {
+    ConditionTime = setInterval(
+      () =>
+        this.store.fetchCondition({ ipAddr: ip, clusterName }).then(resp => {
+          this.setState({
+            conditions: resp,
+          })
+        }),
+      10000
+    )
   }
 
   handleOk = e => {
     this.setState({
       visible: false,
-    });
+    })
   }
 
   handleCancel = e => {
     this.setState({
       visible: false,
-    });
-    clearInterval(ConditionTime);
-  };
+    })
+    clearInterval(ConditionTime)
+  }
 
   showConditions() {
-    if (this.state.conditions.length >0 ) 
-      return this.state.conditions
-    else {
-      return [{
-          type: 'EnsureSystem',
-          name: '准备中...',
-          status: "False",
-      }]
-    }
-  }  
+    if (this.state.conditions.length > 0) return this.state.conditions
+
+    return [
+      {
+        type: 'EnsureSystem',
+        name: '准备中...',
+        status: 'False',
+      },
+    ]
+  }
 
   getColumns = () => {
     const { module, prefix, getSortOrder, getFilteredValue } = this.props
@@ -253,22 +258,20 @@ export default class Nodes extends React.Component {
           const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />
 
           return (
-            <div 
-              className={styles.status}
-            > 
-              { status !== "Running" ? (
-                <div onClick={this.handleCreate(ipaddr,clusterName)}>
+            <div className={styles.status}>
+              {status !== 'Running' ? (
+                <div onClick={this.handleCreate(ipaddr, clusterName)}>
                   <Status
                     type={status}
                     name={t(`NODE_STATUS_${status.toUpperCase()}`)}
                   />
                 </div>
-               ) : (
+              ) : (
                 <Status
                   type={status}
                   name={t(`NODE_STATUS_${status.toUpperCase()}`)}
                 />
-              )} 
+              )}
               {!isEmpty(taints) && (
                 <Tooltip content={this.renderTaintsTip(taints)}>
                   <span className={styles.taints}>{taints.length}</span>
@@ -284,9 +287,23 @@ export default class Nodes extends React.Component {
                   destroyOnClose
                 >
                   <Steps direction="vertical" size="small">
-                    { this.showConditions().map( (cond, index) => (
-                      (cond.status === "True" ? <Steps.Step key={index} title={cond.name} status="finish" description={`完成时间: ${cond.time}`} /> : <Steps.Step key={index} icon={antIcon} title={cond.name} status="wait" /> )
-                    ))}
+                    {this.showConditions().map((cond, index) =>
+                      cond.status === 'True' ? (
+                        <Steps.Step
+                          key={index}
+                          title={cond.name}
+                          status="finish"
+                          description={`完成时间: ${cond.time}`}
+                        />
+                      ) : (
+                        <Steps.Step
+                          key={index}
+                          icon={antIcon}
+                          title={cond.name}
+                          status="wait"
+                        />
+                      )
+                    )}
                   </Steps>
                 </Modal>
               </div>
@@ -476,7 +493,7 @@ export default class Nodes extends React.Component {
 
   showCreate = () => {
     const { getData } = this.props
-    console.log("getData==>",this.props);
+    console.log('getData==>', this.props)
     return this.props.trigger('cluster.create', {
       success: getData,
     })
