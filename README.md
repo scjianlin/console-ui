@@ -2,40 +2,31 @@
 
 该项目基于青云[Console](https://github.com/kubesphere/console) 改造而成! 
 
-Kunkka Console is the web-based UI for  [Kunkka](https://github.com/gostship/kunkka) clusters.
 
-## Developer Guide
-
-### Preparation
-
-Make sure the following software is installed and added to the \$PATH variable:
-
-- A KubeSphere cluster
+### 环境准备
 - Node.js 10.16+ ([installation with nvm](https://github.com/creationix/nvm#usage))
 - Yarn 1.19.1+
+- 后端程序 ([kubeOnkube-operator](https://github.com/scjianlin/kubeOnkube-operator))
 
-Fork the repository, then clone your repository and install the dependencies:
-
+安装前端依赖
 ```sh
 yarn
 ```
 
-Note: If you are in China Mainland, execute the following command before running the command above for faster installation.
+提示: 如果是在大陆,请设置yarn源为国内源。
 
 ```sh
 yarn config set registry https://registry.npm.taobao.org
 ```
 
-Start kunkka Console for development  
+启动前端项目
 ```sh 
 yarn start
 ```
 
-## 1.Config api server in kunkka Console
+## 1. 本地调试
 
-Add the file `local_config.yaml` under the folder `server`
-
-local_config.yaml
+修改server/config.yaml 文件,修改内容如下：
 
 ```yaml
 server:
@@ -44,10 +35,8 @@ server:
     wsUrl: ws://node_ip:30881
 ```
 
-## 2. Access the services within the KubeSphere cluster
-
-If you are in the same network as the cluster. You can access the ks-apiserver using K8s DNS with the default configuration in `server/config.yaml`
-
+## 2. 集群内部访问
+修改server/config.yaml 文件,修改内容如下：
 ```yaml
 server:
   apiServer:
@@ -55,7 +44,7 @@ server:
     wsUrl: ws://ks-apiserver.kubesphere-system.svc
 ```
 
-## 3. 图例
+## 4. 图例
 ![前端展示](docs/images/ui.png)  
 支持创建裸金属和托管集群。  
 
