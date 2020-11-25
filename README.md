@@ -57,7 +57,7 @@ server:
 
 ## 3. 图例
 ![前端展示](docs/images/ui.png)  
-支持导入外部集群,和创建裸金属和托管集群。  
+支持创建裸金属和托管集群。  
 
 ![详情展示](docs/images/detail.png)
 
